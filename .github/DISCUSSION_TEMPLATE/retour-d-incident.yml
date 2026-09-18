@@ -1,0 +1,27 @@
+title: "[Incident] "
+labels: ["incident"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Un retour d'incident **anonymisé** : aucun nom d'organisation, de site, d'adresse ou de personne. Décrivez le mécanisme, pas la cible.
+  - type: textarea
+    id: pont
+    attributes:
+      label: Qu'est-ce qui a franchi l'isolation, et par quel pont ?
+      description: Média, équipement à double usage, connexion tierce, mise à jour amont, exception non révoquée, physique…
+    validations:
+      required: true
+  - type: textarea
+    id: detection
+    attributes:
+      label: Comment a-t-il été détecté ?
+    validations:
+      required: true
+  - type: textarea
+    id: contremesure
+    attributes:
+      label: Qu'est-ce qui l'aurait bloqué ou détecté plus tôt ?
+      description: Renvoyez si possible à une leçon du programme.
+    validations:
+      required: true

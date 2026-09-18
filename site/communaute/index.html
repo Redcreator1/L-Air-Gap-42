@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Communauté — L'Air Gap 42</title>
+  <meta name="description" content="Le Bunker : la communauté privée des praticiens de l'isolation. Discord, discussions GitHub, lives hebdomadaires, revues d'architecture entre pairs.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script type="module" src="../assets/js/site.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero" style="padding-bottom:30px">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Le Bunker</div>
+          <h1>Personne ne sécurise un air gap <span class="grad-text">seul</span>.</h1>
+          <p class="lead">La communauté privée des praticiens de l’isolation : ingénieurs OT, RSSI, auditeurs, consultants. On y partage des schémas, des incidents anonymisés, des retours d’audit, des offres — et on se fait relire.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" data-href="community.discordInvite" href="#" target="_blank" rel="noopener">Rejoindre le Discord</a>
+            <a class="btn btn-ghost btn-lg" data-href="community.discussionsUrl" href="#" target="_blank" rel="noopener">Discussions GitHub</a>
+          </div>
+          <p class="small muted">L’accès complet (canaux Pro / Elite, lives, revues) est réservé aux membres. Les canaux publics sont ouverts à tous.</p>
+        </div>
+        <div class="card reveal" id="discord-widget-host">
+          <div class="eyebrow">Rituels hebdomadaires</div>
+          <ul class="timeline" style="margin-top:14px">
+            <li><b>Lundi · Objectif de la semaine</b><span>Chaque membre poste sa leçon-cible et son livrable. Responsabilité mutuelle.</span></li>
+            <li><b><span data-config="community.liveSessions.day"></span> · Live <span data-config="community.liveSessions.time"></span></b><span>Revue d’architecture en direct sur un cas de membre (anonymisé), puis Q&R. Enregistré.</span></li>
+            <li><b>Vendredi · Retour d’incident</b><span>Un incident réel décortiqué : ce qui a franchi l’isolation, comment, et ce qui l’aurait bloqué.</span></li>
+            <li><b>En continu · Revue par les pairs</b><span>Postez votre matrice de flux ou votre schéma, recevez deux relectures sous 72 h.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container grid-4">
+        <div class="card reveal"><div class="icon-box">💬</div><h3>Discord</h3><p class="muted small">Salons par module, salon incidents, salon emploi, vocal permanent pendant les lives. Modéré, sans bruit commercial.</p></div>
+        <div class="card reveal"><div class="icon-box">🧵</div><h3>Discussions GitHub</h3><p class="muted small">Un fil par leçon, indexé et pérenne. Vos questions améliorent le programme : les meilleures réponses sont intégrées aux mises à jour.</p></div>
+        <div class="card reveal"><div class="icon-box">🎙</div><h3>Lives & replays</h3><p class="muted small">Chaque semaine, un live d’une heure. Tous les replays sont accessibles aux membres Pro et Elite.</p></div>
+        <div class="card reveal"><div class="icon-box">🤝</div><h3>Mastermind Elite</h3><p class="muted small">Douze personnes maximum, réunion mensuelle, problèmes réels, décisions réelles. Accès sur candidature.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="center reveal"><div class="eyebrow" style="justify-content:center">Charte</div><h2>Trois règles, pas une de plus.</h2></div>
+        <div class="grid-3" style="margin-top:36px">
+          <div class="card reveal"><h3>1. Anonymisez</h3><p class="muted">Jamais de nom de client, de site, d’adresse IP réelle. On apprend du cas, pas de l’organisation.</p></div>
+          <div class="card reveal"><h3>2. Défendez, n’attaquez pas</h3><p class="muted">On partage des contre-mesures, des architectures, des procédures. Pas d’outillage offensif, pas de détails d’exploitation.</p></div>
+          <div class="card reveal"><h3>3. Rendez ce que vous prenez</h3><p class="muted">Une question posée = une relecture offerte. C’est ce qui fait que les revues arrivent sous 72 h.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Rejoignez des gens qui ont les mêmes problèmes que vous.</h2>
+          <p class="muted">L’accès à la communauté est inclus dans toutes les offres.</p>
+          <a class="btn btn-primary btn-lg" href="../tarifs/">Voir les offres</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+  <script type="module">
+    import { config } from '../assets/js/site.js';
+    if (config.community.discordServerId) {
+      const host = document.getElementById('discord-widget-host');
+      const f = document.createElement('iframe');
+      f.src = `https://discord.com/widget?id=${config.community.discordServerId}&theme=dark`;
+      f.width = '100%';
+      f.height = '400';
+      f.allowTransparency = true;
+      f.frameBorder = '0';
+      f.sandbox = 'allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts';
+      f.style.marginTop = '20px';
+      f.style.borderRadius = '12px';
+      host.appendChild(f);
+    }
+  </script>
+</body>
+</html>

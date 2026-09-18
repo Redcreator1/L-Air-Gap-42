@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programme — L'Air Gap 42</title>
+  <meta name="description" content="Le programme détaillé des 42 jours : 6 modules, 45 leçons, quiz, ateliers et templates pour maîtriser la sécurité des systèmes isolés.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script type="module" src="../assets/js/site.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero" style="padding-bottom:30px">
+      <div class="container">
+        <div class="eyebrow">Programme</div>
+        <h1>42 jours pour passer de<br><span class="grad-text">« probablement isolé »</span> à « prouvé isolé ».</h1>
+        <p class="lead">Chaque leçon : un concept, une mise en pratique chez vous, une checklist, un quiz. Le module 0 est en accès libre pour que vous jugiez sur pièces.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="../app/#/m/m0/pourquoi-air-gap">Lire le module 0 gratuitement</a>
+          <a class="btn btn-ghost" href="../tarifs/">Voir les tarifs</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="stats reveal" id="stats"></div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="module-list" id="modules"><p class="muted mono">Chargement du programme…</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="center reveal"><div class="eyebrow" style="justify-content:center">Comparatif</div><h2>Quel module dans quel palier ?</h2></div>
+        <div class="card reveal" style="margin-top:32px;overflow-x:auto">
+          <table class="table">
+            <thead><tr><th>Module</th><th>Essentiel</th><th>Pro</th><th>Elite</th></tr></thead>
+            <tbody id="matrix"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Prêt à sécuriser pour de bon ?</h2>
+          <p class="muted">Accès immédiat après paiement. Garantie <span data-config="checkout.guaranteeDays"></span> jours.</p>
+          <a class="btn btn-primary btn-lg" href="../tarifs/">Choisir mon palier</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+
+  <script type="module">
+    import { url } from '../assets/js/site.js';
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const LABEL = { free: 'Gratuit', essentiel: 'Essentiel', pro: 'Pro', elite: 'Elite' };
+    const RANK = { free: 0, essentiel: 1, pro: 2, elite: 3 };
+    const cur = await (await fetch(url('data/curriculum.json'))).json();
+    const lessons = cur.modules.flatMap((m) => m.lessons);
+    const minutes = lessons.reduce((a, l) => a + l.minutes, 0);
+    document.getElementById('stats').innerHTML = [
+      [cur.modules.length, 'modules'],
+      [lessons.length, 'leçons'],
+      [Math.round(minutes / 60) + ' h', 'de contenu'],
+      [lessons.filter((l) => l.hasQuiz).length, 'quiz'],
+    ].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
+
+    document.getElementById('modules').innerHTML = cur.modules
+      .map(
+        (m, i) => `<article class="module ${i === 0 ? 'open' : ''}">
+        <button class="module-head" aria-expanded="${i === 0}">
+          <span class="module-num">${String(i).padStart(2, '0')}</span>
+          <span><h3>${esc(m.title)}</h3><span class="module-meta">${m.lessons.length} leçons · ${m.days || (m.lessons[0]?.day ? `jours ${m.lessons[0].day}–${m.lessons.at(-1).day}` : 'accès libre')} · ${Math.round(m.lessons.reduce((a, l) => a + l.minutes, 0) / 60 * 10) / 10} h</span></span>
+          <span class="tier-tag ${m.tier}">${LABEL[m.tier]}</span>
+        </button>
+        <div class="module-body">
+          <p class="muted" style="padding:10px 0 6px">${esc(m.summary || '')}</p>
+          ${m.lessons
+            .map(
+              (l) => `<div class="lesson-row ${l.free || m.tier === 'free' ? 'free' : ''}">
+                <span class="day">${l.day ? 'J' + l.day : '—'}</span>
+                <span><span class="title">${l.free || m.tier === 'free' ? `<a href="${url('app/#/m/' + m.id + '/' + l.id)}" style="color:inherit">${esc(l.title)}</a>` : esc(l.title)}</span><br><span class="small muted">${esc(l.excerpt)}</span></span>
+                <span class="dur">${l.minutes} min</span>
+              </div>`,
+            )
+            .join('')}
+        </div>
+      </article>`,
+      )
+      .join('');
+    document.querySelectorAll('.module-head').forEach((b) =>
+      b.addEventListener('click', () => {
+        const open = b.parentElement.classList.toggle('open');
+        b.setAttribute('aria-expanded', String(open));
+      }),
+    );
+    document.getElementById('matrix').innerHTML = cur.modules
+      .map(
+        (m) => `<tr><td>${esc(m.title)}</td>${['essentiel', 'pro', 'elite']
+          .map((t) => `<td class="${RANK[t] >= RANK[m.tier] ? 'ok' : 'no'}">${RANK[t] >= RANK[m.tier] ? '✓ inclus' : '—'}</td>`)
+          .join('')}</tr>`,
+      )
+      .join('') +
+      `<tr><td>Lives hebdomadaires & revue d’architecture</td><td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+       <tr><td>Bibliothèque de templates</td><td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+       <tr><td>Coaching 1:1 (3 × 60 min) & mastermind</td><td class="no">—</td><td class="no">—</td><td class="ok">✓</td></tr>
+       <tr><td>Kit d’audit IEC 62443 / NIS2 / ISO 27001</td><td class="no">—</td><td class="no">—</td><td class="ok">✓</td></tr>`;
+  </script>
+</body>
+</html>

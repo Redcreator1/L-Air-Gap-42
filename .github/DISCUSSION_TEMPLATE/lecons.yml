@@ -1,0 +1,32 @@
+title: "[Leçon] "
+labels: ["leçon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de respecter la charte : anonymisez, restez défensif, rendez ce que vous prenez.
+  - type: input
+    id: lecon
+    attributes:
+      label: Leçon concernée
+      description: Module et titre (ex. « M3 · Le sas de transfert »)
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Votre question ou retour
+      description: Contexte anonymisé, ce que vous avez essayé, ce qui bloque.
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Question de compréhension
+        - Cas pratique (comment appliquer chez moi)
+        - Erreur ou imprécision dans la leçon
+        - Suggestion d'amélioration
+    validations:
+      required: true
