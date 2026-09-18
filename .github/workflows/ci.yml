@@ -1,9 +1,9 @@
 name: CI
 
+# Un seul déclencheur par changement : la pull request (le push sur la même branche ne relance pas).
 on:
   pull_request:
-  push:
-    branches-ignore: [main]
+  workflow_dispatch:
 
 jobs:
   test:
