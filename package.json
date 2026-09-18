@@ -1,0 +1,21 @@
+{
+  "name": "l-air-gap-42",
+  "version": "1.0.0",
+  "private": true,
+  "description": "L'Air Gap 42 — plateforme de formation premium sur la sécurité des systèmes isolés. Site statique GitHub Pages, contenu chiffré, communauté intégrée.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "keygen": "node scripts/keygen.mjs",
+    "check": "node scripts/check.mjs",
+    "e2e": "node scripts/e2e.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  },
+  "license": "UNLICENSED"
+}

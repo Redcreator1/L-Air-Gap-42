@@ -1,0 +1,128 @@
+{
+  "title": "L'Air Gap 42",
+  "version": "2026.1",
+  "modules": [
+    {
+      "id": "m0",
+      "dir": "00-briefing",
+      "title": "Module 0 · Briefing",
+      "short": "0 · Briefing (gratuit)",
+      "tier": "free",
+      "days": "accès libre",
+      "summary": "Trois leçons en accès libre pour poser le problème, casser le mythe de l'isolation parfaite et cartographier votre périmètre. Jugez sur pièces.",
+      "lessons": [
+        { "id": "pourquoi-air-gap", "file": "01-pourquoi-air-gap.md", "title": "Pourquoi l'air gap reste la mesure la plus sous-estimée" },
+        { "id": "mythe-isolation-parfaite", "file": "02-mythe-isolation-parfaite.md", "title": "Le mythe de l'isolation parfaite : six incidents qui ont franchi le mur" },
+        { "id": "cartographier-perimetre", "file": "03-cartographier-perimetre.md", "title": "Cartographier votre périmètre en 90 minutes" }
+      ]
+    },
+    {
+      "id": "m1",
+      "dir": "01-fondations",
+      "title": "Module 1 · Fondations & modèle de menace",
+      "short": "1 · Fondations",
+      "tier": "essentiel",
+      "days": "jours 1–7",
+      "summary": "Définitions qui engagent, adversaires réalistes, actifs critiques, surfaces d'entrée, hypothèses d'isolation vérifiables et matrice des flux. Vous terminez avec un modèle de menace en une page.",
+      "lessons": [
+        { "id": "definitions", "file": "01-definitions.md", "day": 1, "title": "Air gap, isolation logique, diode : des définitions qui engagent" },
+        { "id": "adversaires", "file": "02-adversaires.md", "day": 2, "title": "Qui veut entrer ? Modéliser vos adversaires réalistes" },
+        { "id": "actifs-critiques", "file": "03-actifs-critiques.md", "day": 3, "title": "Inventorier ce qui doit vraiment rester isolé" },
+        { "id": "surfaces-entree", "file": "04-surfaces-entree.md", "day": 4, "title": "Les neuf surfaces d'entrée d'un système isolé" },
+        { "id": "hypotheses-isolation", "file": "05-hypotheses-isolation.md", "day": 5, "title": "Transformer les hypothèses d'isolation en preuves" },
+        { "id": "matrice-flux", "file": "06-matrice-flux.md", "day": 6, "title": "Construire la matrice des flux autorisés" },
+        { "id": "atelier-modele-menace", "file": "07-atelier-modele-menace.md", "day": 7, "title": "Atelier : votre modèle de menace en une page" }
+      ]
+    },
+    {
+      "id": "m2",
+      "dir": "02-architecture",
+      "title": "Module 2 · Architecture d'isolation",
+      "short": "2 · Architecture",
+      "tier": "essentiel",
+      "days": "jours 8–14",
+      "summary": "Zones et conduits, modèle de Purdue revisité, DMZ industrielle, diodes de données, accès distant de maintenance, identité hors-ligne. Livrable : votre schéma d'architecture cible.",
+      "lessons": [
+        { "id": "zones-conduits", "file": "08-zones-conduits.md", "day": 8, "title": "Zones et conduits : appliquer IEC 62443 sans dogme" },
+        { "id": "purdue-2026", "file": "09-purdue-2026.md", "day": 9, "title": "Le modèle de Purdue à l'ère du cloud industriel" },
+        { "id": "dmz-industrielle", "file": "10-dmz-industrielle.md", "day": 10, "title": "Concevoir une DMZ industrielle qui ne devient pas un pont" },
+        { "id": "diodes-donnees", "file": "11-diodes-donnees.md", "day": 11, "title": "Diodes de données et passerelles unidirectionnelles" },
+        { "id": "acces-distant", "file": "12-acces-distant.md", "day": 12, "title": "Accès distant de maintenance : le sas, pas la porte" },
+        { "id": "identite-hors-ligne", "file": "13-identite-hors-ligne.md", "day": 13, "title": "Identité et secrets dans un monde sans annuaire central" },
+        { "id": "atelier-schema-cible", "file": "14-atelier-schema-cible.md", "day": 14, "title": "Atelier : votre schéma d'architecture cible" }
+      ]
+    },
+    {
+      "id": "m3",
+      "dir": "03-transferts",
+      "title": "Module 3 · Transferts & supply chain",
+      "short": "3 · Transferts",
+      "tier": "pro",
+      "days": "jours 15–21",
+      "summary": "Le point où 80 % des isolations cassent : médias amovibles, kiosques, sas, signatures, mises à jour hors-ligne, supply chain matérielle. Livrable : votre runbook de transfert.",
+      "lessons": [
+        { "id": "politique-medias", "file": "15-politique-medias.md", "day": 15, "title": "Une politique de médias amovibles réellement appliquée" },
+        { "id": "kiosque-decontamination", "file": "16-kiosque-decontamination.md", "day": 16, "title": "Le kiosque de décontamination : conception et limites" },
+        { "id": "sas-transfert", "file": "17-sas-transfert.md", "day": 17, "title": "Le sas de transfert : procédure, journal, double contrôle" },
+        { "id": "signatures-verification", "file": "18-signatures-verification.md", "day": 18, "title": "Signer et vérifier : hachages, signatures, transparence" },
+        { "id": "mises-a-jour-hors-ligne", "file": "19-mises-a-jour-hors-ligne.md", "day": 19, "title": "Mises à jour hors-ligne : dépôts miroirs et fenêtres de patch" },
+        { "id": "supply-chain-materiel", "file": "20-supply-chain-materiel.md", "day": 20, "title": "Supply chain matérielle : du BIOS à la clé USB" },
+        { "id": "atelier-runbook-transfert", "file": "21-atelier-runbook-transfert.md", "day": 21, "title": "Atelier : votre runbook de transfert" }
+      ]
+    },
+    {
+      "id": "m4",
+      "dir": "04-detection",
+      "title": "Module 4 · Détection & réponse",
+      "short": "4 · Détection",
+      "tier": "pro",
+      "days": "jours 22–28",
+      "summary": "Voir sans Internet : télémétrie isolée, baselines, détection des ponts, chasse, playbook de réponse et exercice sur table. Livrable : votre plan de détection.",
+      "lessons": [
+        { "id": "telemetrie-isolee", "file": "22-telemetrie-isolee.md", "day": 22, "title": "Télémétrie sans Internet : collecter, stocker, corréler" },
+        { "id": "baselines", "file": "23-baselines.md", "day": 23, "title": "Baselines : connaître le normal pour voir l'anormal" },
+        { "id": "detection-ponts", "file": "24-detection-ponts.md", "day": 24, "title": "Détecter les ponts : radio, USB, réseau fantôme" },
+        { "id": "chasse-hors-ligne", "file": "25-chasse-hors-ligne.md", "day": 25, "title": "Chasse aux menaces en environnement isolé" },
+        { "id": "playbook-ir", "file": "26-playbook-ir.md", "day": 26, "title": "Playbook de réponse à incident sans connexion" },
+        { "id": "exercice-table-top", "file": "27-exercice-table-top.md", "day": 27, "title": "Exercice sur table : la clé USB du prestataire" },
+        { "id": "atelier-plan-detection", "file": "28-atelier-plan-detection.md", "day": 28, "title": "Atelier : votre plan de détection" }
+      ]
+    },
+    {
+      "id": "m5",
+      "dir": "05-canaux-caches",
+      "title": "Module 5 · Canaux cachés & durcissement",
+      "short": "5 · Canaux cachés",
+      "tier": "pro",
+      "days": "jours 29–35",
+      "summary": "Ce qui traverse l'air : électromagnétique, acoustique, optique, thermique, et les contre-mesures proportionnées. Puis le durcissement : firmware, système, HSM, physique. Livrable : votre plan de durcissement priorisé.",
+      "lessons": [
+        { "id": "canaux-caches-panorama", "file": "29-canaux-caches-panorama.md", "day": 29, "title": "Panorama des canaux cachés : ce qui traverse l'air" },
+        { "id": "em-acoustique-optique", "file": "30-em-acoustique-optique.md", "day": 30, "title": "Électromagnétique, acoustique, optique, thermique : contre-mesures" },
+        { "id": "durcissement-firmware", "file": "31-durcissement-firmware.md", "day": 31, "title": "Durcissement firmware : UEFI, Secure Boot, TPM" },
+        { "id": "durcissement-systeme", "file": "32-durcissement-systeme.md", "day": 32, "title": "Durcissement système : allowlisting et réduction de surface" },
+        { "id": "hsm-cles", "file": "33-hsm-cles.md", "day": 33, "title": "HSM et gestion des clés hors-ligne" },
+        { "id": "securite-physique", "file": "34-securite-physique.md", "day": 34, "title": "Sécurité physique : la couche zéro" },
+        { "id": "atelier-plan-durcissement", "file": "35-atelier-plan-durcissement.md", "day": 35, "title": "Atelier : votre plan de durcissement priorisé" }
+      ]
+    },
+    {
+      "id": "m6",
+      "dir": "06-gouvernance",
+      "title": "Module 6 · Gouvernance, conformité & audit",
+      "short": "6 · Gouvernance",
+      "tier": "elite",
+      "days": "jours 36–42",
+      "summary": "Prouver l'isolation : NIS2, LPM, DORA, IEC 62443, ISO 27001, méthode d'audit en six étapes, rapport à la direction, plan 90 jours, exercice red/blue et capstone.",
+      "lessons": [
+        { "id": "nis2-lpm-dora", "file": "36-nis2-lpm-dora.md", "day": 36, "title": "NIS2, LPM, DORA : ce que « isolé » vous impose" },
+        { "id": "iec-62443-iso-27001", "file": "37-iec-62443-iso-27001.md", "day": 37, "title": "IEC 62443 et ISO 27001 : cartographier vos contrôles" },
+        { "id": "audit-air-gap", "file": "38-audit-air-gap.md", "day": 38, "title": "Auditer un air gap : la méthode en six étapes" },
+        { "id": "rapport-direction", "file": "39-rapport-direction.md", "day": 39, "title": "Le rapport à la direction : risque, coût, décision" },
+        { "id": "plan-90-jours", "file": "40-plan-90-jours.md", "day": 40, "title": "Votre plan de remédiation 90 jours" },
+        { "id": "exercice-red-blue", "file": "41-exercice-red-blue.md", "day": 41, "title": "Exercice red/blue sur table : l'isolation sous pression" },
+        { "id": "capstone", "file": "42-capstone.md", "day": 42, "title": "Capstone : le dossier d'architecture complet" }
+      ]
+    }
+  ]
+}

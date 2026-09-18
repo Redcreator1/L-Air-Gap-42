@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://giscus.app https://assets.lemonsqueezy.com https://app.lemonsqueezy.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://giscus.app https://discord.com https://*.lemonsqueezy.com; connect-src 'self' https://formspree.io https://buttondown.com https://plausible.io https://*.vercel.app; base-uri 'self'; object-src 'none'; form-action 'self'">
+  <title>Tarifs — L'Air Gap 42</title>
+  <meta name="description" content="Trois paliers pour maîtriser la sécurité des systèmes isolés : Essentiel, Pro, Elite. Paiement unique, accès à vie, garantie 14 jours.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script type="module" src="../assets/js/site.js"></script>
+  <script type="module" src="../assets/js/pages/tarifs.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero hero-short">
+      <div class="container center">
+        <span class="pill"><i class="dot"></i> <span data-cohort="label"></span> · inscriptions <span id="cd-inline" class="mono"></span></span>
+        <h1 class="mt-md">Un investissement.<br><span class="grad-text">Des années</span> d’isolation prouvée.</h1>
+        <p class="lead">Paiement unique, accès à vie, facture fournie. Toutes les offres incluent le module 0, les mises à jour et la garantie <span data-config="checkout.guaranteeDays"></span> jours.</p>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="pricing" id="pricing"></div>
+        <div class="guarantee reveal">
+          <div class="icon-box" data-icon="check"></div>
+          <div><b>Garantie <span data-config="checkout.guaranteeDays"></span> jours satisfait ou remboursé.</b><br><span class="muted small">Un e-mail suffit, tant que vous n’avez pas terminé plus de deux modules.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container grid-3">
+        <div class="card reveal"><div class="icon-box" data-icon="zap"></div><h3>Accès immédiat</h3><p class="muted small">Votre clé de licence vous est transmise juste après le paiement. Activez-la sur la page Accès et commencez dans la minute.</p></div>
+        <div class="card reveal"><div class="icon-box" data-icon="receipt"></div><h3>Facture et financement</h3><p class="muted small">Facture conforme envoyée automatiquement. Programme détaillé fourni pour votre plan de formation.</p></div>
+        <div class="card reveal"><div class="icon-box" data-icon="refresh"></div><h3>Upgrade à tout moment</h3><p class="muted small">Passez d’Essentiel à Pro ou Elite en ne payant que la différence. Votre progression est conservée.</p></div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="card reveal center card-pad">
+          <div class="eyebrow eyebrow-center">Entreprises et équipes</div>
+          <h3>Formez toute l’équipe OT / sécurité.</h3>
+          <div id="enterprise"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="center reveal"><div class="eyebrow eyebrow-center">Questions fréquentes</div><h2>Avant de choisir.</h2></div>
+        <div class="faq reveal mt-md" id="faq"></div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+</html>

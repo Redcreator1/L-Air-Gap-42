@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#35f0c3"/>
+      <stop offset=".55" stop-color="#4cc9ff"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="20%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#35f0c3" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#07090f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#07090f"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g font-family="Space Grotesk, Inter, Arial, sans-serif" fill="#e7ebf3">
+    <rect x="80" y="80" width="56" height="56" rx="14" fill="url(#g)"/>
+    <text x="96" y="118" font-size="26" font-weight="800" fill="#06110e">42</text>
+    <text x="152" y="118" font-size="30" font-weight="700">L'Air Gap 42</text>
+    <text x="80" y="270" font-size="72" font-weight="700" letter-spacing="-2">Vos systèmes ne sont pas</text>
+    <text x="80" y="350" font-size="72" font-weight="700" letter-spacing="-2">aussi <tspan fill="url(#g)">isolés</tspan> que vous le croyez.</text>
+    <text x="80" y="430" font-size="30" fill="#a7b0c2">42 jours · 6 modules · communauté · lives hebdomadaires</text>
+    <rect x="80" y="490" width="360" height="60" rx="30" fill="#35f0c3"/>
+    <text x="260" y="529" font-size="24" font-weight="700" fill="#052b22" text-anchor="middle">Rejoindre le programme</text>
+  </g>
+</svg>
