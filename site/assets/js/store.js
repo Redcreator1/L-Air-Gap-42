@@ -84,4 +84,15 @@ export const store = {
   importAll(obj) {
     for (const [k, v] of Object.entries(obj || {})) if (k !== 'license') write(k, v);
   },
+  /** Efface progression, notes, nom et préférences ; conserve la licence. */
+  resetProgress() {
+    for (const k of [...mem.keys()]) if (k !== 'license') mem.delete(k);
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith(NS) && k !== NS + 'license')
+        .forEach((k) => localStorage.removeItem(k));
+    } catch {
+      /* volatile */
+    }
+  },
 };

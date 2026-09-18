@@ -158,6 +158,110 @@ pre {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Utilitaires d'espacement et de largeur ---------- */
+.mt-sm {
+  margin-top: 12px;
+}
+.mt-md {
+  margin-top: 22px;
+}
+.mt-lg {
+  margin-top: 40px;
+}
+.mt-xl {
+  margin-top: 48px;
+}
+.mb-sm {
+  margin-bottom: 16px;
+}
+.mb-md {
+  margin-bottom: 22px;
+}
+.mb-lg {
+  margin-bottom: 30px;
+}
+.container-sm {
+  max-width: 560px;
+}
+.container-md {
+  max-width: 800px;
+}
+.card-narrow {
+  max-width: 820px;
+  margin-inline: auto;
+  padding: 36px;
+}
+.card-pad {
+  padding: 36px;
+}
+.eyebrow-center {
+  justify-content: center;
+}
+.h1-sm {
+  font-size: clamp(1.9rem, 4vw, 2.3rem);
+}
+.h3-sm {
+  font-size: 1rem;
+}
+.lead-center {
+  margin-inline: auto;
+}
+.hero-short {
+  padding-bottom: 30px;
+}
+.section-alt {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+}
+.grid-top {
+  align-items: start;
+  gap: 56px;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+.seats-wrap {
+  max-width: 320px;
+  margin: 0 auto 24px;
+}
+.footer-tagline {
+  margin-top: 14px;
+  max-width: 38ch;
+}
+.instructor-head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.instructor-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+.avatar-lg {
+  width: 56px;
+  height: 56px;
+  font-size: 1.3rem;
+}
+.terminal-left {
+  text-align: left;
+}
+.terminal-short {
+  min-height: 0;
+}
+.discord-widget {
+  margin-top: 20px;
+  border: 0;
+  border-radius: 12px;
+}
+.module-summary {
+  padding: 10px 0 6px;
+}
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -512,7 +616,14 @@ pre {
   place-items: center;
   color: var(--accent);
   margin-bottom: 18px;
-  font-size: 1.2rem;
+}
+.icon-box svg {
+  width: 22px;
+  height: 22px;
+}
+.btn svg,
+.nav-burger svg {
+  flex-shrink: 0;
 }
 .logos {
   display: flex;

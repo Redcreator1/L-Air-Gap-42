@@ -21,7 +21,7 @@ URL résultante : `https://<utilisateur>.github.io/<dépôt>/`. Elle doit corres
 2. Renseignez `site.customDomain: 'formation.exemple.com'` dans `site/config.js` → le build génère le fichier `CNAME`.
 3. Mettez `site.url` à jour.
 4. **Settings → Pages → Custom domain**, cochez *Enforce HTTPS* une fois le certificat émis.
-5. Dans `site/404.html`, remplacez les chemins `/L-Air-Gap-42/` par `/` (la page 404 est servie à n'importe quelle profondeur, elle ne peut pas utiliser de chemins relatifs).
+5. Dans `site/404.html` et `scripts/e2e.mjs` (constante `BASE`), remplacez `/L-Air-Gap-42/` par `/` : la page 404 est servie à n'importe quelle profondeur et ne peut pas utiliser de chemins relatifs.
 
 ## 2. Secrets de production
 
@@ -91,19 +91,38 @@ Puis `site/config.js` → `api.activateUrl: 'https://<projet>.vercel.app/api/act
 
 ## 6. Newsletter et analytics
 
-- `newsletter.provider` : `formspree` (le plus simple, formulaire → e-mail), `buttondown`, `convertkit` ou `mailto`.
+- `newsletter.provider` : `formspree` (formulaire → e-mail, réponse vérifiée), `buttondown` (formulaire intégré, réponse opaque) ou `mailto` (aucun service). D'autres fournisseurs se branchent dans `newsletter()` de `site/assets/js/site.js` ; testez-les avant de les activer.
 - `analytics.provider` : `plausible` ou `umami` (sans cookie, pas de bandeau nécessaire). Les événements `Checkout`, `Activate`, `Purchase`, `Newsletter` sont envoyés automatiquement.
 
-## 7. Juridique
+## 7. Politique de sécurité de contenu (CSP)
 
-`site/legal/index.html` contient CGV, mentions légales et politique de confidentialité pré-rédigées pour une vente de contenu numérique en France/UE. Remplacez les champs entre crochets. Faites relire si vous vendez à des consommateurs hors UE.
+Chaque page déclare une CSP dans une balise `<meta http-equiv="Content-Security-Policy">` (GitHub Pages ne permet pas d'en-têtes HTTP personnalisés). Elle autorise uniquement : les scripts du site, giscus, Lemon Squeezy et Plausible ; les polices Google ; les iframes giscus, Discord et Lemon Squeezy ; les connexions vers Formspree, Buttondown, Plausible et `*.vercel.app`.
 
-## 8. Vérifier le déploiement
+Si vous ajoutez un service (Umami sur votre domaine, une autre visio, un lecteur vidéo), ajoutez son origine à la directive concernée dans **toutes** les pages, puis lancez `npm run e2e` : le test échoue sur toute violation CSP. Les scripts inline sont interdits par cette politique : le code de page vit dans `site/assets/js/pages/`.
+
+## 8. Juridique et allégations commerciales
+
+- `site/legal/index.html` contient CGV, mentions légales et politique de confidentialité pré-rédigées pour une vente de contenu numérique en France/UE. Remplacez les champs entre crochets. Faites relire si vous vendez à des consommateurs hors UE.
+- Les prix sont affichés avec la mention de `checkout.priceNote` (HT par défaut). Pour une vente à des consommateurs en France, affichez des prix TTC.
+- `testimonials`, `cohort.seatsLeft` et `site.instructor` sont vides ou neutres par défaut : ne renseignez que des témoignages réels (avec accord écrit), des places réellement disponibles et une expérience vérifiable. Une allégation fausse relève des pratiques commerciales trompeuses.
+
+## 9. Vérifier le déploiement
 
 1. Ouvrez le site : le bandeau « Mode démo » ne doit **plus** apparaître.
 2. Page **Accès** : saisissez une vraie clé de licence de chaque palier, vérifiez que les bons modules s'ouvrent.
 3. Testez un achat réel à 1 € (créez un prix temporaire) de bout en bout : paiement → e-mail → activation.
 4. Vérifiez `sitemap.xml`, `feed.xml`, et soumettez le site à la Search Console.
+
+## 10. Tests
+
+```bash
+npm run check                     # curriculum, quiz, liens, chiffrement (sans navigateur)
+npm ci && npx playwright install chromium
+npm run build && npm run e2e      # parcours complet dans Chromium, sous /L-Air-Gap-42/
+SHOTS=1 npm run e2e               # + captures d'écran dans .e2e-shots/
+```
+
+Le workflow `ci.yml` exécute les deux sur chaque pull request ; `deploy.yml` exécute `check` avant chaque publication.
 
 ## Dépannage
 

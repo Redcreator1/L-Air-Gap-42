@@ -10,14 +10,16 @@ Programme de 42 jours sur la sécurité des systèmes isolés (air gap, OT/ICS, 
 | Paiement | Stripe Payment Links ou Lemon Squeezy (configurable) |
 | Accès | Contenu premium chiffré AES-256-GCM au build, déverrouillé par clé de licence dans le navigateur |
 | Communauté | Discord + GitHub Discussions (giscus sous chaque leçon) + lives hebdomadaires + newsletter |
-| Dépendances | Aucune. Node ≥ 20 pour le build. |
+| Dépendances | Aucune à l'exécution ni au build (Node ≥ 20). Playwright en développement pour les tests. |
+| Sécurité | CSP sur chaque page, aucun script inline, Markdown rendu sans HTML brut, contenu déchiffré localement |
 
 ## Démarrer en 60 secondes
 
 ```bash
-npm run check   # valide curriculum, quiz, liens, chiffrement
+npm run check   # valide curriculum, quiz, liens, chiffrement (aucune dépendance)
 npm run build   # génère dist/ (mode démo si aucun secret)
 npm run dev     # http://localhost:4242
+npm ci && npx playwright install chromium && npm run e2e   # parcours complet dans Chromium
 ```
 
 Licences de démonstration (mode démo uniquement) : `AG42-DEMO-ESSENTIEL-2026`, `AG42-DEMO-PRO-2026`, `AG42-DEMO-ELITE-2026`. Saisissez-les sur la page **Accès**.
@@ -37,15 +39,18 @@ Le guide détaillé : [`docs/SETUP.md`](docs/SETUP.md). La stratégie de vente :
 site/                 pages statiques (HTML/CSS/JS, sans framework)
   config.js           configuration unique : offres, prix, cohorte, communauté, analytics
   assets/js/site.js   navigation, tarifs, FAQ, compte à rebours, newsletter
+  assets/js/pages/    code propre à chaque page (programme, tarifs, accès, communauté, merci)
   assets/js/app.js    espace membre : tableau de bord, leçons, quiz, notes, certificat
   assets/js/crypto.js déchiffrement WebCrypto (PBKDF2 → AES-GCM)
   assets/js/md.js     rendu Markdown maison (hors-ligne, sans CDN)
+  assets/js/icons.js  icônes SVG inline
 content/
   curriculum.json     modules, leçons, paliers
   modules/**/*.md     leçons en Markdown + frontmatter + bloc ```quiz
 scripts/
   build.mjs           site/ + content/ → dist/ (chiffrement des modules premium)
   check.mjs           validations + test de bout en bout du chiffrement
+  e2e.mjs             parcours complet dans Chromium (Playwright)
   keygen.mjs          génération des secrets de production
   dev.mjs             serveur local
 api/activate.js       (optionnel) fonction Vercel : licence individuelle → clé de contenu

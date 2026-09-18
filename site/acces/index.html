@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://giscus.app https://assets.lemonsqueezy.com https://app.lemonsqueezy.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://giscus.app https://discord.com https://*.lemonsqueezy.com; connect-src 'self' https://formspree.io https://buttondown.com https://plausible.io https://*.vercel.app; base-uri 'self'; object-src 'none'; form-action 'self'">
   <title>Activer ma licence — L'Air Gap 42</title>
   <meta name="description" content="Activez votre clé de licence pour déverrouiller le programme L'Air Gap 42 dans votre navigateur.">
   <meta name="robots" content="noindex">
@@ -12,75 +13,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/main.css">
   <script type="module" src="../assets/js/site.js"></script>
+  <script type="module" src="../assets/js/pages/acces.js"></script>
 </head>
 <body>
   <header id="nav"></header>
   <main>
     <section class="hero">
-      <div class="container" style="max-width:560px">
+      <div class="container container-sm">
         <div class="eyebrow">Accès membre</div>
-        <h1 style="font-size:2.2rem">Activez votre licence.</h1>
+        <h1 class="h1-sm">Activez votre licence.</h1>
         <p class="lead">Saisissez la clé reçue après votre achat. Elle déchiffre le programme directement dans ce navigateur : rien n’est envoyé à un serveur.</p>
-        <form id="activate" class="card" style="margin-top:20px">
+        <form id="activate" class="card mt-md" novalidate>
           <div class="field">
             <label for="key">Clé de licence</label>
             <input type="text" id="key" class="mono" placeholder="AG42-XXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false" required>
           </div>
           <button class="btn btn-primary btn-block" type="submit" id="submit">Déverrouiller le programme</button>
-          <div id="msg" style="margin-top:14px"></div>
+          <div id="msg" class="mt-sm" aria-live="polite"></div>
         </form>
-        <div class="card" style="margin-top:16px">
-          <h3 style="font-size:1rem">Pas encore de clé ?</h3>
-          <p class="muted small">Le module 0 est en accès libre dans <a href="../app/">l’espace membre</a>. Pour le reste du programme, <a href="../tarifs/">choisissez votre palier</a>. Clé perdue ? Écrivez-nous depuis l’adresse utilisée à l’achat : <a data-href="site.contactEmail" href="#" id="mail"></a>.</p>
+        <div class="card mt-sm">
+          <h3 class="h3-sm">Pas encore de clé ?</h3>
+          <p class="muted small">Le module 0 est en accès libre dans <a href="../app/">l’espace membre</a>. Pour le reste du programme, <a href="../tarifs/">choisissez votre palier</a>. Clé perdue ? Écrivez-nous depuis l’adresse utilisée à l’achat : <a data-mailto href="#"></a>.</p>
         </div>
       </div>
     </section>
   </main>
   <footer id="footer"></footer>
-
-  <script type="module">
-    import { config, url } from '../assets/js/site.js';
-    import { store } from '../assets/js/store.js';
-    import { unwrapWithLicense, fingerprint, normalizeLicense } from '../assets/js/crypto.js';
-
-    const mail = document.getElementById('mail');
-    mail.textContent = config.site.contactEmail;
-    mail.href = 'mailto:' + config.site.contactEmail;
-
-    const form = document.getElementById('activate');
-    const input = document.getElementById('key');
-    const msg = document.getElementById('msg');
-    const btn = document.getElementById('submit');
-    const params = new URLSearchParams(location.search);
-    if (params.get('key')) input.value = params.get('key');
-    const existing = store.getLicense();
-    if (existing) msg.innerHTML = `<div class="notice ok">Une licence <b>${existing.tier}</b> est déjà active sur cet appareil. <a href="${url('app/')}">Aller à mon parcours →</a></div>`;
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      btn.disabled = true;
-      msg.innerHTML = '<div class="notice">Vérification cryptographique en cours…</div>';
-      try {
-        let license = normalizeLicense(input.value);
-        // Mode API optionnel : une clé Lemon Squeezy / Stripe est échangée contre la clé de contenu.
-        if (config.api.activateUrl) {
-          const r = await fetch(config.api.activateUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ license }) });
-          const j = await r.json().catch(() => ({}));
-          if (!r.ok || !j.contentLicense) throw new Error(j.error || 'Licence refusée par le serveur d’activation.');
-          license = j.contentLicense;
-        }
-        const keysFile = await (await fetch(url('data/keys.json'), { cache: 'no-store' })).json();
-        const res = await unwrapWithLicense(keysFile, license);
-        if (!res) throw new Error('Clé invalide. Vérifiez les caractères (pas de O/0 ni I/1 ambigus) ou contactez le support.');
-        store.setLicense({ tier: res.tier, keys: res.keys, fp: await fingerprint(license), activatedAt: Date.now() });
-        msg.innerHTML = `<div class="notice ok">Licence <b>${res.tier}</b> activée. Redirection vers votre parcours…</div>`;
-        if (window.plausible) window.plausible('Activate', { props: { tier: res.tier } });
-        setTimeout(() => (location.href = url('app/')), 900);
-      } catch (err) {
-        msg.innerHTML = `<div class="notice err">${String(err.message).replace(/</g, '&lt;')}</div>`;
-        btn.disabled = false;
-      }
-    });
-  </script>
 </body>
 </html>

@@ -152,6 +152,84 @@
   border-style: dashed;
   color: var(--text-3);
 }
+.side-lessons .state svg {
+  width: 10px;
+  height: 10px;
+  stroke-width: 3;
+}
+.side-actions {
+  margin-top: 20px;
+  display: grid;
+  gap: 8px;
+}
+.lesson-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.lesson-meta svg {
+  width: 14px;
+  height: 14px;
+}
+.dash-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.dash-mod,
+.dash-mod:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.dash-mod:hover {
+  border-color: var(--border-strong);
+}
+.dash-mod h3 {
+  margin-top: 12px;
+}
+.dash-mod .pct {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.dash-mod .pct svg {
+  width: 12px;
+  height: 12px;
+}
+.lock-screen .icon-box svg {
+  width: 28px;
+  height: 28px;
+}
+.lock-screen p {
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.lock-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+.resources a svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.certificate.pending {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-danger-text {
+  color: var(--danger);
+}
 
 .main {
   padding: 32px clamp(16px, 4vw, 56px) 80px;
@@ -300,8 +378,33 @@
 }
 .quiz-q {
   margin: 18px 0;
-  padding-top: 18px;
+  padding: 18px 0 0;
+  border: 0;
   border-top: 1px dashed var(--border);
+}
+.quiz-q legend {
+  padding: 0;
+}
+.side-progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.accent {
+  color: var(--accent);
+}
+.ok-text {
+  color: var(--success);
+}
+.warn-text {
+  color: var(--accent-2);
+}
+.search-hits {
+  display: block;
+  margin-top: 8px;
+}
+.search-empty {
+  padding: 8px 4px;
 }
 .quiz-q p {
   font-weight: 600;

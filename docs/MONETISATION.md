@@ -55,7 +55,8 @@ Quatre cohortes par an + upgrades + entreprise : un objectif de 250 à 300 k€ 
 
 ## Ce qu'il faut préparer avant la première cohorte
 
-- [ ] 20 témoignages réels (offrez la cohorte 0 à 10 personnes de votre réseau contre un retour écrit et un témoignage). Les témoignages de `config.testimonials` sont des exemples à remplacer.
+- [ ] Des témoignages réels (offrez la cohorte 0 à 10 personnes de votre réseau contre un retour écrit et un accord de publication). `config.testimonials` est vide par défaut et la section reste masquée tant qu'il le reste : le site ne publie aucun témoignage fictif.
+- [ ] La présentation du formateur (`site.instructor`), avec une expérience vérifiable. La section est masquée tant que le nom est vide.
 - [ ] Le lead magnet (PDF de 8 pages) et 5 e-mails de séquence d'accueil.
 - [ ] La bibliothèque de templates Pro (politique de médias, matrice de flux, runbook, checklist d'audit, rapport direction) au format docx/xlsx, livrée via un dossier partagé dont le lien est dans une leçon du module 3.
 - [ ] Le kit d'audit Elite (grilles, modèles de rapport, lettre d'autorisation de test).
