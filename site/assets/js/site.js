@@ -4,7 +4,6 @@
  * Chaque bloc ne s'exécute que si son conteneur existe dans la page.
  */
 import config from '../../config.js';
-import { store } from './store.js';
 import { icon, applyIcons } from './icons.js';
 
 export const BASE = new URL('../../', import.meta.url).pathname; // ex : /L-Air-Gap-42/
@@ -37,9 +36,8 @@ function renderNav() {
     ['programme/', 'Programme'],
     ['tarifs/', 'Tarifs'],
     ['communaute/', 'Communauté'],
-    ['app/', 'Espace membre'],
+    ['jouer/', 'Jouer'],
   ];
-  const lic = store.getLicense();
   host.className = 'nav';
   host.innerHTML = `
     <div class="container">
@@ -48,7 +46,7 @@ function renderNav() {
         ${links.map(([p, l]) => `<li><a href="${url(p)}" ${here === '/' + p ? 'aria-current="page"' : ''}>${l}</a></li>`).join('')}
       </ul>
       <div class="nav-cta">
-        ${lic ? `<a class="btn btn-ghost btn-sm" href="${url('app/')}">Mon parcours · ${esc(TIER_LABEL[lic.tier] || lic.tier)}</a>` : `<a class="btn btn-ghost btn-sm" href="${url('acces/')}">J’ai une licence</a>`}
+        <a class="btn btn-ghost btn-sm" href="${url('jouer/')}">Commencer</a>
         <a class="btn btn-primary btn-sm" href="${url('tarifs/')}">Rejoindre</a>
         <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false">${icon('menu', 22)}</button>
       </div>
@@ -73,7 +71,7 @@ function renderFooter() {
         <div><h4>Programme</h4><ul>
           <li><a href="${url('programme/')}">Les 6 modules</a></li>
           <li><a href="${url('tarifs/')}">Tarifs</a></li>
-          <li><a href="${url('app/#/m/m0/pourquoi-air-gap')}">Briefing gratuit</a></li>
+          <li><a href="${url('jouer/')}">Mode d’emploi</a></li>
           <li><a href="${url('feed.xml')}">Flux RSS</a></li>
         </ul></div>
         <div><h4>Communauté</h4><ul>
@@ -87,7 +85,7 @@ function renderFooter() {
           <li><a href="${url('communaute/')}">Sessions live</a></li>
         </ul></div>
         <div><h4>Support</h4><ul>
-          <li><a href="${url('acces/')}">Activer ma licence</a></li>
+          <li><a href="${url('acces/')}">Ma clé de licence</a></li>
           <li><a href="mailto:${esc(config.site.contactEmail)}">Contact</a></li>
           <li><a href="${url('legal/')}">CGV & mentions légales</a></li>
         </ul></div>
@@ -99,23 +97,14 @@ function renderFooter() {
     </div>`;
 }
 
-// ---------- Mode démo ----------
-async function demoBanner() {
+// ---------- Informations de build ----------
+async function buildInfo() {
   try {
     const r = await fetch(url('data/build.json'), { cache: 'no-store' });
     if (!r.ok) return;
     const b = await r.json();
     const bi = $('#build-info');
     if (bi) bi.textContent = `build ${b.commit} · ${new Date(b.builtAt).toLocaleDateString('fr-FR')}`;
-    if (b.prelaunch) document.documentElement.classList.add('prelaunch');
-    if (b.demo || b.prelaunch) {
-      const el = document.createElement('div');
-      el.className = 'demo-banner';
-      el.innerHTML = b.prelaunch
-        ? `Pré-lancement : le module 0 est en accès libre, le programme complet ouvre avec la prochaine cohorte.`
-        : `Mode démo : secrets non configurés. Licences de test — Essentiel <code>${esc(b.demoLicenses.essentiel)}</code> · Pro <code>${esc(b.demoLicenses.pro)}</code> · Elite <code>${esc(b.demoLicenses.elite)}</code>`;
-      document.body.prepend(el);
-    }
   } catch {
     /* page servie sans build (ouverture directe de site/) */
   }
@@ -377,5 +366,5 @@ document.addEventListener('DOMContentLoaded', () => {
   terminal();
   applyIcons();
   reveal();
-  demoBanner();
+  buildInfo();
 });

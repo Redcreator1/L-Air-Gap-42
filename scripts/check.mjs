@@ -1,160 +1,153 @@
 #!/usr/bin/env node
 /**
- * Vérifications avant build / en CI :
- *  1. curriculum.json cohérent (ids uniques, fichiers présents, jours croissants)
- *  2. chaque leçon a un frontmatter valide, un quiz JSON valide avec réponse dans les choix
- *  3. les liens internes des pages du site pointent vers des fichiers existants
- *  4. test de bout en bout du chiffrement : build en mémoire → déchiffrement avec la clé démo
- * Sort avec un code ≠ 0 en cas d'erreur. Aucune dépendance.
+ * Vérifications avant build et en intégration continue :
+ *   1. curriculum.json cohérent (identifiants uniques, fichiers présents, jours croissants)
+ *   2. chaque leçon a un quiz valide dont la réponse figure parmi les choix
+ *   3. les liens internes des pages du site pointent vers des fichiers existants
+ *   4. l'archive de niveaux correspond à content/niveaux.json (taille et empreinte)
+ *   5. un niveau libre se déchiffre réellement avec openssl, comme chez l'apprenant
+ *
+ * Aucune dépendance npm. Sort avec un code ≠ 0 en cas d'erreur.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { webcrypto as crypto } from 'node:crypto';
+import { createHash } from 'node:crypto';
+import os from 'node:os';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const errors = [];
-const warn = [];
-const err = (m) => errors.push(m);
+const SITE = path.join(ROOT, 'site');
+const erreurs = [];
+const alertes = [];
+const err = (m) => erreurs.push(m);
 
-// ---------- 1 & 2 : curriculum + leçons ----------
+// ---------- 1 & 2 : curriculum et quiz ----------
 const cur = JSON.parse(await fs.readFile(path.join(ROOT, 'content/curriculum.json'), 'utf8'));
 const ids = new Set();
-let lessons = 0;
+let lecons = 0;
 for (const m of cur.modules) {
-  if (!['free', 'essentiel', 'pro', 'elite'].includes(m.tier)) err(`Module ${m.id} : tier inconnu « ${m.tier} »`);
-  if (ids.has(m.id)) err(`Module ${m.id} : id dupliqué`);
+  if (!['free', 'essentiel', 'pro', 'elite'].includes(m.tier)) err(`Module ${m.id} : palier inconnu « ${m.tier} »`);
+  if (ids.has(m.id)) err(`Module ${m.id} : identifiant dupliqué`);
   ids.add(m.id);
-  let lastDay = 0;
+  let dernierJour = 0;
   for (const l of m.lessons) {
-    lessons++;
-    const key = `${m.id}/${l.id}`;
-    if (ids.has(key)) err(`Leçon ${key} : id dupliqué`);
-    ids.add(key);
+    lecons++;
+    const cle = `${m.id}/${l.id}`;
+    if (ids.has(cle)) err(`Leçon ${cle} : identifiant dupliqué`);
+    ids.add(cle);
     if (l.day !== undefined) {
-      if (l.day <= lastDay) err(`Leçon ${key} : jour ${l.day} non croissant`);
-      lastDay = l.day;
+      if (l.day <= dernierJour) err(`Leçon ${cle} : jour ${l.day} non croissant`);
+      dernierJour = l.day;
     }
-    const file = path.join(ROOT, 'content/modules', m.dir, l.file);
-    let raw;
+    const fichier = path.join(ROOT, 'content/modules', m.dir, l.file);
+    let brut;
     try {
-      raw = await fs.readFile(file, 'utf8');
+      brut = await fs.readFile(fichier, 'utf8');
     } catch {
-      err(`Leçon ${key} : fichier manquant ${path.relative(ROOT, file)}`);
+      err(`Leçon ${cle} : fichier manquant ${path.relative(ROOT, fichier)}`);
       continue;
     }
-    if (!/^---\n[\s\S]*?\n---\n/.test(raw)) warn.push(`Leçon ${key} : pas de frontmatter (minutes calculées automatiquement)`);
-    const words = raw.split(/\s+/).length;
-    if (words < 150) warn.push(`Leçon ${key} : contenu court (${words} mots)`);
-    const quizzes = [...raw.matchAll(/```quiz\s*\n([\s\S]*?)```/g)];
-    for (const [, json] of quizzes) {
+    const mots = brut.split(/\s+/).length;
+    if (mots < 150) alertes.push(`Leçon ${cle} : contenu court (${mots} mots)`);
+    const blocs = [...brut.matchAll(/```quiz\s*\n([\s\S]*?)```/g)];
+    if (blocs.length === 0) alertes.push(`Leçon ${cle} : aucun quiz, le niveau sera validé sans question`);
+    for (const [, json] of blocs) {
       let q;
       try {
         q = JSON.parse(json);
       } catch (e) {
-        err(`Leçon ${key} : quiz JSON invalide (${e.message})`);
+        err(`Leçon ${cle} : quiz JSON invalide (${e.message})`);
         continue;
       }
       for (const [i, item] of (Array.isArray(q) ? q : [q]).entries()) {
-        if (!item.q || !Array.isArray(item.choices) || item.choices.length < 2) err(`Leçon ${key} : quiz #${i + 1} incomplet`);
-        else if (typeof item.answer !== 'number' || item.answer < 0 || item.answer >= item.choices.length) err(`Leçon ${key} : quiz #${i + 1} réponse hors choix`);
+        if (!item.q || !Array.isArray(item.choices) || item.choices.length < 2) err(`Leçon ${cle} : quiz #${i + 1} incomplet`);
+        else if (typeof item.answer !== 'number' || item.answer < 0 || item.answer >= item.choices.length) err(`Leçon ${cle} : quiz #${i + 1} réponse hors choix`);
+        else if (item.choices.length > 4) err(`Leçon ${cle} : quiz #${i + 1} — 4 choix maximum (le lanceur attend a, b, c ou d)`);
       }
     }
   }
 }
 
-// ---------- 3 : liens internes du site ----------
-const SITE = path.join(ROOT, 'site');
-async function walk(dir) {
+// ---------- 3 : liens internes ----------
+async function parcourir(dir) {
   const out = [];
   for (const e of await fs.readdir(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...(await walk(p)));
+    if (e.isDirectory()) out.push(...(await parcourir(p)));
     else out.push(p);
   }
   return out;
 }
-const generated = new Set(['sitemap.xml', 'feed.xml', 'robots.txt', 'CNAME', 'data']);
-for (const file of (await walk(SITE)).filter((f) => f.endsWith('.html'))) {
-  const html = await fs.readFile(file, 'utf8');
-  // Uniquement le HTML statique : on ignore les <script> (gabarits JS) et les attributs data-href.
-  const staticHtml = html.replace(/<script[\s\S]*?<\/script>/g, '');
-  for (const [, ref] of staticHtml.matchAll(/(?<![\w-])(?:href|src)="([^"#?]+)/g)) {
+const genere = new Set(['sitemap.xml', 'feed.xml', 'robots.txt', 'CNAME', 'data']);
+for (const fichier of (await parcourir(SITE)).filter((f) => f.endsWith('.html'))) {
+  const html = (await fs.readFile(fichier, 'utf8')).replace(/<script[\s\S]*?<\/script>/g, '');
+  for (const [, ref] of html.matchAll(/(?<![\w-])(?:href|src)="([^"#?]+)/g)) {
     if (/^(https?:|mailto:|data:|\/\/|#)/.test(ref) || ref.startsWith('/L-Air-Gap-42/') || ref.includes('${')) continue;
-    const clean = ref.replace(/#.*$/, '');
-    const target = path.resolve(path.dirname(file), clean);
-    const rel = path.relative(SITE, target);
-    if (generated.has(rel.split(path.sep)[0])) continue;
-    const exists = await fs
-      .stat(target)
-      .then((s) => (s.isDirectory() ? fs.stat(path.join(target, 'index.html')).then(() => true) : true))
+    const cible = path.resolve(path.dirname(fichier), ref.replace(/#.*$/, ''));
+    const rel = path.relative(SITE, cible);
+    if (genere.has(rel.split(path.sep)[0])) continue;
+    const existe = await fs
+      .stat(cible)
+      .then((s) => (s.isDirectory() ? fs.stat(path.join(cible, 'index.html')).then(() => true) : true))
       .catch(() => false);
-    if (!exists) err(`${path.relative(ROOT, file)} : lien cassé « ${ref} »`);
+    if (!existe) err(`${path.relative(ROOT, fichier)} : lien cassé « ${ref} »`);
   }
 }
 
-// ---------- 4 : test de bout en bout du chiffrement ----------
-{
-  const tmp = await fs.mkdtemp(path.join(ROOT, '.check-'));
-  try {
-    // Build vers dist/ (le script ne prend pas de destination : on sauvegarde/restaure dist/ si présent)
-    const distPath = path.join(ROOT, 'dist');
-    const hadDist = await fs.stat(distPath).then(() => true).catch(() => false);
-    if (hadDist) await fs.rename(distPath, path.join(tmp, 'dist-backup'));
-    execFileSync(process.execPath, [path.join(ROOT, 'scripts/build.mjs')], { stdio: 'pipe', env: { ...process.env, CONTENT_MASTER_SECRET: '', LICENSE_KEY_ESSENTIEL: '', LICENSE_KEY_PRO: '', LICENSE_KEY_ELITE: '' } });
-    const keys = JSON.parse(await fs.readFile(path.join(distPath, 'data/keys.json'), 'utf8'));
-    const build = JSON.parse(await fs.readFile(path.join(distPath, 'data/build.json'), 'utf8'));
-    // Réimplémentation minimale du client (miroir de site/assets/js/crypto.js)
-    const enc = new TextEncoder();
-    const dec = new TextDecoder();
-    const b64d = (s) => Uint8Array.from(Buffer.from(s, 'base64'));
-    const pbkdf2 = async (pass, salt, it) => {
-      const k = await crypto.subtle.importKey('raw', enc.encode(pass.trim().toUpperCase().replace(/\s+/g, '')), 'PBKDF2', false, ['deriveBits']);
-      return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: it }, k, 256));
-    };
-    const aes = async (raw, { iv, ct }) => {
-      const k = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
-      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(iv) }, k, b64d(ct));
-    };
-    const expect = { essentiel: ['m1', 'm2'], pro: ['m1', 'm2', 'm3', 'm4', 'm5'], elite: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6'] };
-    for (const [lic, pass] of Object.entries(build.demoLicenses)) {
-      const entry = keys.licenses[lic];
-      const wrap = await pbkdf2(pass, b64d(entry.salt), keys.iterations);
-      const check = dec.decode(await aes(wrap, entry.check));
-      if (check !== `ok:${lic}`) err(`Crypto : contrôle d'enveloppe ${lic} échoué`);
-      const contentKeys = {};
-      for (const [tier, blob] of Object.entries(entry.keys)) contentKeys[tier] = new Uint8Array(await aes(wrap, blob));
-      for (const modId of expect[lic]) {
-        const encFile = JSON.parse(await fs.readFile(path.join(distPath, `data/modules/${modId}.enc.json`), 'utf8'));
-        if (!contentKeys[encFile.tier]) {
-          err(`Crypto : licence ${lic} devrait ouvrir ${modId} (tier ${encFile.tier})`);
-          continue;
-        }
-        const payload = JSON.parse(dec.decode(await aes(contentKeys[encFile.tier], encFile)));
-        if (!payload.lessons || Object.keys(payload.lessons).length === 0) err(`Crypto : module ${modId} vide après déchiffrement`);
+// ---------- 4 & 5 : archive de niveaux ----------
+const niveaux = await fs.readFile(path.join(ROOT, 'content/niveaux.json'), 'utf8').then(JSON.parse).catch(() => null);
+if (!niveaux) {
+  err('content/niveaux.json absent : lancez « npm run lab ».');
+} else {
+  if (niveaux.niveaux.length !== lecons) err(`L’archive décrit ${niveaux.niveaux.length} niveaux pour ${lecons} leçons : relancez « npm run lab ».`);
+  const archive = path.join(SITE, 'telechargements', niveaux.archive.nom);
+  const contenu = await fs.readFile(archive).catch(() => null);
+  if (!contenu) err(`Archive ${niveaux.archive.nom} absente : lancez « npm run lab ».`);
+  else {
+    if (contenu.length !== niveaux.archive.octets) err('Taille de l’archive différente de content/niveaux.json : relancez « npm run lab ».');
+    const empreinte = createHash('sha256').update(contenu).digest('hex');
+    if (empreinte !== niveaux.archive.sha256) err('Empreinte de l’archive différente de content/niveaux.json : relancez « npm run lab ».');
+
+    // Déchiffrement réel d'un niveau libre, avec la même commande que le lanceur.
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'ag42-'));
+    try {
+      execFileSync('tar', ['xzf', archive, '-C', tmp], { stdio: 'pipe' });
+      const base = path.join(tmp, 'airgap42-labs', 'niveaux');
+      const libre = niveaux.niveaux.find((n) => n.palier === 'libre');
+      const ouvrir = (fichier, passe) =>
+        execFileSync('openssl', ['enc', '-d', '-aes-256-cbc', '-pbkdf2', '-iter', '310000', '-md', 'sha256', '-base64', '-pass', `pass:${passe}`, '-in', fichier], { stdio: ['ignore', 'pipe', 'ignore'] }).toString();
+      const cle = ouvrir(path.join(base, `${libre.id}.k.libre`), `libre:${libre.id}`).split('\n')[1];
+      const texte = ouvrir(path.join(base, `${libre.id}.enc`), cle);
+      if (!texte.startsWith('AG42/1')) err('Niveau libre : marqueur d’intégrité absent après déchiffrement.');
+      if (texte.length < 500) err('Niveau libre : contenu déchiffré anormalement court.');
+      // Une clé bidon ne doit rien ouvrir.
+      let ouvertParErreur = false;
+      try {
+        ouvertParErreur = ouvrir(path.join(base, `${libre.id}.enc`), 'cle-invalide').startsWith('AG42/1');
+      } catch {
+        /* openssl échoue : comportement attendu */
       }
-      // Une licence inférieure ne doit PAS avoir la clé des paliers supérieurs
-      const forbidden = lic === 'essentiel' ? ['pro', 'elite'] : lic === 'pro' ? ['elite'] : [];
-      for (const t of forbidden) if (contentKeys[t]) err(`Crypto : licence ${lic} ne doit pas contenir la clé ${t}`);
+      if (ouvertParErreur) err('Une clé invalide a ouvert un niveau.');
+      // Un niveau payant ne doit pas être ouvrable avec la licence publique.
+      const paye = niveaux.niveaux.find((n) => n.palier !== 'libre');
+      if (paye) {
+        const enveloppes = (await fs.readdir(base)).filter((f) => f.startsWith(`${paye.id}.k.`));
+        if (enveloppes.includes(`${paye.id}.k.libre`)) err(`Niveau payant ${paye.id} : une enveloppe « libre » a été publiée.`);
+        if (enveloppes.length === 0) err(`Niveau payant ${paye.id} : aucune enveloppe de clé.`);
+      }
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
     }
-    // Mauvaise licence → aucune enveloppe ne s'ouvre
-    const bad = await pbkdf2('AG42-FAUX-00000', b64d(keys.licenses.pro.salt), keys.iterations);
-    const opened = await aes(bad, keys.licenses.pro.check).then(() => true).catch(() => false);
-    if (opened) err('Crypto : une licence invalide a ouvert une enveloppe');
-    await fs.rm(distPath, { recursive: true, force: true });
-    if (hadDist) await fs.rename(path.join(tmp, 'dist-backup'), distPath);
-  } finally {
-    await fs.rm(tmp, { recursive: true, force: true });
   }
 }
 
-// ---------- Rapport ----------
-console.log(`\n▶ check : ${cur.modules.length} modules, ${lessons} leçons`);
-for (const w of warn) console.log(`  ⚠ ${w}`);
-if (errors.length) {
-  for (const e of errors) console.error(`  ✖ ${e}`);
-  console.error(`\n✖ ${errors.length} erreur(s)\n`);
+// ---------- rapport ----------
+console.log(`\n▶ check : ${cur.modules.length} modules, ${lecons} leçons, ${niveaux?.niveaux.length ?? 0} niveaux`);
+for (const a of alertes) console.log(`  ⚠ ${a}`);
+if (erreurs.length) {
+  for (const e of erreurs) console.error(`  ✖ ${e}`);
+  console.error(`\n✖ ${erreurs.length} erreur(s)\n`);
   process.exit(1);
 }
-console.log('✔ curriculum, quiz, liens et chiffrement OK\n');
+console.log('✔ curriculum, quiz, liens et archive de niveaux OK\n');

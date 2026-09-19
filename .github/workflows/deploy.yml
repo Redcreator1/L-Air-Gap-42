@@ -29,15 +29,9 @@ jobs:
         run: npm run check
 
       - name: Build
+        # Aucun secret : l'archive de niveaux est déjà chiffrée et versionnée dans le dépôt.
         env:
-          # Sans ces secrets, PUBLIC_DEPLOY=1 fait publier le site SANS le contenu payant :
-          # la clé de démonstration est publique, elle ne doit jamais ouvrir les 42 leçons.
-          CONTENT_MASTER_SECRET: ${{ secrets.CONTENT_MASTER_SECRET }}
-          LICENSE_KEY_ESSENTIEL: ${{ secrets.LICENSE_KEY_ESSENTIEL }}
-          LICENSE_KEY_PRO: ${{ secrets.LICENSE_KEY_PRO }}
-          LICENSE_KEY_ELITE: ${{ secrets.LICENSE_KEY_ELITE }}
           SITE_URL: ${{ vars.SITE_URL }}
-          PUBLIC_DEPLOY: '1'
         run: npm run build
 
       - name: Publier sur gh-pages

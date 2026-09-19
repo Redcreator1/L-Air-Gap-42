@@ -29,13 +29,13 @@ export default {
 
   // ---------- Cohorte (page d'accueil et Tarifs) ----------
   cohort: {
-    label: 'Cohorte Automne 2026',
+    label: 'Cohorte 1 · Automne 2026',
     // Clôture des inscriptions (ISO 8601). Passée → le compte à rebours affiche « inscriptions closes ».
-    closesAt: '2026-10-15T21:59:59Z',
+    closesAt: '2026-10-04T21:59:59Z',
     // Places réelles. Mettez seatsLeft à jour à chaque vente, ou laissez seats === seatsLeft.
     seats: 42,
     seatsLeft: 42,
-    startsOn: '20 octobre 2026',
+    startsOn: '20 septembre 2026',
   },
 
   // ---------- Offres ----------
@@ -47,7 +47,7 @@ export default {
     // PayPal. Deux options, au choix :
     //
     //  A. Boutons PayPal (recommandé) : renseignez `clientId`. Le paiement se fait sur place et,
-    //     si `api.activateUrl` est configuré, l'accès est activé automatiquement après paiement.
+    //     si `api.activateUrl` est configuré, la clé de licence s'affiche aussitôt après paiement.
     //     L'identifiant client est PUBLIC : https://developer.paypal.com/dashboard/applications
     //     Commencez en bac à sable (`sandbox: true`) avec un compte acheteur de test.
     //
@@ -125,8 +125,8 @@ export default {
     guaranteeDays: 14,
   },
 
-  // ---------- Activation par API (optionnel, dossier api/ déployé sur Vercel) ----------
-  // Vide = mode 100 % statique : la clé de licence déchiffre directement dans le navigateur.
+  // ---------- Délivrance de la clé par API (optionnel, dossier api/ déployé sur Vercel) ----------
+  // Vide = la clé de licence est envoyée par e-mail après vérification manuelle du paiement.
   api: {
     activateUrl: '', // ex : 'https://airgap42-api.vercel.app/api/activate'
   },
