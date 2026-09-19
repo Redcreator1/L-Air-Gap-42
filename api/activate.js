@@ -1,28 +1,28 @@
 /**
- * Fonction serverless OPTIONNELLE (Vercel) : échange une preuve d'achat contre la clé de contenu
- * du palier correspondant.
+ * Fonction serverless OPTIONNELLE (Vercel) : encaisse et vérifie une commande PayPal, puis
+ * renvoie la clé de contenu du palier acheté.
  *
- * Deux usages :
- *  - Stripe : l'acheteur est redirigé vers /merci/?session_id=cs_… ; la page échange cet
- *    identifiant de session contre la clé. Aucune saisie, aucun e-mail à attendre.
- *  - Lemon Squeezy : l'acheteur saisit sa clé de licence personnelle (révocable côté Lemon Squeezy).
- *
- * Sans cette fonction, le site reste 100 % statique : la clé du palier est transmise par e-mail
- * et saisie sur la page Accès.
+ * Pourquoi côté serveur : le bouton PayPal construit la commande dans le navigateur, donc le
+ * montant n'est pas digne de confiance. Cette fonction relit la commande chez PayPal, vérifie
+ * qu'elle est réglée et que le montant correspond bien au tarif du palier annoncé, et seulement
+ * alors délivre la clé. Sans elle, le site reste 100 % statique : la clé du palier est envoyée
+ * par e-mail et saisie sur la page Accès.
  *
  * Déploiement : `vercel deploy` à la racine (vercel.json fourni), puis
  * site/config.js → api.activateUrl = 'https://<projet>.vercel.app/api/activate'.
  *
  * Variables d'environnement :
- *   LICENSE_KEY_ESSENTIEL / LICENSE_KEY_PRO / LICENSE_KEY_ELITE   (mêmes valeurs que les secrets GitHub)
- *   STRIPE_SECRET_KEY + STRIPE_PRICE_ESSENTIEL / _PRO / _ELITE    (affichés par npm run stripe:setup)
- *   LEMONSQUEEZY_API_KEY + LS_VARIANT_ESSENTIEL / _PRO / _ELITE   (si Lemon Squeezy)
- *   ALLOWED_ORIGIN                                                 (ex : https://redcreator1.github.io)
+ *   PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET   identifiants de l'application PayPal
+ *   PAYPAL_SANDBOX                            '1' pour le bac à sable, absent en production
+ *   PAYPAL_PRICES                             tarifs attendus, ex : {"essentiel":490,"pro":1490,"elite":4900}
+ *   PAYPAL_CURRENCY                           devise attendue (défaut : EUR)
+ *   LICENSE_KEY_ESSENTIEL / _PRO / _ELITE     mêmes valeurs que les secrets GitHub
+ *   ALLOWED_ORIGIN                            ex : https://redcreator1.github.io
  */
 export const config = { runtime: 'edge' };
 
 const TIERS = ['essentiel', 'pro', 'elite'];
-const STRIPE_API = 'https://api.stripe.com/v1';
+const api = () => (process.env.PAYPAL_SANDBOX === '1' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com');
 
 function json(body, status, origin) {
   return new Response(JSON.stringify(body), {
@@ -37,55 +37,75 @@ function json(body, status, origin) {
   });
 }
 
-/** Erreur destinée à l'acheteur : message lisible, pas de détail interne. */
+/** Erreur destinée à l'acheteur : message lisible, aucun détail interne. */
 class ClientError extends Error {}
 
-function tierFromPrice(priceId) {
-  for (const t of TIERS) if (process.env[`STRIPE_PRICE_${t.toUpperCase()}`] === priceId) return t;
-  return null;
-}
-
-async function stripeGet(endpoint) {
-  const r = await fetch(STRIPE_API + endpoint, {
-    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`, 'Stripe-Version': '2025-08-27.basil' },
-  });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new ClientError(j.error?.message || 'Session de paiement introuvable.');
-  return j;
-}
-
-/** Vérifie qu'une session Checkout est réglée et renvoie le palier acheté. */
-async function tierFromStripeSession(sessionId) {
-  if (!process.env.STRIPE_SECRET_KEY) throw new ClientError('Paiement Stripe non configuré côté serveur.');
-  if (!/^cs_[A-Za-z0-9_]+$/.test(sessionId)) throw new ClientError('Identifiant de session invalide.');
-
-  const session = await stripeGet(`/checkout/sessions/${sessionId}`);
-  if (session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
-    throw new ClientError('Le paiement n’est pas encore confirmé. Réessayez dans une minute.');
-  }
-  // Le palier est porté par les métadonnées du lien de paiement, avec le tarif en secours.
-  const fromMeta = session.metadata?.airgap42_tier;
-  if (fromMeta && TIERS.includes(fromMeta)) return fromMeta;
-
-  const items = await stripeGet(`/checkout/sessions/${sessionId}/line_items?limit=1`);
-  const tier = tierFromPrice(items.data?.[0]?.price?.id);
-  if (!tier) throw new ClientError('Produit acheté non reconnu. Contactez le support.');
-  return tier;
-}
-
-/** Valide et consomme une activation Lemon Squeezy (décompte les activations autorisées). */
-async function tierFromLemonSqueezy(licenseKey) {
-  const r = await fetch('https://api.lemonsqueezy.com/v1/licenses/activate', {
+async function token() {
+  const id = process.env.PAYPAL_CLIENT_ID;
+  const secret = process.env.PAYPAL_CLIENT_SECRET;
+  if (!id || !secret) throw new ClientError('Paiement non configuré côté serveur.');
+  const r = await fetch(`${api()}/v1/oauth2/token`, {
     method: 'POST',
-    headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ license_key: licenseKey, instance_name: 'airgap42-web' }),
+    headers: { Authorization: `Basic ${btoa(`${id}:${secret}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=client_credentials',
   });
-  const j = await r.json().catch(() => ({}));
-  const active = j.activated === true || j.license_key?.status === 'active';
-  if (!active) throw new ClientError(j.error || 'Licence invalide ou nombre d’activations dépassé.');
-  const variantId = String(j.meta?.variant_id ?? '');
-  for (const t of TIERS) if (process.env[`LS_VARIANT_${t.toUpperCase()}`] === variantId) return t;
-  throw new ClientError('Produit acheté non reconnu. Contactez le support.');
+  if (!r.ok) throw new Error('paypal auth failed');
+  return (await r.json()).access_token;
+}
+
+async function paypal(method, path, accessToken) {
+  const r = await fetch(api() + path, {
+    method,
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+  });
+  const body = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, body };
+}
+
+function expectedPrice(tier) {
+  let prices;
+  try {
+    prices = JSON.parse(process.env.PAYPAL_PRICES || '{}');
+  } catch {
+    throw new Error('PAYPAL_PRICES invalide');
+  }
+  const value = prices[tier];
+  if (typeof value !== 'number') throw new ClientError('Tarif inconnu pour ce produit. Contactez le support.');
+  return value;
+}
+
+/**
+ * Encaisse la commande si besoin, puis vérifie palier, devise et montant.
+ * @returns {Promise<string>} le palier acheté
+ */
+async function tierFromPayPalOrder(orderId) {
+  if (!/^[A-Z0-9]{5,30}$/i.test(orderId)) throw new ClientError('Référence de commande invalide.');
+  const access = await token();
+
+  let { ok, body: order } = await paypal('GET', `/v2/checkout/orders/${orderId}`, access);
+  if (!ok) throw new ClientError('Commande introuvable.');
+
+  if (order.status === 'APPROVED') {
+    const captured = await paypal('POST', `/v2/checkout/orders/${orderId}/capture`, access);
+    // ORDER_ALREADY_CAPTURED : le navigateur a encaissé avant nous, ce n'est pas une erreur.
+    const already = captured.body?.details?.some((d) => d.issue === 'ORDER_ALREADY_CAPTURED');
+    if (!captured.ok && !already) throw new ClientError('Le paiement n’a pas pu être finalisé.');
+    order = captured.ok ? captured.body : (await paypal('GET', `/v2/checkout/orders/${orderId}`, access)).body;
+  }
+  if (order.status !== 'COMPLETED') throw new ClientError('Le paiement n’est pas confirmé. Réessayez dans une minute.');
+
+  const unit = order.purchase_units?.[0];
+  const tier = unit?.custom_id;
+  if (!TIERS.includes(tier)) throw new ClientError('Produit acheté non reconnu. Contactez le support.');
+
+  // Le montant réellement encaissé, pas celui annoncé par le navigateur.
+  const capture = unit.payments?.captures?.find((c) => c.status === 'COMPLETED');
+  const paid = capture?.amount ?? unit.amount;
+  const currency = process.env.PAYPAL_CURRENCY || 'EUR';
+  if (paid?.currency_code !== currency || Number(paid?.value) < expectedPrice(tier)) {
+    throw new ClientError('Le montant réglé ne correspond pas au produit. Contactez le support.');
+  }
+  return tier;
 }
 
 export default async function handler(req) {
@@ -96,12 +116,8 @@ export default async function handler(req) {
   let tier;
   try {
     const { license } = await req.json();
-    if (typeof license !== 'string' || !license.trim() || license.length > 300) throw new ClientError('Référence d’achat manquante.');
-    const value = license.trim();
-
-    if (value.startsWith('cs_')) tier = await tierFromStripeSession(value);
-    else if (process.env.LEMONSQUEEZY_API_KEY || /^[0-9a-f-]{36}$/i.test(value)) tier = await tierFromLemonSqueezy(value);
-    else throw new ClientError('Référence d’achat non reconnue.');
+    if (typeof license !== 'string' || !license.trim() || license.length > 100) throw new ClientError('Référence d’achat manquante.');
+    tier = await tierFromPayPalOrder(license.trim());
   } catch (e) {
     if (e instanceof ClientError) return json({ error: e.message }, 403, origin);
     return json({ error: 'Vérification impossible pour le moment. Réessayez.' }, 502, origin);

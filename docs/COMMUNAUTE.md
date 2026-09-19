@@ -41,7 +41,7 @@ La communauté est ce qui fait qu'un acheteur termine le programme, reste, recom
   #emploi-missions       offres et demandes, secteur OT/sécurité
 ```
 
-Rôles : `Essentiel`, `Pro`, `Elite`, `Modérateur`, `Alumni` (a obtenu le certificat). L'attribution du rôle se fait manuellement par un modérateur après vérification de l'achat (nom/e-mail Stripe), ou automatiquement avec un bot de licence si vous passez par l'API Vercel.
+Rôles : `Essentiel`, `Pro`, `Elite`, `Modérateur`, `Alumni` (a obtenu le certificat). L'attribution du rôle se fait manuellement par un modérateur après vérification de l'achat (nom et e-mail du paiement PayPal), ou automatiquement avec un bot de licence si vous passez par l'API Vercel.
 
 ## Les trois rituels
 

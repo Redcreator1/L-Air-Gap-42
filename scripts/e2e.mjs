@@ -82,10 +82,15 @@ try {
   const liveCheckout = await page.locator('[data-checkout]').count();
   const waitlist = await page.locator('[data-waitlist]').count();
   check('tarifs : aucun lien de paiement gabarit exposé', await page.evaluate(() => ![...document.querySelectorAll('a[href]')].some((a) => /REMPLACER/i.test(a.getAttribute('href')))));
+  const payButtons = await page.locator('.pay-slot').count();
   check(
-    liveCheckout === 3 ? 'tarifs : 3 liens de paiement actifs' : 'tarifs : mode pré-lancement (liste d’attente + bandeau)',
-    liveCheckout === 3 ? true : waitlist === 3 && (await page.locator('#checkout-pending').count()) === 1,
-    `checkout=${liveCheckout} waitlist=${waitlist}`,
+    payButtons === 3 ? 'tarifs : 3 boutons PayPal' : liveCheckout === 3 ? 'tarifs : 3 liens de paiement actifs' : 'tarifs : mode pré-lancement (liste d’attente + bandeau)',
+    payButtons === 3 || liveCheckout === 3 || (waitlist === 3 && (await page.locator('#checkout-pending').count()) === 1),
+    `paypal=${payButtons} liens=${liveCheckout} attente=${waitlist}`,
+  );
+  check(
+    'tarifs : kit PayPal chargé seulement si un identifiant client est configuré',
+    (await page.evaluate(() => [...document.scripts].some((s) => s.src.includes('paypal.com/sdk')))) === (payButtons === 3),
   );
 
   await page.goto(origin + 'programme/', { waitUntil: 'networkidle' });

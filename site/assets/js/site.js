@@ -151,12 +151,8 @@ function cohort() {
 }
 
 // ---------- Tarifs ----------
-export function checkoutHref(tier) {
-  if (config.checkout.provider === 'lemonsqueezy' && config.checkout.lemonStore && !/^https?:/.test(tier.checkoutUrl)) {
-    return `https://${config.checkout.lemonStore}.lemonsqueezy.com/checkout/buy/${tier.checkoutUrl}?embed=1`;
-  }
-  return tier.checkoutUrl;
-}
+/** Option B : lien de paiement PayPal sans code, collé dans le palier. */
+export const checkoutHref = (tier) => tier.checkoutUrl;
 
 /** Un palier est vendable quand son lien de paiement est réel (ni vide, ni gabarit à remplacer). */
 export function isTierConfigured(tier) {
@@ -169,19 +165,22 @@ function waitlistHref(tier) {
   const subject = `Liste d’attente ${config.site.name} — ${tier.name}`;
   return `mailto:${config.site.contactEmail}?subject=${encodeURIComponent(subject)}`;
 }
-function pricing() {
+async function pricing() {
   const host = $('#pricing');
   if (!host) return;
-  const lemon = config.checkout.provider === 'lemonsqueezy';
-  const anyOpen = config.checkout.tiers.some(isTierConfigured);
+  const { isPayPalReady, mountPayPalButtons } = await import('./paypal.js');
+  const withButtons = isPayPalReady();
+  const anyOpen = withButtons || config.checkout.tiers.some(isTierConfigured);
+
   host.innerHTML = config.checkout.tiers
     .map((t) => {
-      const open = isTierConfigured(t);
-      const cta = open
-        ? `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block${lemon ? ' lemonsqueezy-button' : ''}" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>`
-        : `<a class="btn btn-ghost btn-block" href="${esc(waitlistHref(t))}" data-waitlist="${esc(t.id)}">Être prévenu de l’ouverture</a>`;
+      const link = isTierConfigured(t);
+      let cta;
+      if (withButtons) cta = `<div class="pay-slot" data-pay="${esc(t.id)}"><div class="paypal-button"></div></div>`;
+      else if (link) cta = `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>`;
+      else cta = `<a class="btn btn-ghost btn-block" href="${esc(waitlistHref(t))}" data-waitlist="${esc(t.id)}">Être prévenu de l’ouverture</a>`;
       return `
-    <article class="price-card ${t.highlight ? 'highlight' : ''}${open ? '' : ' price-card-soon'}" id="tier-${esc(t.id)}">
+    <article class="price-card ${t.highlight ? 'highlight' : ''}${withButtons || link ? '' : ' price-card-soon'}" id="tier-${esc(t.id)}">
       ${t.badge ? `<span class="price-badge">${esc(t.badge)}</span>` : ''}
       <h3>${esc(t.name)}</h3>
       <p class="pitch">${esc(t.pitch)}</p>
@@ -192,6 +191,7 @@ function pricing() {
     </article>`;
     })
     .join('');
+
   if (!anyOpen) {
     host.insertAdjacentHTML(
       'beforebegin',
@@ -209,12 +209,12 @@ function pricing() {
     }),
   );
   $$('[data-waitlist]').forEach((a) => a.addEventListener('click', () => window.plausible?.('Waitlist', { props: { tier: a.dataset.waitlist } })));
-  if (lemon) {
-    const s = document.createElement('script');
-    s.src = 'https://assets.lemonsqueezy.com/lemon.js';
-    s.defer = true;
-    document.head.appendChild(s);
+
+  if (withButtons) {
+    const slots = $$('[data-pay]').map((el) => ({ host: el, tier: config.checkout.tiers.find((t) => t.id === el.dataset.pay) }));
+    mountPayPalButtons(slots);
   }
+
   const ent = $('#enterprise');
   if (ent) ent.innerHTML = `<p class="muted">${esc(config.checkout.enterprise.pitch)}</p><a class="btn btn-ghost" href="${esc(config.checkout.enterprise.mailto)}">Demander un devis</a>`;
 }

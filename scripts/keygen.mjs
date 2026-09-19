@@ -4,7 +4,7 @@
  * Usage : npm run keygen
  *
  * Les clés de licence (LICENSE_KEY_*) sont celles que vous transmettez aux acheteurs
- * (message post-achat Stripe, e-mail Lemon Squeezy, ou via api/activate.js).
+ * (e-mail post-achat, ou automatiquement via api/activate.js après vérification du paiement PayPal).
  * Le secret maître (CONTENT_MASTER_SECRET) ne quitte JAMAIS GitHub Actions.
  */
 import { randomBytes } from 'node:crypto';

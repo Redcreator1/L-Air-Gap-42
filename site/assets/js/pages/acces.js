@@ -17,7 +17,7 @@ if (existing) {
 }
 
 async function resolveLicense(raw) {
-  // Mode API : une licence individuelle (Lemon Squeezy, Stripe) est échangée contre la clé de contenu.
+  // Mode API : une référence de commande PayPal est échangée contre la clé de contenu.
   if (!config.api.activateUrl) return raw;
   const r = await fetch(config.api.activateUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ license: raw }) });
   const j = await r.json().catch(() => ({}));

@@ -1,5 +1,5 @@
 /**
- * Page Merci : après un paiement Stripe, la redirection porte ?session_id=cs_…
+ * Page Merci : après un paiement PayPal, la redirection porte ?order=<référence de commande>.
  * Si l'API d'activation est configurée, la licence est activée automatiquement,
  * sans saisie ni attente d'e-mail. Sinon, les étapes manuelles restent affichées.
  */
@@ -8,7 +8,7 @@ import { store } from '../store.js';
 import { unwrapWithLicense, fingerprint } from '../crypto.js';
 
 const params = new URLSearchParams(location.search);
-const sessionId = params.get('session_id');
+const orderId = params.get('order');
 let tier = params.get('tier');
 try {
   tier = tier || sessionStorage.getItem('ag42:intent');
@@ -22,7 +22,7 @@ const steps = document.getElementById('manual-steps');
 const show = (cls, html) => (host.innerHTML = `<div class="notice ${cls}">${html}</div>`);
 
 async function autoActivate() {
-  if (!host || !sessionId || !config.api.activateUrl) return;
+  if (!host || !orderId || !config.api.activateUrl) return;
   if (store.getLicense()) {
     show('ok', `Une licence est déjà active sur cet appareil. <a href="${url('app/')}">Aller à mon parcours</a>`);
     return;
@@ -33,7 +33,7 @@ async function autoActivate() {
     const r = await fetch(config.api.activateUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ license: sessionId }),
+      body: JSON.stringify({ license: orderId }),
     });
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.contentLicense) throw new Error(j.error || 'Paiement non vérifié.');
