@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://plausible.io; base-uri 'self'; object-src 'none'; form-action 'self'">
+  <title>Ma clé de licence — L'Air Gap 42</title>
+  <meta name="description" content="Où trouver votre clé de licence et comment l'enregistrer dans le lanceur.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <script type="module" src="../assets/js/site.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero">
+      <div class="container container-md">
+        <div class="eyebrow">Accès</div>
+        <h1 class="h1-sm">Votre clé de licence.</h1>
+        <p class="lead">Il n’y a rien à activer sur ce site. Votre clé s’enregistre dans le lanceur, sur votre machine, et elle y reste.</p>
+
+        <div class="card mt-md">
+          <h3 class="h3-sm">1. Où est ma clé ?</h3>
+          <p class="muted small">Elle vous a été affichée juste après le paiement et envoyée par e-mail. Format : <code>AG42-XXX-XXXXX-XXXXX-XXXXX</code>. Les lettres O et I n’y figurent jamais, pour éviter les confusions avec les chiffres 0 et 1.</p>
+        </div>
+
+        <div class="card mt-sm">
+          <h3 class="h3-sm">2. Enregistrez-la dans le lanceur</h3>
+          <p class="muted small">Dans le dossier extrait de l’archive :</p>
+          <pre><code>./airgap42 licence AG42-XXX-XXXXX-XXXXX-XXXXX</code></pre>
+          <p class="muted small">Le lanceur vérifie la clé en ouvrant un niveau, puis vous confirme le palier déverrouillé. Vous pouvez l’enregistrer sur autant de vos machines que vous voulez.</p>
+        </div>
+
+        <div class="card mt-sm">
+          <h3 class="h3-sm">3. Pas encore de clé ?</h3>
+          <p class="muted small">Les trois premiers niveaux sont ouverts à tous, sans clé : voir le <a href="../jouer/">mode d’emploi</a>. Pour la suite, <a href="../tarifs/">choisissez votre palier</a>.</p>
+        </div>
+
+        <div class="notice mt-md">Clé perdue, changement de palier, facture : écrivez-nous depuis l’adresse utilisée à l’achat, <a data-mailto href="#"></a>.</div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+</html>

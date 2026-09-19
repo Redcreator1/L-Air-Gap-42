@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://redcreator1.github.io/L-Air-Gap-42/sitemap.xml
