@@ -8,10 +8,11 @@ Le workflow `.github/workflows/deploy.yml` se déclenche à chaque push sur `mai
 
 1. `npm run check` (validations)
 2. `npm run build` avec les secrets (chiffrement)
-3. `actions/configure-pages` avec `enablement: true` : **active GitHub Pages automatiquement** au premier passage, source « GitHub Actions ».
-4. Déploiement.
+3. publication du dossier construit sur la branche **`gh-pages`**.
 
-Si l'activation automatique échoue (droits insuffisants du `GITHUB_TOKEN` sur certains comptes), allez dans **Settings → Pages → Source → GitHub Actions**, puis relancez le workflow (**Actions → Build & deploy → Run workflow**).
+Sur un dépôt public, GitHub active Pages tout seul au premier push de cette branche : aucun réglage manuel n'est nécessaire. Ce mécanisme a été retenu parce que `actions/configure-pages` avec `enablement: true` échoue quand le jeton d'Actions n'a pas les droits d'administration du dépôt.
+
+Ne modifiez pas la branche `gh-pages` à la main : elle est écrasée à chaque déploiement.
 
 URL résultante : `https://<utilisateur>.github.io/<dépôt>/`. Elle doit correspondre à `site.url` dans `site/config.js` (utilisée pour sitemap, flux RSS, certificat). Vous pouvez aussi définir la variable de dépôt `SITE_URL` (**Settings → Variables**) qui prend le pas.
 
@@ -44,43 +45,54 @@ Conservez-les dans un gestionnaire de mots de passe. Tant qu'ils ne sont pas dé
 
 ## 3. Paiement
 
-### Option A : Stripe Payment Links (simple)
+Le paiement passe par **PayPal**. Deux options, au choix.
 
-1. Dans Stripe, créez trois produits (Essentiel, Pro, Elite) avec un prix unique chacun.
-2. Créez un **Payment Link** par produit. Dans *After payment* :
-   - choisissez **Don't show confirmation page → Redirect customers to your website** avec `https://<votre-site>/merci/?tier=pro` (une URL par palier) ;
-   - **ou** gardez la page de confirmation Stripe et ajoutez un *Custom message* contenant la clé de licence du palier.
-3. Activez la facturation automatique (*Invoices*) et la collecte de la TVA (*Stripe Tax*) si vous vendez dans l'UE.
-4. Envoyez la clé de licence par e-mail : le plus simple est le message de confirmation Stripe (*Settings → Emails → Successful payments*, personnalisable par produit via les métadonnées) ou une automatisation (Zapier / Make : *Checkout completed* → e-mail avec la clé du palier).
-5. Collez les liens dans `site/config.js` → `checkout.tiers[].checkoutUrl`.
+### Option A : boutons PayPal (recommandé)
 
-### Option B : Lemon Squeezy (TVA UE gérée, clés de licence natives)
+1. Sur https://developer.paypal.com/dashboard/applications, créez une application. Notez le **Client ID** (public) et le **Secret** (à ne jamais publier). Faites-le d'abord en **Sandbox**.
+2. Dans `site/config.js` → `checkout.paypal` : collez le `clientId`, laissez `sandbox: true` le temps des essais.
+3. Un bouton PayPal s'affiche alors dans chaque carte de tarif. Le montant, la devise et le palier viennent de `checkout.tiers`.
+4. Testez avec un compte acheteur Sandbox (https://developer.paypal.com/dashboard/accounts), puis repassez en production : nouvelle application en mode *Live*, `clientId` de production, `sandbox: false`.
 
-1. Créez une boutique et trois produits. Activez **License keys** sur chaque produit (une clé par achat, limite d'activations à votre convenance).
-2. Dans `site/config.js` : `checkout.provider: 'lemonsqueezy'`, `checkout.lemonStore: '<slug>'`, et pour chaque palier `checkoutUrl` = l'UUID de la variante (ou l'URL complète de checkout).
-3. Deux modes :
-   - **statique** : la clé Lemon Squeezy sert d'identifiant, mais c'est la clé `LICENSE_KEY_<palier>` que vous transmettez dans l'e-mail de livraison du produit (champ *License key instructions* ou fichier joint) ;
-   - **API (recommandé)** : déployez `api/activate.js` (section 4). L'acheteur saisit sa clé Lemon Squeezy personnelle ; le serveur la valide et lui rend la clé de contenu. Vous pouvez révoquer une clé individuelle depuis Lemon Squeezy.
+**Livraison de la clé de licence.** Deux voies :
+
+1. **Automatique (recommandé)** : déployez `api/activate.js` (section 4) et renseignez `api.activateUrl`. Après approbation, la commande est envoyée à la fonction, qui l'**encaisse et la vérifie côté serveur** (statut, palier, devise, montant réellement réglé), puis renvoie la clé du palier. L'accès s'ouvre immédiatement, sans e-mail ni saisie.
+2. **Par e-mail** : sans cette fonction, la commande est encaissée côté navigateur et l'acheteur atterrit sur la page Merci. Vous lui envoyez alors la clé `LICENSE_KEY_<palier>` depuis votre boîte ou une automatisation branchée sur la notification PayPal.
+
+> **Important.** Le bouton construit la commande dans le navigateur : le montant peut être manipulé par un acheteur malveillant. C'est la fonction d'activation qui protège la vente, en comparant le montant réellement encaissé au tarif attendu (`PAYPAL_PRICES`). Sans elle, vérifiez chaque paiement dans votre tableau de bord PayPal avant d'envoyer une clé.
+
+### Option B : liens de paiement PayPal (sans code)
+
+Dans votre compte PayPal, *Outils → Liens et boutons de paiement*, créez un lien par palier, puis collez chaque URL dans le `checkoutUrl` du palier correspondant et laissez `clientId` vide. Le montant est fixé par PayPal, donc non manipulable, mais il n'y a pas d'activation automatique : la clé part par e-mail.
+
+### Avant branchement
+
+Tant qu'aucun `clientId` ni `checkoutUrl` n'est renseigné, le site n'affiche aucun lien mort : les boutons deviennent « Être prévenu de l'ouverture » et un bandeau annonce l'ouverture prochaine. Vous pouvez donc publier le site avant d'avoir un compte PayPal.
 
 ### Page « merci »
 
-`site/merci/` explique les trois étapes (récupérer la clé, l'activer, rejoindre le Discord). Elle lit `?tier=` pour l'analytics.
+`site/merci/` explique les trois étapes (récupérer la clé, l'activer, rejoindre le Discord). Elle lit `?tier=` pour la mesure d'audience et `?order=` pour l'activation automatique.
 
-## 4. API d'activation (optionnel, Vercel)
+## 4. API d'activation (fortement recommandée avec l'option A, Vercel)
 
-Pour des licences individuelles révocables :
+Elle encaisse et vérifie la commande PayPal côté serveur, puis délivre la clé du palier.
 
 ```bash
 npm i -g vercel
 vercel link
+vercel env add PAYPAL_CLIENT_ID        # identifiant de l'application PayPal
+vercel env add PAYPAL_CLIENT_SECRET    # secret de l'application (jamais dans le dépôt)
+vercel env add PAYPAL_SANDBOX          # 1 en bac à sable, à supprimer en production
+vercel env add PAYPAL_PRICES           # {"essentiel":490,"pro":1490,"elite":4900}
+vercel env add PAYPAL_CURRENCY         # EUR
 vercel env add LICENSE_KEY_ESSENTIEL   # + PRO, ELITE : mêmes valeurs que les secrets GitHub
-vercel env add LEMONSQUEEZY_API_KEY    # ou STRIPE_SECRET_KEY
-vercel env add LS_VARIANT_ESSENTIEL    # + PRO, ELITE (ou STRIPE_PRICE_*)
 vercel env add ALLOWED_ORIGIN          # https://<utilisateur>.github.io
 vercel deploy --prod
 ```
 
 Puis `site/config.js` → `api.activateUrl: 'https://<projet>.vercel.app/api/activate'`. Le site reste sur GitHub Pages ; seule l'activation passe par Vercel.
+
+`PAYPAL_PRICES` doit refléter les prix de `site/config.js` : c'est la référence qui empêche qu'un paiement minoré ouvre un palier. Si vous changez un prix, changez les deux.
 
 ## 5. Communauté
 
@@ -96,7 +108,7 @@ Puis `site/config.js` → `api.activateUrl: 'https://<projet>.vercel.app/api/act
 
 ## 7. Politique de sécurité de contenu (CSP)
 
-Chaque page déclare une CSP dans une balise `<meta http-equiv="Content-Security-Policy">` (GitHub Pages ne permet pas d'en-têtes HTTP personnalisés). Elle autorise uniquement : les scripts du site, giscus, Lemon Squeezy et Plausible ; les polices Google ; les iframes giscus, Discord et Lemon Squeezy ; les connexions vers Formspree, Buttondown, Plausible et `*.vercel.app`.
+Chaque page déclare une CSP dans une balise `<meta http-equiv="Content-Security-Policy">` (GitHub Pages ne permet pas d'en-têtes HTTP personnalisés). Elle autorise uniquement : les scripts du site, giscus, PayPal et Plausible ; les polices Google ; les iframes giscus, Discord et PayPal ; les connexions vers Formspree, Buttondown, Plausible, PayPal et `*.vercel.app`.
 
 Si vous ajoutez un service (Umami sur votre domaine, une autre visio, un lecteur vidéo), ajoutez son origine à la directive concernée dans **toutes** les pages, puis lancez `npm run e2e` : le test échoue sur toute violation CSP. Les scripts inline sont interdits par cette politique : le code de page vit dans `site/assets/js/pages/`.
 

@@ -166,8 +166,13 @@ async function main() {
     elite: process.env.LICENSE_KEY_ELITE || DEMO.licenses.elite,
   };
   const demoMode = !process.env.CONTENT_MASTER_SECRET || TIERS.some((t) => !process.env[`LICENSE_KEY_${t.toUpperCase()}`]);
+  // Publication publique sans vraies clés : le contenu payant est EXCLU du build.
+  // Sinon la clé de démonstration, affichée sur le site, ouvrirait les 42 leçons à tout le monde.
+  const prelaunch = demoMode && process.env.PUBLIC_DEPLOY === '1';
 
-  console.log(`\n▶ Build L'Air Gap 42 ${demoMode ? '(MODE DÉMO — clés publiques, voir docs/SETUP.md)' : '(production)'}`);
+  console.log(
+    `\n▶ Build L'Air Gap 42 ${prelaunch ? '(PRÉ-LANCEMENT — secrets absents : contenu payant non publié)' : demoMode ? '(MODE DÉMO — clés publiques, voir docs/SETUP.md)' : '(production)'}`,
+  );
 
   await rmrf(DIST);
   await copyDir(SITE, DIST);
@@ -224,7 +229,7 @@ async function main() {
       }
     }
 
-    if (mod.tier !== 'free') {
+    if (mod.tier !== 'free' && !prelaunch) {
       const bytes = enc.encode(JSON.stringify(premiumPayload));
       const { iv, ct } = await encryptWithRaw(contentKeys[mod.tier], bytes);
       await writeJSON(`data/modules/${mod.id}.enc.json`, { v: 1, alg: 'AES-256-GCM', tier: mod.tier, module: mod.id, iv, ct });
@@ -237,7 +242,7 @@ async function main() {
   // ----- Enveloppes de clés (keys.json) -----
   // Pour chaque licence L : PBKDF2(licence) chiffre les clés de contenu des paliers ≤ L.
   const keysFile = { v: 1, kdf: 'PBKDF2-SHA256', iterations: PBKDF2_ITERATIONS, licenses: {} };
-  for (const lic of TIERS) {
+  for (const lic of prelaunch ? [] : TIERS) {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const wrapKey = await pbkdf2(licenses[lic], salt);
     const check = await encryptWithRaw(wrapKey, enc.encode(`ok:${lic}`));
@@ -248,14 +253,15 @@ async function main() {
     keysFile.licenses[lic] = { salt: b64(salt), check, keys: wrapped };
   }
   await writeJSON('data/keys.json', keysFile);
-  log('keys.json généré (enveloppes PBKDF2 → AES-GCM)');
+  log(prelaunch ? 'contenu payant NON publié (aucun module chiffré, aucune enveloppe de clé)' : 'keys.json généré (enveloppes PBKDF2 → AES-GCM)');
 
   // ----- Fichiers dérivés -----
   await writeJSON('data/search.json', searchIndex);
   await writeJSON('data/build.json', {
     builtAt: new Date().toISOString(),
-    demo: demoMode,
-    demoLicenses: demoMode ? DEMO.licenses : undefined,
+    demo: demoMode && !prelaunch,
+    prelaunch,
+    demoLicenses: demoMode && !prelaunch ? DEMO.licenses : undefined,
     version: JSON.parse(await fs.readFile(path.join(ROOT, 'package.json'), 'utf8')).version,
     commit: process.env.GITHUB_SHA ? process.env.GITHUB_SHA.slice(0, 7) : 'local',
   });
@@ -281,7 +287,10 @@ async function main() {
 
   log(`sitemap.xml, feed.xml, robots.txt, search.json${config.site.customDomain ? ', CNAME' : ''}`);
   console.log(`✔ dist/ prêt en ${Date.now() - t0} ms\n`);
-  if (demoMode) {
+  if (prelaunch) {
+    console.log('  Pré-lancement : seules les leçons gratuites sont publiées.');
+    console.log('  Définissez CONTENT_MASTER_SECRET et LICENSE_KEY_* (secrets GitHub) pour publier le programme complet.\n');
+  } else if (demoMode) {
     console.log('  Clés de licence DÉMO actives :');
     for (const [t, k] of Object.entries(DEMO.licenses)) console.log(`    ${t.padEnd(10)} ${k}`);
     console.log('  → Définissez CONTENT_MASTER_SECRET et LICENSE_KEY_* (secrets GitHub) pour la production.\n');

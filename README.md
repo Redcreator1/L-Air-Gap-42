@@ -7,7 +7,7 @@ Programme de 42 jours sur la sécurité des systèmes isolés (air gap, OT/ICS, 
 | --- | --- |
 | Site public | `https://redcreator1.github.io/L-Air-Gap-42/` (après activation de Pages, voir `docs/SETUP.md`) |
 | Contenu | 7 modules · 45 leçons · ~27 000 mots · quiz à chaque leçon |
-| Paiement | Stripe Payment Links ou Lemon Squeezy (configurable) |
+| Paiement | PayPal (boutons ou liens de paiement sans code) |
 | Accès | Contenu premium chiffré AES-256-GCM au build, déverrouillé par clé de licence dans le navigateur |
 | Communauté | Discord + GitHub Discussions (giscus sous chaque leçon) + lives hebdomadaires + newsletter |
 | Dépendances | Aucune à l'exécution ni au build (Node ≥ 20). Playwright en développement pour les tests. |
@@ -27,7 +27,7 @@ Licences de démonstration (mode démo uniquement) : `AG42-DEMO-ESSENTIEL-2026`,
 ## Mise en production
 
 1. `npm run keygen` → copiez les 4 valeurs dans **Settings → Secrets and variables → Actions** du dépôt.
-2. Créez vos liens de paiement et renseignez `site/config.js` (`checkout.tiers[].checkoutUrl`, Discord, newsletter, e-mail de contact).
+2. Renseignez `site/config.js` : identifiant client PayPal, Discord, newsletter, e-mail de contact, formateur.
 3. Fusionnez sur `main` : le workflow `deploy.yml` construit, chiffre et publie sur GitHub Pages (il active Pages automatiquement au premier passage).
 4. Complétez `site/legal/index.html` (raison sociale, SIREN, TVA, médiateur).
 
@@ -53,7 +53,7 @@ scripts/
   e2e.mjs             parcours complet dans Chromium (Playwright)
   keygen.mjs          génération des secrets de production
   dev.mjs             serveur local
-api/activate.js       (optionnel) fonction Vercel : licence individuelle → clé de contenu
+api/activate.js       (optionnel) fonction Vercel : commande PayPal vérifiée → clé de contenu
 .github/workflows/    déploiement GitHub Pages
 ```
 
@@ -67,7 +67,7 @@ clé de contenu (palier)  ──AES-GCM────────▶  déchiffre d
 
 Une licence Pro ouvre Essentiel + Pro ; une licence Elite ouvre tout. Une licence inférieure ne contient pas la clé des paliers supérieurs (vérifié par `npm run check`). Rien ne transite par un serveur : le contenu est lisible hors-ligne une fois chargé, ce qui est cohérent avec le sujet enseigné.
 
-Pour des licences **individuelles et révocables**, déployez `api/activate.js` sur Vercel et renseignez `api.activateUrl` : la clé Lemon Squeezy ou la session Stripe de l'acheteur est échangée côté serveur contre la clé de contenu.
+Avec PayPal, déployez `api/activate.js` sur Vercel et renseignez `api.activateUrl` : la commande de l'acheteur est encaissée et vérifiée côté serveur (statut, palier, devise, montant réellement réglé) avant que la clé de contenu ne soit délivrée, et l'accès s'ouvre sans e-mail ni saisie.
 
 ## Licence
 

@@ -77,7 +77,21 @@ try {
   await page.goto(origin + 'tarifs/', { waitUntil: 'networkidle' });
   check('tarifs : 3 offres', (await page.locator('.price-card').count()) === 3);
   check('tarifs : FAQ', (await page.locator('#faq details').count()) >= 4);
-  check('tarifs : un seul attribut class par bouton', await page.evaluate(() => [...document.querySelectorAll('[data-checkout]')].every((a) => a.outerHTML.split('class=').length === 2)));
+  check('tarifs : un seul attribut class par bouton', await page.evaluate(() => [...document.querySelectorAll('.price-card .btn')].every((a) => a.outerHTML.split('class=').length === 2)));
+  // Avant branchement du paiement : aucun lien mort, une prise de contact à la place.
+  const liveCheckout = await page.locator('[data-checkout]').count();
+  const waitlist = await page.locator('[data-waitlist]').count();
+  check('tarifs : aucun lien de paiement gabarit exposé', await page.evaluate(() => ![...document.querySelectorAll('a[href]')].some((a) => /REMPLACER/i.test(a.getAttribute('href')))));
+  const payButtons = await page.locator('.pay-slot').count();
+  check(
+    payButtons === 3 ? 'tarifs : 3 boutons PayPal' : liveCheckout === 3 ? 'tarifs : 3 liens de paiement actifs' : 'tarifs : mode pré-lancement (liste d’attente + bandeau)',
+    payButtons === 3 || liveCheckout === 3 || (waitlist === 3 && (await page.locator('#checkout-pending').count()) === 1),
+    `paypal=${payButtons} liens=${liveCheckout} attente=${waitlist}`,
+  );
+  check(
+    'tarifs : kit PayPal chargé seulement si un identifiant client est configuré',
+    (await page.evaluate(() => [...document.scripts].some((s) => s.src.includes('paypal.com/sdk')))) === (payButtons === 3),
+  );
 
   await page.goto(origin + 'programme/', { waitUntil: 'networkidle' });
   check('programme : 7 modules, 45 leçons', (await page.locator('.module').count()) === 7 && (await page.locator('.lesson-row').count()) === 45);

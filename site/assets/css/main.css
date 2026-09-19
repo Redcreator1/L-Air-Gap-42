@@ -1248,3 +1248,20 @@ html.js .reveal.in {
 .table td.no {
   color: var(--text-3);
 }
+
+/* Palier dont le paiement n'est pas encore branché */
+.price-card-soon .price {
+  opacity: 0.6;
+}
+.price-card-soon .amount::after {
+  content: ' ';
+}
+
+/* Emplacement du bouton de paiement */
+.pay-slot {
+  min-height: 48px;
+}
+.pay-slot .pay-status {
+  margin-top: 10px;
+  font-size: 0.88rem;
+}

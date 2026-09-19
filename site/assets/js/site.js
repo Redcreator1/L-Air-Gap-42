@@ -22,6 +22,12 @@ export const fmtPrice = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency
 /** Lit une valeur de config par chemin pointé ('community.discordInvite'). */
 const cfg = (path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), config);
 
+/** Une URL est utilisable si elle est absolue et ne contient pas de gabarit à remplacer. */
+export const isConfiguredUrl = (v) => typeof v === 'string' && /^https?:\/\//.test(v) && !/REMPLACER/i.test(v);
+
+/** Repli quand un service n'est pas encore branché : on écrit, personne ne clique dans le vide. */
+const contactHref = (subject) => `mailto:${config.site.contactEmail}?subject=${encodeURIComponent(subject)}`;
+
 // ---------- Navigation & pied de page ----------
 function renderNav() {
   const host = $('#nav');
@@ -71,8 +77,13 @@ function renderFooter() {
           <li><a href="${url('feed.xml')}">Flux RSS</a></li>
         </ul></div>
         <div><h4>Communauté</h4><ul>
-          <li><a href="${esc(config.community.discordInvite)}" rel="noopener" target="_blank">Discord</a></li>
-          <li><a href="${esc(config.community.discussionsUrl)}" rel="noopener" target="_blank">Discussions GitHub</a></li>
+          ${[
+            [config.community.discordInvite, 'Discord'],
+            [config.community.discussionsUrl, 'Discussions GitHub'],
+          ]
+            .filter(([href]) => isConfiguredUrl(href))
+            .map(([href, label]) => `<li><a href="${esc(href)}" rel="noopener" target="_blank">${label}</a></li>`)
+            .join('')}
           <li><a href="${url('communaute/')}">Sessions live</a></li>
         </ul></div>
         <div><h4>Support</h4><ul>
@@ -96,10 +107,13 @@ async function demoBanner() {
     const b = await r.json();
     const bi = $('#build-info');
     if (bi) bi.textContent = `build ${b.commit} · ${new Date(b.builtAt).toLocaleDateString('fr-FR')}`;
-    if (b.demo) {
+    if (b.prelaunch) document.documentElement.classList.add('prelaunch');
+    if (b.demo || b.prelaunch) {
       const el = document.createElement('div');
       el.className = 'demo-banner';
-      el.innerHTML = `Mode démo : secrets non configurés. Licences de test — Essentiel <code>${esc(b.demoLicenses.essentiel)}</code> · Pro <code>${esc(b.demoLicenses.pro)}</code> · Elite <code>${esc(b.demoLicenses.elite)}</code>`;
+      el.innerHTML = b.prelaunch
+        ? `Pré-lancement : le module 0 est en accès libre, le programme complet ouvre avec la prochaine cohorte.`
+        : `Mode démo : secrets non configurés. Licences de test — Essentiel <code>${esc(b.demoLicenses.essentiel)}</code> · Pro <code>${esc(b.demoLicenses.pro)}</code> · Elite <code>${esc(b.demoLicenses.elite)}</code>`;
       document.body.prepend(el);
     }
   } catch {
@@ -137,30 +151,53 @@ function cohort() {
 }
 
 // ---------- Tarifs ----------
-export function checkoutHref(tier) {
-  if (config.checkout.provider === 'lemonsqueezy' && config.checkout.lemonStore && !/^https?:/.test(tier.checkoutUrl)) {
-    return `https://${config.checkout.lemonStore}.lemonsqueezy.com/checkout/buy/${tier.checkoutUrl}?embed=1`;
-  }
-  return tier.checkoutUrl;
+/** Option B : lien de paiement PayPal sans code, collé dans le palier. */
+export const checkoutHref = (tier) => tier.checkoutUrl;
+
+/** Un palier est vendable quand son lien de paiement est réel (ni vide, ni gabarit à remplacer). */
+export function isTierConfigured(tier) {
+  const href = checkoutHref(tier);
+  return Boolean(href) && /^https:\/\//.test(href) && !/REMPLACER/i.test(href);
 }
-function pricing() {
+
+/** Avant branchement du paiement, le bouton ouvre une prise de contact au lieu d'un lien mort. */
+function waitlistHref(tier) {
+  const subject = `Liste d’attente ${config.site.name} — ${tier.name}`;
+  return `mailto:${config.site.contactEmail}?subject=${encodeURIComponent(subject)}`;
+}
+async function pricing() {
   const host = $('#pricing');
   if (!host) return;
-  const lemon = config.checkout.provider === 'lemonsqueezy';
+  const { isPayPalReady, mountPayPalButtons } = await import('./paypal.js');
+  const withButtons = isPayPalReady();
+  const anyOpen = withButtons || config.checkout.tiers.some(isTierConfigured);
+
   host.innerHTML = config.checkout.tiers
-    .map(
-      (t) => `
-    <article class="price-card ${t.highlight ? 'highlight' : ''}" id="tier-${esc(t.id)}">
+    .map((t) => {
+      const link = isTierConfigured(t);
+      let cta;
+      if (withButtons) cta = `<div class="pay-slot" data-pay="${esc(t.id)}"><div class="paypal-button"></div></div>`;
+      else if (link) cta = `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>`;
+      else cta = `<a class="btn btn-ghost btn-block" href="${esc(waitlistHref(t))}" data-waitlist="${esc(t.id)}">Être prévenu de l’ouverture</a>`;
+      return `
+    <article class="price-card ${t.highlight ? 'highlight' : ''}${withButtons || link ? '' : ' price-card-soon'}" id="tier-${esc(t.id)}">
       ${t.badge ? `<span class="price-badge">${esc(t.badge)}</span>` : ''}
       <h3>${esc(t.name)}</h3>
       <p class="pitch">${esc(t.pitch)}</p>
       <div class="price"><span class="amount">${fmtPrice(t.price)}</span>${t.priceBefore ? `<span class="before">${fmtPrice(t.priceBefore)}</span>` : ''}</div>
       <div class="price-note">${esc(config.checkout.priceNote)}</div>
       <ul class="features">${t.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
-      <a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block${lemon ? ' lemonsqueezy-button' : ''}" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>
-    </article>`,
-    )
+      ${cta}
+    </article>`;
+    })
     .join('');
+
+  if (!anyOpen) {
+    host.insertAdjacentHTML(
+      'beforebegin',
+      `<div class="notice warn mb-md" id="checkout-pending">Les paiements en ligne ouvrent avec la prochaine cohorte. Laissez-nous votre adresse : vous recevrez le lien d’inscription en premier.</div>`,
+    );
+  }
   $$('[data-checkout]').forEach((a) =>
     a.addEventListener('click', () => {
       try {
@@ -171,12 +208,13 @@ function pricing() {
       if (window.plausible) window.plausible('Checkout', { props: { tier: a.dataset.checkout } });
     }),
   );
-  if (lemon) {
-    const s = document.createElement('script');
-    s.src = 'https://assets.lemonsqueezy.com/lemon.js';
-    s.defer = true;
-    document.head.appendChild(s);
+  $$('[data-waitlist]').forEach((a) => a.addEventListener('click', () => window.plausible?.('Waitlist', { props: { tier: a.dataset.waitlist } })));
+
+  if (withButtons) {
+    const slots = $$('[data-pay]').map((el) => ({ host: el, tier: config.checkout.tiers.find((t) => t.id === el.dataset.pay) }));
+    mountPayPalButtons(slots);
   }
+
   const ent = $('#enterprise');
   if (ent) ent.innerHTML = `<p class="muted">${esc(config.checkout.enterprise.pitch)}</p><a class="btn btn-ghost" href="${esc(config.checkout.enterprise.mailto)}">Demander un devis</a>`;
 }
@@ -209,9 +247,16 @@ function socialProof() {
     const v = cfg(el.dataset.config);
     if (v !== undefined) el.textContent = v;
   });
+  // Un service non branché ne produit jamais de lien mort : il ouvre une prise de contact.
   $$('[data-href]').forEach((el) => {
     const v = cfg(el.dataset.href);
-    if (v) el.href = v;
+    if (isConfiguredUrl(v)) {
+      el.href = v;
+      return;
+    }
+    el.href = contactHref(`${config.site.name} — ${el.textContent.trim() || 'communauté'}`);
+    el.removeAttribute('target');
+    el.dataset.pending = '1';
   });
   $$('[data-mailto]').forEach((el) => {
     el.textContent = config.site.contactEmail;

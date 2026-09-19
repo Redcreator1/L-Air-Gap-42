@@ -40,13 +40,29 @@ export default {
 
   // ---------- Offres ----------
   checkout: {
-    // 'stripe' (Payment Links) ou 'lemonsqueezy' (checkout overlay, TVA UE gérée)
-    provider: 'stripe',
     currency: 'EUR',
     // Mention affichée sous le prix. Vente à des consommateurs en France : les prix doivent être TTC.
-    priceNote: 'Paiement unique · HT · accès à vie · facture fournie',
-    // Lemon Squeezy uniquement : identifiant de boutique (https://<lemonStore>.lemonsqueezy.com)
-    lemonStore: '',
+    priceNote: 'Paiement unique · accès à vie · facture fournie',
+
+    // PayPal. Deux options, au choix :
+    //
+    //  A. Boutons PayPal (recommandé) : renseignez `clientId`. Le paiement se fait sur place et,
+    //     si `api.activateUrl` est configuré, l'accès est activé automatiquement après paiement.
+    //     L'identifiant client est PUBLIC : https://developer.paypal.com/dashboard/applications
+    //     Commencez en bac à sable (`sandbox: true`) avec un compte acheteur de test.
+    //
+    //  B. Liens de paiement PayPal (sans code) : laissez `clientId` vide et collez l'URL du lien
+    //     de chaque palier dans son `checkoutUrl`. Aucune activation automatique : la clé de
+    //     licence est transmise par e-mail.
+    //
+    // Tant que ni l'un ni l'autre n'est configuré, les boutons proposent une liste d'attente.
+    paypal: {
+      clientId: '',
+      sandbox: true,
+      // Libellé de la ligne de commande dans PayPal et sur la facture de l'acheteur.
+      softDescriptor: 'AIRGAP42',
+    },
+
     tiers: [
       {
         id: 'essentiel',
@@ -54,8 +70,8 @@ export default {
         price: 490,
         priceBefore: 690,
         pitch: 'Les fondations et l’architecture d’isolation. Pour bâtir un air gap qui tient.',
-        // Stripe : lien de paiement https://buy.stripe.com/… ; Lemon Squeezy : UUID de variante ou URL de checkout
-        checkoutUrl: 'https://buy.stripe.com/REMPLACER_ESSENTIEL',
+        // Option B uniquement : URL d'un lien de paiement PayPal (https://www.paypal.com/ncp/payment/…)
+        checkoutUrl: '',
         features: [
           'Modules 1 & 2 (14 leçons, 14 jours)',
           'Ateliers guidés + checklists d’architecture',
@@ -73,7 +89,7 @@ export default {
         highlight: true,
         badge: 'Recommandé',
         pitch: 'Le parcours opérationnel complet : transferts, détection, canaux cachés. Pour ceux qui ont un air gap à défendre.',
-        checkoutUrl: 'https://buy.stripe.com/REMPLACER_PRO',
+        checkoutUrl: '',
         features: [
           'Modules 1 à 5 (35 leçons, 35 jours)',
           'Tout Essentiel inclus',
@@ -90,7 +106,7 @@ export default {
         price: 4900,
         priceBefore: 6900,
         pitch: 'Les 42 jours + gouvernance, audit et 3 sessions de coaching individuel. Pour RSSI, auditeurs et consultants.',
-        checkoutUrl: 'https://buy.stripe.com/REMPLACER_ELITE',
+        checkoutUrl: '',
         features: [
           'Les 6 modules (42 leçons, 42 jours) + briefing',
           'Tout Pro inclus',
