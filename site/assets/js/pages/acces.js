@@ -32,6 +32,8 @@ form.addEventListener('submit', async (e) => {
   try {
     const license = await resolveLicense(normalizeLicense(input.value));
     const r = await fetch(url('data/keys.json'), { cache: 'no-store' });
+    // En pré-lancement, aucune licence n'a encore été émise : le fichier de clés n'est pas publié.
+    if (r.status === 404) throw new Error('Les licences ne sont pas encore émises : le programme complet ouvre avec la prochaine cohorte.');
     if (!r.ok) throw new Error('Fichier de clés indisponible. Réessayez dans un instant.');
     const res = await unwrapWithLicense(await r.json(), license);
     if (!res) throw new Error('Clé invalide. Vérifiez les caractères (les lettres O et I ne sont jamais utilisées) ou contactez le support.');

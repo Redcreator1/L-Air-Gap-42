@@ -1,21 +1,22 @@
 name: Build & deploy (GitHub Pages)
 
+# Publication via la branche gh-pages : sur un dépôt public, GitHub active Pages
+# automatiquement au premier push de cette branche. Aucun réglage manuel, et pas
+# besoin des droits d'administration que réclame actions/configure-pages.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,30 +28,28 @@ jobs:
       - name: Vérifications (curriculum, crypto, liens)
         run: npm run check
 
-      - name: Build (chiffrement du contenu premium)
+      - name: Build
         env:
+          # Sans ces secrets, PUBLIC_DEPLOY=1 fait publier le site SANS le contenu payant :
+          # la clé de démonstration est publique, elle ne doit jamais ouvrir les 42 leçons.
           CONTENT_MASTER_SECRET: ${{ secrets.CONTENT_MASTER_SECRET }}
           LICENSE_KEY_ESSENTIEL: ${{ secrets.LICENSE_KEY_ESSENTIEL }}
           LICENSE_KEY_PRO: ${{ secrets.LICENSE_KEY_PRO }}
           LICENSE_KEY_ELITE: ${{ secrets.LICENSE_KEY_ELITE }}
           SITE_URL: ${{ vars.SITE_URL }}
+          PUBLIC_DEPLOY: '1'
         run: npm run build
 
-      - name: Configure Pages (active GitHub Pages si nécessaire)
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publier sur gh-pages
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Déploiement de ${GITHUB_SHA::7}"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
+          echo "Publié : https://$(echo "$GITHUB_REPOSITORY" | cut -d/ -f1 | tr 'A-Z' 'a-z').github.io/$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2)/"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

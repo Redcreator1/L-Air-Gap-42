@@ -107,10 +107,13 @@ async function demoBanner() {
     const b = await r.json();
     const bi = $('#build-info');
     if (bi) bi.textContent = `build ${b.commit} · ${new Date(b.builtAt).toLocaleDateString('fr-FR')}`;
-    if (b.demo) {
+    if (b.prelaunch) document.documentElement.classList.add('prelaunch');
+    if (b.demo || b.prelaunch) {
       const el = document.createElement('div');
       el.className = 'demo-banner';
-      el.innerHTML = `Mode démo : secrets non configurés. Licences de test — Essentiel <code>${esc(b.demoLicenses.essentiel)}</code> · Pro <code>${esc(b.demoLicenses.pro)}</code> · Elite <code>${esc(b.demoLicenses.elite)}</code>`;
+      el.innerHTML = b.prelaunch
+        ? `Pré-lancement : le module 0 est en accès libre, le programme complet ouvre avec la prochaine cohorte.`
+        : `Mode démo : secrets non configurés. Licences de test — Essentiel <code>${esc(b.demoLicenses.essentiel)}</code> · Pro <code>${esc(b.demoLicenses.pro)}</code> · Elite <code>${esc(b.demoLicenses.elite)}</code>`;
       document.body.prepend(el);
     }
   } catch {
