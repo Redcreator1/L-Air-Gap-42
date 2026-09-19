@@ -24,7 +24,7 @@ Le cas fondateur. Des systèmes de contrôle industriel isolés ont été attein
 
 ## 2. Le poste d’ingénierie à double usage
 
-Scénario récurrent dans les audits industriels, documenté dans plusieurs rapports d’agences nationales : un ordinateur portable d’ingénieur sert à la fois à programmer les automates du réseau isolé et à lire ses e-mails sur le réseau d’entreprise. Il alterne entre les deux mondes plusieurs fois par jour.
+Scénario décrit à plusieurs reprises dans des rapports publics d’agences nationales de cybersécurité : un ordinateur portable d’ingénieur sert à la fois à programmer les automates du réseau isolé et à lire ses e-mails sur le réseau d’entreprise. Il alterne entre les deux mondes plusieurs fois par jour.
 
 **Le pont :** l’humain, par commodité. Le laptop est *techniquement* déconnecté du réseau isolé quand il est sur Internet. Mais son disque, lui, fait le voyage.
 
@@ -34,7 +34,7 @@ Scénario récurrent dans les audits industriels, documenté dans plusieurs rapp
 
 ## 3. Le modem de télémaintenance oublié
 
-Cas fréquent en infrastructure critique : un fabricant installe, à la livraison d’une machine, un modem cellulaire pour son propre support à distance. Il figure sur le bon de livraison, pas sur le schéma réseau. Des années plus tard, il fonctionne encore, avec un mot de passe par défaut.
+Cas régulièrement décrit dans la littérature publique sur les infrastructures critiques : un fabricant installe, à la livraison d’une machine, un modem cellulaire pour son propre support à distance. Il figure sur le bon de livraison, pas sur le schéma réseau. Des années plus tard, il fonctionne encore, avec un mot de passe par défaut.
 
 **Le pont :** une connexion externe *fournie par un tiers*, en dehors du processus de conception du réseau.
 
@@ -54,7 +54,7 @@ Plusieurs campagnes publiques ont visé des éditeurs de logiciels pour insérer
 
 ## 5. Le partage de fichiers « temporaire »
 
-Vu dans une salle de supervision : un partage réseau créé lors d’une migration pour transférer des historiques entre le réseau de production et le réseau bureautique. La migration a duré trois semaines. Le partage est resté quatre ans.
+Situation classique en salle de supervision : un partage réseau créé lors d’une migration pour transférer des historiques entre le réseau de production et le réseau bureautique. La migration a duré trois semaines. Le partage est resté quatre ans.
 
 **Le pont :** l’exception au processus, jamais révoquée.
 

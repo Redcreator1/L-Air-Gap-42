@@ -27,15 +27,15 @@
             <a class="btn btn-primary btn-lg" data-href="community.discordInvite" href="#" target="_blank" rel="noopener">Rejoindre le Discord</a>
             <a class="btn btn-ghost btn-lg" data-href="community.discussionsUrl" href="#" target="_blank" rel="noopener">Discussions GitHub</a>
           </div>
-          <p class="small muted">L’accès complet (canaux Pro / Elite, lives, revues) est réservé aux membres. Les canaux publics sont ouverts à tous.</p>
+          <p class="small muted">Les canaux réservés aux paliers Pro et Elite sont ouverts aux membres. Les canaux publics sont ouverts à tous.</p>
         </div>
         <div class="card reveal" id="discord-widget-host">
           <div class="eyebrow">Rituels hebdomadaires</div>
           <ul class="timeline mt-sm">
             <li><b>Lundi · Objectif de la semaine</b><span>Chaque membre poste sa leçon-cible et son livrable. Responsabilité mutuelle.</span></li>
-            <li><b><span data-config="community.liveSessions.day"></span> · Live <span data-config="community.liveSessions.time"></span></b><span>Revue d’architecture en direct sur un cas de membre (anonymisé), puis Q&R. Enregistré.</span></li>
+            <li data-engagement="lives"><b><span data-config="community.liveSessions.day"></span> · Live <span data-config="community.liveSessions.time"></span></b><span>Revue d’architecture en direct sur un cas de membre (anonymisé), puis questions-réponses.</span></li>
             <li><b>Vendredi · Retour d’incident</b><span>Un incident réel décortiqué : ce qui a franchi l’isolation, comment, et ce qui l’aurait bloqué.</span></li>
-            <li><b>En continu · Revue par les pairs</b><span>Postez votre matrice de flux ou votre schéma, recevez deux relectures sous 72 h.</span></li>
+            <li data-engagement="revuePairs"><b>En continu · Revue par les pairs</b><span>Postez votre matrice de flux ou votre schéma, recevez deux relectures sous 72 h.</span></li>
           </ul>
         </div>
       </div>
@@ -45,8 +45,8 @@
       <div class="container grid-4">
         <div class="card reveal"><div class="icon-box" data-icon="message"></div><h3>Discord</h3><p class="muted small">Salons par module, salon incidents, salon emploi, vocal permanent pendant les lives. Modéré, sans bruit commercial.</p></div>
         <div class="card reveal"><div class="icon-box" data-icon="hash"></div><h3>Discussions GitHub</h3><p class="muted small">Un fil par leçon, indexé et pérenne. Vos questions améliorent le programme : les meilleures réponses sont intégrées aux mises à jour.</p></div>
-        <div class="card reveal"><div class="icon-box" data-icon="mic"></div><h3>Lives et replays</h3><p class="muted small">Chaque semaine, un live d’une heure. Tous les replays sont accessibles aux membres Pro et Elite.</p></div>
-        <div class="card reveal"><div class="icon-box" data-icon="users"></div><h3>Mastermind Elite</h3><p class="muted small">Douze personnes au plus, réunion mensuelle, problèmes réels, décisions réelles. Accès sur candidature.</p></div>
+        <div class="card reveal" data-engagement="lives"><div class="icon-box" data-icon="mic"></div><h3>Lives et enregistrements</h3><p class="muted small">Chaque semaine, un live d’une heure. Les enregistrements sont accessibles aux membres Pro et Elite.</p></div>
+        <div class="card reveal" data-engagement="mastermind"><div class="icon-box" data-icon="users"></div><h3>Groupe restreint Elite</h3><p class="muted small">Douze personnes au plus, réunion mensuelle, problèmes réels, décisions réelles. Accès sur candidature.</p></div>
       </div>
     </section>
 
@@ -56,7 +56,7 @@
         <div class="grid-3 mt-lg">
           <div class="card reveal"><h3>1. Anonymisez</h3><p class="muted">Jamais de nom de client, de site, d’adresse IP réelle. On apprend du cas, pas de l’organisation.</p></div>
           <div class="card reveal"><h3>2. Défendez, n’attaquez pas</h3><p class="muted">On partage des contre-mesures, des architectures, des procédures. Pas d’outillage offensif, pas de détails d’exploitation.</p></div>
-          <div class="card reveal"><h3>3. Rendez ce que vous prenez</h3><p class="muted">Une question posée = une relecture offerte. C’est ce qui fait que les revues arrivent sous 72 h.</p></div>
+          <div class="card reveal"><h3>3. Rendez ce que vous prenez</h3><p class="muted">Une question posée, une relecture offerte. C’est ce qui fait tenir l’entraide dans la durée.</p></div>
         </div>
       </div>
     </section>
@@ -65,7 +65,7 @@
       <div class="container">
         <div class="cta-band reveal">
           <h2>Rejoignez des gens qui ont les mêmes problèmes que vous.</h2>
-          <p class="muted">L’accès à la communauté est inclus dans toutes les offres.</p>
+          <p class="muted">L’accès aux canaux publics est ouvert à tous, sans achat.</p>
           <a class="btn btn-primary btn-lg" href="../tarifs/">Voir les offres</a>
         </div>
       </div>

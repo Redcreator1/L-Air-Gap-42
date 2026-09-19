@@ -35,7 +35,7 @@ Deux règles d’ajustement : une mesure **prérequise** par d’autres remonte 
 **Page 2 · La justification.** Pour chaque mesure de la vague 30 jours, trois lignes : le risque (formulation du modèle de menace), ce que la mesure change, ce qui se passe si on ne la fait pas. Pour les mesures écartées ou repoussées à 12 mois : une ligne d’explication. La direction lit la page 2 pour comprendre la page 1.
 
 :::tip La mesure qui rapporte le plus
-Dans presque tous les plans que nous avons relus, la mesure au meilleur rapport est l’allowlisting sur les postes d’ingénierie. Elle coûte du temps, pas d’argent, et elle neutralise les deux risques les plus fréquents. Si elle n’est pas en vague 30 jours, vérifiez votre score.
+La mesure au meilleur rapport est presque toujours l’allowlisting sur les postes d’ingénierie. Elle coûte du temps, pas d’argent, et elle neutralise les deux risques les plus fréquents. Si elle n’est pas en vague 30 jours, vérifiez votre score.
 :::
 
 ## Relecture

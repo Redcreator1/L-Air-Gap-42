@@ -69,6 +69,27 @@ for (const m of cur.modules) {
   }
 }
 
+// ---------- 2 bis : engagements commerciaux ----------
+// Ce qui est affiché sur le site engage le vendeur. On vérifie que chaque service annoncé
+// dispose au moins de ce qu'il faut pour être tenu.
+const config = (await import(path.join(SITE, 'config.js'))).default;
+const engagements = config.engagements || {};
+const prerequis = {
+  lives: [['community.liveSessions.url', config.community?.liveSessions?.url], ['community.discordInvite', config.community?.discordInvite]],
+  replays: [['community.discordInvite', config.community?.discordInvite]],
+  mastermind: [['community.discordInvite', config.community?.discordInvite]],
+  revuePairs: [['community.discordInvite', config.community?.discordInvite]],
+};
+const utilisable = (v) => typeof v === 'string' && /^https?:\/\//.test(v) && !/REMPLACER/i.test(v);
+for (const [cle, actif] of Object.entries(engagements)) {
+  if (!actif) continue;
+  for (const [nom, valeur] of prerequis[cle] || []) {
+    if (!utilisable(valeur)) err(`Engagement « ${cle} » activé mais ${nom} n’est pas configuré : le site promet un service injoignable.`);
+  }
+}
+const actifs = Object.entries(engagements).filter(([, v]) => v).map(([k]) => k);
+if (actifs.length) alertes.push(`Engagements affichés sur le site (vous devrez les tenir) : ${actifs.join(', ')}`);
+
 // ---------- 3 : liens internes ----------
 async function parcourir(dir) {
   const out = [];

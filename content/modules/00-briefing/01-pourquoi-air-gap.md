@@ -16,7 +16,7 @@ Cette leçon a un seul but : vous convaincre que l’air gap est à la fois **la
 
 Un pare-feu réduit une probabilité. Un air gap supprime une *classe entière* de scénarios : l’attaque distante opportuniste. Le ransomware qui balaie Internet à la recherche d’un port RDP ouvert ne vous trouvera jamais. Le scanner qui teste une CVE fraîchement publiée sur des milliers d’adresses IP ne vous atteindra pas.
 
-C’est énorme. La majorité des incidents documentés chaque année commence par une exposition réseau. Retirer cette exposition, c’est retirer l’attaquant automatisé, l’attaquant pressé, l’attaquant qui n’a pas de raison particulière de s’intéresser à *vous*.
+C’est énorme, et c’est mécanique : une attaque distante suppose un chemin réseau. Retirer ce chemin, c’est retirer l’attaquant automatisé, l’attaquant pressé, l’attaquant qui n’a pas de raison particulière de s’intéresser à *vous*.
 
 Ce qui reste, c’est l’attaquant qui a une raison. Et celui-là ne passe pas par le câble que vous avez retiré. Il passe par la clé USB, le prestataire, la mise à jour, la personne. Le risque n’a pas disparu : il a changé de forme, et il exige d’autres défenses que celles que vous avez l’habitude de déployer.
 
@@ -38,7 +38,7 @@ La promesse la plus fragile est l’**intégrité**. Tout ce que votre système 
 
 ## Quatre signaux d’un air gap qui se dégrade
 
-Un air gap ne casse presque jamais d’un coup. Il s’érode. Voici les signes avant-coureurs que nous retrouvons dans presque tous les audits :
+Un air gap ne casse presque jamais d’un coup. Il s’érode. Voici quatre signes avant-coureurs à chercher chez vous :
 
 1. **Les exceptions ont une durée de vie infinie.** Un accès temporaire accordé « pour la migration » il y a trois ans est toujours actif. Personne ne sait plus qui l’a demandé.
 2. **Le nombre de médias amovibles n’est pas connu.** Si vous ne pouvez pas répondre à « combien de clés USB ont été insérées le mois dernier ? », vous n’avez pas d’air gap, vous avez une convention.

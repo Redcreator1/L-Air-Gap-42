@@ -82,7 +82,12 @@ try {
   }
 
   await page.goto(origin, { waitUntil: 'networkidle' });
-  check('accueil : icônes SVG injectées', (await page.locator('.icon-box svg').count()) >= 9);
+  const boites = await page.locator('.icon-box').count();
+  check('accueil : toutes les icônes sont injectées', boites > 0 && (await page.locator('.icon-box svg').count()) === boites, `${boites} icônes`);
+  check(
+    'accueil : aucun service non tenu n’est annoncé',
+    await page.evaluate(() => !document.querySelector('[data-engagement]')),
+  );
   check('accueil : section témoignages masquée quand vide', (await page.locator('[data-section="testimonials"]').count()) === 0);
   check('accueil : section formateur masquée quand vide', (await page.locator('[data-section="instructor"]').count()) === 0);
   await page.waitForTimeout(2200);

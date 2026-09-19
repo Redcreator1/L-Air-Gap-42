@@ -28,7 +28,7 @@
           "module": "Module 0 · Briefing",
           "palier": "libre",
           "jour": null,
-          "minutes": 9,
+          "minutes": 10,
           "questions": 3,
           "extrait": "Chaque incident ci dessous a touché un système que ses exploitants considéraient comme isolé. Aucun n’a nécessité une faille dans l’isolation elle même : tous ont exploité ce qui traverse l’isolation…"
         },
@@ -587,7 +587,7 @@
       "module": "Module 0 · Briefing",
       "palier": "libre",
       "jour": null,
-      "minutes": 9,
+      "minutes": 10,
       "questions": 3,
       "extrait": "Chaque incident ci dessous a touché un système que ses exploitants considéraient comme isolé. Aucun n’a nécessité une faille dans l’isolation elle même : tous ont exploité ce qui traverse l’isolation…"
     },
@@ -1067,7 +1067,7 @@
   ],
   "archive": {
     "nom": "airgap42-labs.tar.gz",
-    "sha256": "192c0f645ebfd7869b5f272f6006a3d9f6f11fcc5b953b5ad034b965c70892a4",
-    "octets": 264542
+    "sha256": "853e6bf88e0e8510c83428137a92e067c6f7c57b5249268e4b2df60875bbec47",
+    "octets": 264524
   }
 }
