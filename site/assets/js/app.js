@@ -2,7 +2,7 @@
  * Espace membre : tableau de bord, lecteur de leçons, quiz, notes, certificat, recherche.
  * Routes (hash) :  #/  ·  #/m/<module>/<lesson>  ·  #/verrou/<module>  ·  #/certificat  ·  #/reglages
  */
-import { config, url, esc, TIER_LABEL } from './site.js';
+import { config, url, esc, TIER_LABEL, isConfiguredUrl } from './site.js';
 import { store } from './store.js';
 import { decryptModule } from './crypto.js';
 import { renderMarkdown } from './md.js';
@@ -30,6 +30,17 @@ const lessonRef = (m, l) => `#/m/${m.id}/${l.id}`;
 const lessonHref = (m, l) => (canAccess(m, l) ? lessonRef(m, l) : `#/verrou/${m.id}`);
 const accessibleLessons = () => allLessons().filter(({ m, l }) => canAccess(m, l));
 const plural = (n, s) => `${n} ${s}${n > 1 ? 's' : ''}`;
+
+/** Liens de communauté : seuls ceux réellement configurés sont affichés. */
+function communityLinks() {
+  return [
+    [config.community.discordInvite, 'Discord'],
+    [config.community.discussionsUrl, 'Discussions GitHub'],
+  ]
+    .filter(([href]) => isConfiguredUrl(href))
+    .map(([href, label]) => `<a class="btn btn-ghost btn-sm" href="${esc(href)}" target="_blank" rel="noopener">${label}</a>`)
+    .join('');
+}
 
 function progressOf(lessons) {
   const done = lessons.filter(({ m, l }) => store.isDone(m.id, l.id)).length;
@@ -169,8 +180,8 @@ function viewDashboard() {
     <div class="card">
       <h3>Rituels de la communauté</h3>
       <p class="muted">Live hebdomadaire <b>${esc(config.community.liveSessions.day)} ${esc(config.community.liveSessions.time)}</b> : revue d’architecture et questions-réponses.
-      ${lic && TIER_RANK[lic.tier] >= TIER_RANK.pro ? `<a href="${esc(config.community.liveSessions.url)}" target="_blank" rel="noopener">Rejoindre la salle</a>` : '<span class="small">(réservé aux membres Pro et Elite)</span>'}</p>
-      <div class="dash-actions"><a class="btn btn-ghost btn-sm" href="${esc(config.community.discordInvite)}" target="_blank" rel="noopener">Discord</a><a class="btn btn-ghost btn-sm" href="${esc(config.community.discussionsUrl)}" target="_blank" rel="noopener">Discussions GitHub</a></div>
+      ${lic && TIER_RANK[lic.tier] >= TIER_RANK.pro && isConfiguredUrl(config.community.liveSessions.url) ? `<a href="${esc(config.community.liveSessions.url)}" target="_blank" rel="noopener">Rejoindre la salle</a>` : '<span class="small">(réservé aux membres Pro et Elite)</span>'}</p>
+      <div class="dash-actions">${communityLinks()}</div>
     </div>`;
 }
 
@@ -295,7 +306,10 @@ function mountComments(m, l) {
   const g = config.community.giscus;
   const host = $('#comments');
   if (!g.enabled || !g.repoId || !g.categoryId) {
-    host.innerHTML = `<div class="notice"><b>Discussion de la leçon.</b> Posez vos questions sur <a href="${esc(config.community.discussionsUrl)}" target="_blank" rel="noopener">GitHub Discussions</a> ou dans le salon Discord <b>#${esc(m.id)}</b>.</div>`;
+    const discussions = isConfiguredUrl(config.community.discussionsUrl)
+      ? `sur <a href="${esc(config.community.discussionsUrl)}" target="_blank" rel="noopener">GitHub Discussions</a> ou `
+      : '';
+    host.innerHTML = `<div class="notice"><b>Discussion de la leçon.</b> Posez vos questions ${discussions}dans le salon Discord <b>#${esc(m.id)}</b>.</div>`;
     return;
   }
   const s = document.createElement('script');

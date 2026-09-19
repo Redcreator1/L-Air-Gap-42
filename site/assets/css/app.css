@@ -618,3 +618,8 @@
     color: #111;
   }
 }
+
+/* Étapes manuelles reléguées quand l'activation automatique prend le relais */
+.is-secondary {
+  opacity: 0.55;
+}

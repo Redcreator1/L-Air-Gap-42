@@ -44,15 +44,29 @@ Conservez-les dans un gestionnaire de mots de passe. Tant qu'ils ne sont pas dé
 
 ## 3. Paiement
 
-### Option A : Stripe Payment Links (simple)
+### Option A : Stripe, en une commande (recommandé)
 
-1. Dans Stripe, créez trois produits (Essentiel, Pro, Elite) avec un prix unique chacun.
-2. Créez un **Payment Link** par produit. Dans *After payment* :
-   - choisissez **Don't show confirmation page → Redirect customers to your website** avec `https://<votre-site>/merci/?tier=pro` (une URL par palier) ;
-   - **ou** gardez la page de confirmation Stripe et ajoutez un *Custom message* contenant la clé de licence du palier.
-3. Activez la facturation automatique (*Invoices*) et la collecte de la TVA (*Stripe Tax*) si vous vendez dans l'UE.
-4. Envoyez la clé de licence par e-mail : le plus simple est le message de confirmation Stripe (*Settings → Emails → Successful payments*, personnalisable par produit via les métadonnées) ou une automatisation (Zapier / Make : *Checkout completed* → e-mail avec la clé du palier).
-5. Collez les liens dans `site/config.js` → `checkout.tiers[].checkoutUrl`.
+```bash
+STRIPE_SECRET_KEY=sk_test_… npm run stripe:setup            # aperçu, n'écrit pas le dépôt
+STRIPE_SECRET_KEY=sk_test_… npm run stripe:setup -- --write # inscrit les liens dans site/config.js
+```
+
+Le script crée, pour chaque palier de `site/config.js` :
+
+- un **produit** d'identifiant fixe `airgap42_<palier>` (le script est relançable sans créer de doublon) ;
+- un **tarif** unique au montant et dans la devise configurés, en `tax_behavior: exclusive` (prix hors taxes, TVA ajoutée au paiement) ;
+- un **lien de paiement** qui redirige vers `/merci/?tier=<palier>&session_id={CHECKOUT_SESSION_ID}`, émet une facture, calcule la TVA automatiquement et accepte les codes promo.
+
+Si vous changez un prix dans `site/config.js`, relancez le script : un nouveau tarif est créé, l'ancien lien est désactivé et remplacé.
+
+Validez d'abord avec `sk_test_…` (carte de test `4242 4242 4242 4242`), puis rejouez avec `sk_live_…` pour la production.
+
+**Livraison de la clé de licence.** Deux voies, au choix :
+
+1. **Automatique (recommandé)** : déployez `api/activate.js` (section 4) et renseignez `api.activateUrl`. La page Merci échange l'identifiant de session Stripe contre la clé et active l'accès immédiatement. L'acheteur n'attend aucun e-mail et ne saisit rien.
+2. **Par e-mail** : dans Stripe, *Settings → Emails → Successful payments*, ajoutez la clé de licence du palier au message de confirmation, ou branchez une automatisation (Zapier, Make) sur l'événement `checkout.session.completed`.
+
+**Avant branchement.** Tant qu'un `checkoutUrl` contient `REMPLACER`, le site n'affiche aucun lien mort : les boutons deviennent « Être prévenu de l'ouverture » et un bandeau annonce l'ouverture prochaine. Vous pouvez donc publier le site avant d'avoir un compte Stripe.
 
 ### Option B : Lemon Squeezy (TVA UE gérée, clés de licence natives)
 

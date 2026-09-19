@@ -22,6 +22,12 @@ export const fmtPrice = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency
 /** Lit une valeur de config par chemin pointé ('community.discordInvite'). */
 const cfg = (path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), config);
 
+/** Une URL est utilisable si elle est absolue et ne contient pas de gabarit à remplacer. */
+export const isConfiguredUrl = (v) => typeof v === 'string' && /^https?:\/\//.test(v) && !/REMPLACER/i.test(v);
+
+/** Repli quand un service n'est pas encore branché : on écrit, personne ne clique dans le vide. */
+const contactHref = (subject) => `mailto:${config.site.contactEmail}?subject=${encodeURIComponent(subject)}`;
+
 // ---------- Navigation & pied de page ----------
 function renderNav() {
   const host = $('#nav');
@@ -71,8 +77,13 @@ function renderFooter() {
           <li><a href="${url('feed.xml')}">Flux RSS</a></li>
         </ul></div>
         <div><h4>Communauté</h4><ul>
-          <li><a href="${esc(config.community.discordInvite)}" rel="noopener" target="_blank">Discord</a></li>
-          <li><a href="${esc(config.community.discussionsUrl)}" rel="noopener" target="_blank">Discussions GitHub</a></li>
+          ${[
+            [config.community.discordInvite, 'Discord'],
+            [config.community.discussionsUrl, 'Discussions GitHub'],
+          ]
+            .filter(([href]) => isConfiguredUrl(href))
+            .map(([href, label]) => `<li><a href="${esc(href)}" rel="noopener" target="_blank">${label}</a></li>`)
+            .join('')}
           <li><a href="${url('communaute/')}">Sessions live</a></li>
         </ul></div>
         <div><h4>Support</h4><ul>
@@ -143,24 +154,47 @@ export function checkoutHref(tier) {
   }
   return tier.checkoutUrl;
 }
+
+/** Un palier est vendable quand son lien de paiement est réel (ni vide, ni gabarit à remplacer). */
+export function isTierConfigured(tier) {
+  const href = checkoutHref(tier);
+  return Boolean(href) && /^https:\/\//.test(href) && !/REMPLACER/i.test(href);
+}
+
+/** Avant branchement du paiement, le bouton ouvre une prise de contact au lieu d'un lien mort. */
+function waitlistHref(tier) {
+  const subject = `Liste d’attente ${config.site.name} — ${tier.name}`;
+  return `mailto:${config.site.contactEmail}?subject=${encodeURIComponent(subject)}`;
+}
 function pricing() {
   const host = $('#pricing');
   if (!host) return;
   const lemon = config.checkout.provider === 'lemonsqueezy';
+  const anyOpen = config.checkout.tiers.some(isTierConfigured);
   host.innerHTML = config.checkout.tiers
-    .map(
-      (t) => `
-    <article class="price-card ${t.highlight ? 'highlight' : ''}" id="tier-${esc(t.id)}">
+    .map((t) => {
+      const open = isTierConfigured(t);
+      const cta = open
+        ? `<a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block${lemon ? ' lemonsqueezy-button' : ''}" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>`
+        : `<a class="btn btn-ghost btn-block" href="${esc(waitlistHref(t))}" data-waitlist="${esc(t.id)}">Être prévenu de l’ouverture</a>`;
+      return `
+    <article class="price-card ${t.highlight ? 'highlight' : ''}${open ? '' : ' price-card-soon'}" id="tier-${esc(t.id)}">
       ${t.badge ? `<span class="price-badge">${esc(t.badge)}</span>` : ''}
       <h3>${esc(t.name)}</h3>
       <p class="pitch">${esc(t.pitch)}</p>
       <div class="price"><span class="amount">${fmtPrice(t.price)}</span>${t.priceBefore ? `<span class="before">${fmtPrice(t.priceBefore)}</span>` : ''}</div>
       <div class="price-note">${esc(config.checkout.priceNote)}</div>
       <ul class="features">${t.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
-      <a class="btn ${t.highlight ? 'btn-primary' : 'btn-ghost'} btn-block${lemon ? ' lemonsqueezy-button' : ''}" href="${esc(checkoutHref(t))}" data-checkout="${esc(t.id)}">${esc(t.cta)}</a>
-    </article>`,
-    )
+      ${cta}
+    </article>`;
+    })
     .join('');
+  if (!anyOpen) {
+    host.insertAdjacentHTML(
+      'beforebegin',
+      `<div class="notice warn mb-md" id="checkout-pending">Les paiements en ligne ouvrent avec la prochaine cohorte. Laissez-nous votre adresse : vous recevrez le lien d’inscription en premier.</div>`,
+    );
+  }
   $$('[data-checkout]').forEach((a) =>
     a.addEventListener('click', () => {
       try {
@@ -171,6 +205,7 @@ function pricing() {
       if (window.plausible) window.plausible('Checkout', { props: { tier: a.dataset.checkout } });
     }),
   );
+  $$('[data-waitlist]').forEach((a) => a.addEventListener('click', () => window.plausible?.('Waitlist', { props: { tier: a.dataset.waitlist } })));
   if (lemon) {
     const s = document.createElement('script');
     s.src = 'https://assets.lemonsqueezy.com/lemon.js';
@@ -209,9 +244,16 @@ function socialProof() {
     const v = cfg(el.dataset.config);
     if (v !== undefined) el.textContent = v;
   });
+  // Un service non branché ne produit jamais de lien mort : il ouvre une prise de contact.
   $$('[data-href]').forEach((el) => {
     const v = cfg(el.dataset.href);
-    if (v) el.href = v;
+    if (isConfiguredUrl(v)) {
+      el.href = v;
+      return;
+    }
+    el.href = contactHref(`${config.site.name} — ${el.textContent.trim() || 'communauté'}`);
+    el.removeAttribute('target');
+    el.dataset.pending = '1';
   });
   $$('[data-mailto]').forEach((el) => {
     el.textContent = config.site.contactEmail;
