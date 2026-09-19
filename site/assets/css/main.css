@@ -1265,3 +1265,57 @@ html.js .reveal.in {
   margin-top: 10px;
   font-size: 0.88rem;
 }
+
+/* Mode d'emploi : étapes numérotées */
+.etapes {
+  list-style: none;
+  counter-reset: etape;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  /* minmax(0,1fr) : sans cela un bloc de code élargit la piste et fait déborder la page. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+}
+.etapes > li {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 24px 26px;
+}
+.etapes h2 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+.etapes pre {
+  background: #0a0e17;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.etapes code,
+.notice code {
+  font-family: var(--font-mono);
+}
+.etapes pre code {
+  color: #c6fff0;
+}
+.cle-licence {
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+/* Aucun bloc ne doit déborder sur petit écran */
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+code {
+  overflow-wrap: anywhere;
+}

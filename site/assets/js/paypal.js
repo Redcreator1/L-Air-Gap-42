@@ -6,14 +6,13 @@
  *
  * Après approbation :
  *  - si `api.activateUrl` est configuré, la commande est envoyée à la fonction d'activation,
- *    qui l'encaisse et la vérifie côté serveur, puis renvoie la clé de contenu du palier ;
- *    l'accès est activé immédiatement, sans e-mail ni saisie ;
+ *    qui l'encaisse et la vérifie côté serveur, puis renvoie la clé du palier. Elle est
+ *    affichée immédiatement, prête à être recopiée dans le terminal ;
  *  - sinon, la commande est encaissée côté navigateur et l'acheteur est renvoyé vers la page
- *    Merci, la clé de licence lui étant transmise par e-mail.
+ *    Merci, la clé lui étant transmise par e-mail.
  */
-import { config, url, esc, TIER_LABEL } from './site.js';
-import { store } from './store.js';
-import { unwrapWithLicense, fingerprint } from './crypto.js';
+import { config, url, esc } from './site.js';
+import { recupererCle, afficherCle } from './licence.js';
 
 const PP = () => config.checkout.paypal;
 export const isPayPalReady = () => Boolean(PP().clientId);
@@ -42,25 +41,6 @@ function setStatus(host, cls, html) {
   const box = host.querySelector('.pay-status') || host.appendChild(Object.assign(document.createElement('div'), { className: 'pay-status' }));
   box.className = `pay-status notice ${cls}`;
   box.innerHTML = html;
-}
-
-/** Échange une commande approuvée contre la clé de contenu, puis déverrouille le programme. */
-async function activateFromOrder(orderId) {
-  const r = await fetch(config.api.activateUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ license: orderId }),
-  });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.contentLicense) throw new Error(j.error || 'Paiement non vérifié.');
-
-  const keys = await fetch(url('data/keys.json'), { cache: 'no-store' });
-  if (!keys.ok) throw new Error('Programme indisponible pour le moment. Votre clé vous est envoyée par e-mail.');
-  const res = await unwrapWithLicense(await keys.json(), j.contentLicense);
-  if (!res) throw new Error('Clé de contenu refusée.');
-
-  store.setLicense({ tier: res.tier, keys: res.keys, fp: await fingerprint(j.contentLicense), activatedAt: Date.now() });
-  return res.tier;
 }
 
 /**
@@ -98,13 +78,13 @@ export async function mountPayPalButtons(slots) {
           }),
         onApprove: async (data, actions) => {
           if (window.plausible) window.plausible('Checkout', { props: { tier: tier.id } });
-          setStatus(host, '', 'Paiement accepté. Ouverture de votre accès…');
+          setStatus(host, '', 'Paiement accepté. Récupération de votre clé…');
           try {
             if (config.api.activateUrl) {
               // Le serveur encaisse et vérifie : le navigateur ne décide jamais du montant payé.
-              const granted = await activateFromOrder(data.orderID);
-              setStatus(host, 'ok', `Accès <b>${esc(TIER_LABEL[granted])}</b> activé. Redirection…`);
-              setTimeout(() => (location.href = url('app/')), 1000);
+              const { tier: palier, cle } = await recupererCle(data.orderID);
+              if (window.plausible) window.plausible('Activate', { props: { tier: palier } });
+              setStatus(host, 'ok', afficherCle(palier, cle));
               return;
             }
             await actions.order.capture();

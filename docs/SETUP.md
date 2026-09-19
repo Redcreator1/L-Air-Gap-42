@@ -1,147 +1,119 @@
-# Guide d'installation et de mise en production
+# Mise en production
 
-Temps estimé : 45 minutes, sans compter la création des comptes tiers.
+Le principe : **vous n'exécutez aucune commande.** Tout ce qui doit tourner tourne sur GitHub. Ce guide ne vous demande que des réglages dans une interface web et des valeurs à coller dans un fichier de configuration.
 
-## 1. GitHub Pages
+## 1. Publication (déjà en place)
 
 Le workflow `.github/workflows/deploy.yml` se déclenche à chaque push sur `main` :
 
-1. `npm run check` (validations)
-2. `npm run build` avec les secrets (chiffrement)
-3. publication du dossier construit sur la branche **`gh-pages`**.
+1. `npm run check` — curriculum, quiz, liens, intégrité de l'archive de niveaux ;
+2. `npm run build` — construit le site ;
+3. publication sur la branche `gh-pages`.
 
-Sur un dépôt public, GitHub active Pages tout seul au premier push de cette branche : aucun réglage manuel n'est nécessaire. Ce mécanisme a été retenu parce que `actions/configure-pages` avec `enablement: true` échoue quand le jeton d'Actions n'a pas les droits d'administration du dépôt.
+Sur un dépôt public, GitHub active Pages tout seul au premier push de cette branche. **Aucun secret n'est nécessaire** : l'archive de niveaux est déjà chiffrée et versionnée dans le dépôt, la chaîne de publication ne fait que la copier.
 
-Ne modifiez pas la branche `gh-pages` à la main : elle est écrasée à chaque déploiement.
-
-URL résultante : `https://<utilisateur>.github.io/<dépôt>/`. Elle doit correspondre à `site.url` dans `site/config.js` (utilisée pour sitemap, flux RSS, certificat). Vous pouvez aussi définir la variable de dépôt `SITE_URL` (**Settings → Variables**) qui prend le pas.
+Ne modifiez jamais la branche `gh-pages` à la main : elle est écrasée à chaque déploiement.
 
 ### Domaine personnalisé
 
-1. Chez votre registrar, créez un enregistrement `CNAME` (`www` ou sous-domaine) vers `<utilisateur>.github.io`, ou les enregistrements `A`/`AAAA` de GitHub Pages pour un domaine apex.
-2. Renseignez `site.customDomain: 'formation.exemple.com'` dans `site/config.js` → le build génère le fichier `CNAME`.
-3. Mettez `site.url` à jour.
-4. **Settings → Pages → Custom domain**, cochez *Enforce HTTPS* une fois le certificat émis.
-5. Dans `site/404.html` et `scripts/e2e.mjs` (constante `BASE`), remplacez `/L-Air-Gap-42/` par `/` : la page 404 est servie à n'importe quelle profondeur et ne peut pas utiliser de chemins relatifs.
+1. Chez votre registrar : un `CNAME` (`www` ou sous-domaine) vers `<utilisateur>.github.io`, ou les enregistrements `A`/`AAAA` de GitHub Pages pour un domaine apex.
+2. `site/config.js` → `site.customDomain: 'airgap42.com'` et `site.url` à jour.
+3. **Settings → Pages → Custom domain**, puis cochez *Enforce HTTPS*.
+4. Dans `site/404.html` et `scripts/e2e.mjs` (constante `BASE`), remplacez `/L-Air-Gap-42/` par `/`.
 
-## 2. Secrets de production
+## 2. Vos clés de licence
 
-```bash
-npm run keygen
-```
+Les trois clés vendues ont été générées à la construction de l'archive et vivent dans `lab/licences.json`, **qui n'est pas dans le dépôt**. Rangez-les dans un gestionnaire de mots de passe.
 
-Copiez les quatre valeurs dans **Settings → Secrets and variables → Actions → New repository secret** :
+| Palier | Ce que la clé ouvre |
+| --- | --- |
+| Essentiel | modules 1 et 2 |
+| Pro | modules 1 à 5 |
+| Elite | les 6 modules |
 
-| Secret | Rôle | Qui le voit |
-| --- | --- | --- |
-| `CONTENT_MASTER_SECRET` | Dérive les clés de contenu de chaque palier (HKDF) | GitHub Actions uniquement |
-| `LICENSE_KEY_ESSENTIEL` | Clé vendue aux acheteurs Essentiel | Les acheteurs Essentiel |
-| `LICENSE_KEY_PRO` | Clé vendue aux acheteurs Pro | Les acheteurs Pro |
-| `LICENSE_KEY_ELITE` | Clé vendue aux acheteurs Elite | Les acheteurs Elite |
+Une licence supérieure ouvre les paliers inférieurs. Vous n'avez rien à faire pour cela : les enveloppes de clés sont déjà dans l'archive.
 
-Conservez-les dans un gestionnaire de mots de passe. Tant qu'ils ne sont pas définis, le build tourne en **mode démo** avec des clés publiques et un bandeau d'avertissement sur le site.
+**Changer une clé** oblige à reconstruire l'archive, donc à prévenir les acheteurs concernés : leur ancienne clé cessera de fonctionner. Ne le faites qu'en cas de fuite avérée.
 
-**Rotation.** Changer `LICENSE_KEY_*` invalide les anciennes clés : prévenez les acheteurs et envoyez-leur la nouvelle. Changer `CONTENT_MASTER_SECRET` rechiffre tout sans effet visible pour les acheteurs (les enveloppes sont régénérées au build).
-
-## 3. Paiement
-
-Le paiement passe par **PayPal**. Deux options, au choix.
+## 3. Paiement PayPal
 
 ### Option A : boutons PayPal (recommandé)
 
-1. Sur https://developer.paypal.com/dashboard/applications, créez une application. Notez le **Client ID** (public) et le **Secret** (à ne jamais publier). Faites-le d'abord en **Sandbox**.
-2. Dans `site/config.js` → `checkout.paypal` : collez le `clientId`, laissez `sandbox: true` le temps des essais.
-3. Un bouton PayPal s'affiche alors dans chaque carte de tarif. Le montant, la devise et le palier viennent de `checkout.tiers`.
-4. Testez avec un compte acheteur Sandbox (https://developer.paypal.com/dashboard/accounts), puis repassez en production : nouvelle application en mode *Live*, `clientId` de production, `sandbox: false`.
+1. Sur https://developer.paypal.com/dashboard/applications, créez une application. Notez le **Client ID** (public) et le **Secret** (jamais publié). Commencez en **Sandbox**.
+2. `site/config.js` → `checkout.paypal.clientId`, et `sandbox: true` le temps des essais.
+3. Un bouton PayPal apparaît dans chaque carte de tarif. Montant, devise et palier viennent de `checkout.tiers`.
+4. Testez avec un compte acheteur Sandbox, puis repassez en production : application *Live*, `clientId` de production, `sandbox: false`.
 
-**Livraison de la clé de licence.** Deux voies :
+**Délivrance de la clé.** Deux voies :
 
-1. **Automatique (recommandé)** : déployez `api/activate.js` (section 4) et renseignez `api.activateUrl`. Après approbation, la commande est envoyée à la fonction, qui l'**encaisse et la vérifie côté serveur** (statut, palier, devise, montant réellement réglé), puis renvoie la clé du palier. L'accès s'ouvre immédiatement, sans e-mail ni saisie.
-2. **Par e-mail** : sans cette fonction, la commande est encaissée côté navigateur et l'acheteur atterrit sur la page Merci. Vous lui envoyez alors la clé `LICENSE_KEY_<palier>` depuis votre boîte ou une automatisation branchée sur la notification PayPal.
+1. **Automatique (recommandé)** : déployez `api/activate.js` (section 4) et renseignez `api.activateUrl`. La commande est encaissée et vérifiée côté serveur, puis la clé s'affiche à l'écran, prête à être recopiée dans le terminal.
+2. **Par e-mail** : sans cette fonction, vous envoyez la clé du palier après avoir vérifié le paiement dans votre tableau de bord PayPal.
 
-> **Important.** Le bouton construit la commande dans le navigateur : le montant peut être manipulé par un acheteur malveillant. C'est la fonction d'activation qui protège la vente, en comparant le montant réellement encaissé au tarif attendu (`PAYPAL_PRICES`). Sans elle, vérifiez chaque paiement dans votre tableau de bord PayPal avant d'envoyer une clé.
+> **Important.** Le bouton construit la commande dans le navigateur : le montant peut y être manipulé. C'est la fonction d'activation qui protège la vente, en comparant le montant réellement encaissé au tarif attendu (`PAYPAL_PRICES`). Sans elle, vérifiez chaque paiement avant d'envoyer une clé.
 
 ### Option B : liens de paiement PayPal (sans code)
 
-Dans votre compte PayPal, *Outils → Liens et boutons de paiement*, créez un lien par palier, puis collez chaque URL dans le `checkoutUrl` du palier correspondant et laissez `clientId` vide. Le montant est fixé par PayPal, donc non manipulable, mais il n'y a pas d'activation automatique : la clé part par e-mail.
+Dans PayPal, *Outils → Liens et boutons de paiement*, créez un lien par palier, collez chaque URL dans le `checkoutUrl` du palier, et laissez `clientId` vide. Le montant est fixé par PayPal, donc non manipulable, mais il n'y a pas de délivrance automatique.
 
 ### Avant branchement
 
-Tant qu'aucun `clientId` ni `checkoutUrl` n'est renseigné, le site n'affiche aucun lien mort : les boutons deviennent « Être prévenu de l'ouverture » et un bandeau annonce l'ouverture prochaine. Vous pouvez donc publier le site avant d'avoir un compte PayPal.
+Tant qu'aucun `clientId` ni `checkoutUrl` n'est renseigné, aucun lien mort n'apparaît : les boutons deviennent « Être prévenu de l'ouverture » et un bandeau annonce l'ouverture prochaine.
 
-### Page « merci »
-
-`site/merci/` explique les trois étapes (récupérer la clé, l'activer, rejoindre le Discord). Elle lit `?tier=` pour la mesure d'audience et `?order=` pour l'activation automatique.
-
-## 4. API d'activation (fortement recommandée avec l'option A, Vercel)
-
-Elle encaisse et vérifie la commande PayPal côté serveur, puis délivre la clé du palier.
+## 4. Délivrance automatique de la clé (optionnel, Vercel)
 
 ```bash
-npm i -g vercel
-vercel link
 vercel env add PAYPAL_CLIENT_ID        # identifiant de l'application PayPal
-vercel env add PAYPAL_CLIENT_SECRET    # secret de l'application (jamais dans le dépôt)
+vercel env add PAYPAL_CLIENT_SECRET    # secret de l'application
 vercel env add PAYPAL_SANDBOX          # 1 en bac à sable, à supprimer en production
 vercel env add PAYPAL_PRICES           # {"essentiel":490,"pro":1490,"elite":4900}
 vercel env add PAYPAL_CURRENCY         # EUR
-vercel env add LICENSE_KEY_ESSENTIEL   # + PRO, ELITE : mêmes valeurs que les secrets GitHub
-vercel env add ALLOWED_ORIGIN          # https://<utilisateur>.github.io
+vercel env add LICENCE_ESSENTIEL       # vos trois clés, cf. section 2
+vercel env add ALLOWED_ORIGIN          # https://redcreator1.github.io
 vercel deploy --prod
 ```
 
-Puis `site/config.js` → `api.activateUrl: 'https://<projet>.vercel.app/api/activate'`. Le site reste sur GitHub Pages ; seule l'activation passe par Vercel.
+Les clés s'appellent ici `LICENSE_KEY_ESSENTIEL`, `LICENSE_KEY_PRO`, `LICENSE_KEY_ELITE` dans la fonction : reportez-y les valeurs de `lab/licences.json`. Puis `site/config.js` → `api.activateUrl`.
 
-`PAYPAL_PRICES` doit refléter les prix de `site/config.js` : c'est la référence qui empêche qu'un paiement minoré ouvre un palier. Si vous changez un prix, changez les deux.
+`PAYPAL_PRICES` doit refléter les prix de `site/config.js` : c'est la référence qui empêche qu'un paiement minoré ouvre un palier.
+
+*(Cette étape est la seule du guide qui demande des commandes. Si vous ne voulez pas la faire, restez sur la délivrance par e-mail : le reste fonctionne sans.)*
 
 ## 5. Communauté
 
-- **Discord** : créez le serveur (plan de salons dans `docs/COMMUNAUTE.md`), générez une invitation permanente → `community.discordInvite`. Pour le widget live : *Server Settings → Widget → Enable*, copiez l'ID → `community.discordServerId`.
-- **GitHub Discussions** : **Settings → General → Features → Discussions**. Créez une catégorie « Leçons » (format *Announcement* ou *Open discussion*). Les modèles de `.github/DISCUSSION_TEMPLATE/` structurent les nouveaux fils.
-- **giscus** (commentaires sous chaque leçon) : installez l'app https://github.com/apps/giscus sur le dépôt, puis sur https://giscus.app récupérez `repoId` et `categoryId` → `community.giscus`, `enabled: true`. Pour garder les commentaires privés aux membres, rendez le dépôt privé et donnez l'accès aux acheteurs en tant que collaborateurs (ou laissez les discussions ouvertes : c'est aussi du référencement).
-- **Lives** : `community.liveSessions` (jour, heure, URL de visio visible uniquement aux membres Pro/Elite connectés).
+- **Discord** : créez le serveur (plan de salons dans `docs/COMMUNAUTE.md`), invitation permanente → `community.discordInvite`. Widget : *Server Settings → Widget → Enable*, ID → `community.discordServerId`.
+- **GitHub Discussions** : **Settings → General → Features → Discussions**. Modèles fournis dans `.github/DISCUSSION_TEMPLATE/`.
+- **Lives** : `community.liveSessions`.
 
-## 6. Newsletter et analytics
+Tant qu'une URL de communauté contient `REMPLACER`, le lien correspondant est masqué au lieu de pointer dans le vide.
 
-- `newsletter.provider` : `formspree` (formulaire → e-mail, réponse vérifiée), `buttondown` (formulaire intégré, réponse opaque) ou `mailto` (aucun service). D'autres fournisseurs se branchent dans `newsletter()` de `site/assets/js/site.js` ; testez-les avant de les activer.
-- `analytics.provider` : `plausible` ou `umami` (sans cookie, pas de bandeau nécessaire). Les événements `Checkout`, `Activate`, `Purchase`, `Newsletter` sont envoyés automatiquement.
+## 6. Newsletter et mesure d'audience
 
-## 7. Politique de sécurité de contenu (CSP)
+- `newsletter.provider` : `formspree`, `buttondown` ou `mailto`.
+- `analytics.provider` : `plausible` ou `umami`, sans cookie, donc sans bandeau de consentement.
 
-Chaque page déclare une CSP dans une balise `<meta http-equiv="Content-Security-Policy">` (GitHub Pages ne permet pas d'en-têtes HTTP personnalisés). Elle autorise uniquement : les scripts du site, giscus, PayPal et Plausible ; les polices Google ; les iframes giscus, Discord et PayPal ; les connexions vers Formspree, Buttondown, Plausible, PayPal et `*.vercel.app`.
+## 7. Politique de sécurité de contenu
 
-Si vous ajoutez un service (Umami sur votre domaine, une autre visio, un lecteur vidéo), ajoutez son origine à la directive concernée dans **toutes** les pages, puis lancez `npm run e2e` : le test échoue sur toute violation CSP. Les scripts inline sont interdits par cette politique : le code de page vit dans `site/assets/js/pages/`.
+Chaque page déclare une CSP en balise `<meta>` (GitHub Pages ne permet pas d'en-têtes personnalisés). Elle autorise les scripts du site, PayPal, giscus et Plausible ; les polices Google ; les iframes PayPal, Discord et giscus. Si vous ajoutez un service, ajoutez son origine sur **toutes** les pages et relancez `npm run e2e` : le test échoue sur toute violation.
 
-## 8. Juridique et allégations commerciales
+## 8. Confidentialité du contenu
 
-- `site/legal/index.html` contient CGV, mentions légales et politique de confidentialité pré-rédigées pour une vente de contenu numérique en France/UE. Remplacez les champs entre crochets. Faites relire si vous vendez à des consommateurs hors UE.
-- Les prix sont affichés avec la mention de `checkout.priceNote` (HT par défaut). Pour une vente à des consommateurs en France, affichez des prix TTC.
-- `testimonials`, `cohort.seatsLeft` et `site.instructor` sont vides ou neutres par défaut : ne renseignez que des témoignages réels (avec accord écrit), des places réellement disponibles et une expérience vérifiable. Une allégation fausse relève des pratiques commerciales trompeuses.
+Le dépôt est public et `content/modules/` contient les 45 leçons en clair, historique compris. **Le texte du parcours est donc lisible par qui sait regarder.** L'archive téléchargée, elle, est bien chiffrée.
 
-## 9. Vérifier le déploiement
+Trois postures, à choisir en connaissance de cause :
 
-1. Ouvrez le site : le bandeau « Mode démo » ne doit **plus** apparaître.
-2. Page **Accès** : saisissez une vraie clé de licence de chaque palier, vérifiez que les bons modules s'ouvrent.
-3. Testez un achat réel à 1 € (créez un prix temporaire) de bout en bout : paiement → e-mail → activation.
-4. Vérifiez `sitemap.xml`, `feed.xml`, et soumettez le site à la Search Console.
+1. **Assumer.** Le produit vendu n'est pas le texte : c'est le parcours guidé, les validations, la communauté, les lives, le certificat. C'est le modèle d'OverTheWire, dont tout le contenu est public.
+2. **Séparer les dépôts.** La source (leçons, scripts) dans un dépôt privé ; un dépôt public ne recevant que le site construit et l'archive chiffrée. Deux clics dans l'interface GitHub, aucune commande.
+3. **Réécrire l'historique.** Purger les leçons du dépôt public et forcer la réécriture. Destructif et irréversible : à ne faire qu'avec une sauvegarde, et cela ne récupère pas ce qui a déjà été copié.
 
-## 10. Tests
+## 9. Juridique et allégations
 
-```bash
-npm run check                     # curriculum, quiz, liens, chiffrement (sans navigateur)
-npm ci && npx playwright install chromium
-npm run build && npm run e2e      # parcours complet dans Chromium, sous /L-Air-Gap-42/
-SHOTS=1 npm run e2e               # + captures d'écran dans .e2e-shots/
-```
+- `site/legal/index.html` : remplacez les champs entre crochets (raison sociale, SIREN, TVA, médiateur).
+- Vente à des consommateurs en France : les prix affichés doivent être TTC. Ajustez `checkout.priceNote`.
+- `testimonials`, `cohort.seatsLeft` et `site.instructor` sont vides ou neutres par défaut. N'y mettez que du vérifiable.
 
-Le workflow `ci.yml` exécute les deux sur chaque pull request ; `deploy.yml` exécute `check` avant chaque publication.
+## 10. Vérifier après publication
 
-## Dépannage
-
-| Symptôme | Cause probable | Correctif |
-| --- | --- | --- |
-| Bandeau « Mode démo » en production | Secrets non définis ou mal nommés | Vérifiez les 4 secrets, relancez le workflow |
-| « Clé invalide » avec une bonne clé | Le site n'a pas été rebuildé après changement de secret ; ou espaces/caractères ambigus | Relancez le workflow ; la saisie ignore la casse et les espaces mais pas O/0 |
-| Pages non activées | Droits du `GITHUB_TOKEN` | Settings → Pages → Source : GitHub Actions |
-| Styles absents sur la 404 | Chemins absolus `/L-Air-Gap-42/` | Adaptez `site/404.html` à votre chemin de base |
-| Contenu premium visible dans `dist/data` | Impossible : seuls les JSON chiffrés y sont ; les leçons gratuites sont en clair par conception | — |
+1. Ouvrez la page **Jouer** : l'empreinte affichée doit être celle du fichier téléchargé.
+2. Téléchargez l'archive, extrayez-la, lancez `./airgap42` : les trois premiers niveaux doivent s'ouvrir sans clé.
+3. Enregistrez une clé de licence : le palier correspondant doit se déverrouiller, et lui seul.
+4. Faites un achat réel à 1 € (prix temporaire) de bout en bout.

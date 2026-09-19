@@ -1,0 +1,326 @@
+#!/bin/sh
+# ============================================================================
+#  L'Air Gap 42 — lanceur de niveaux
+#
+#  Ce programme fonctionne HORS-LIGNE, sans droits d'administration, sans rien
+#  installer. Il ne contacte aucun serveur et n'écrit que dans son propre
+#  dossier. C'est cohérent avec ce qu'il enseigne : vous pouvez débrancher.
+#
+#  Dépendances : sh, openssl, base64, et sha256sum ou shasum.
+#
+#  Usage :
+#     ./airgap42                    état et niveau en cours
+#     ./airgap42 licence <clé>      enregistre votre clé de licence
+#     ./airgap42 niveau <n>         affiche le briefing du niveau n
+#     ./airgap42 valider <n>        répond aux questions de contrôle
+#     ./airgap42 progression        tableau d'avancement
+#     ./airgap42 certificat         certificat de fin de parcours
+#     ./airgap42 aide               cette aide
+# ============================================================================
+
+set -eu
+
+RACINE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+NIVEAUX="$RACINE/niveaux"
+INDEX="$NIVEAUX/index"
+ETAT="$RACINE/.etat"
+F_LICENCE="$ETAT/licence"
+F_RESOLUS="$ETAT/resolus"
+ITER=310000
+
+# ---------------------------------------------------------------- présentation
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  C_T=$(printf '\033[1;36m')  # titre
+  C_V=$(printf '\033[0;32m')  # succès
+  C_R=$(printf '\033[0;31m')  # erreur
+  C_J=$(printf '\033[0;33m')  # avertissement
+  C_D=$(printf '\033[0;90m')  # discret
+  C_0=$(printf '\033[0m')
+else
+  C_T=''; C_V=''; C_R=''; C_J=''; C_D=''; C_0=''
+fi
+
+titre() { printf '%s%s%s\n' "$C_T" "$1" "$C_0"; }
+ok()    { printf '%s%s%s\n' "$C_V" "$1" "$C_0"; }
+err()   { printf '%s%s%s\n' "$C_R" "$1" "$C_0" >&2; }
+avert() { printf '%s%s%s\n' "$C_J" "$1" "$C_0"; }
+discret(){ printf '%s%s%s\n' "$C_D" "$1" "$C_0"; }
+regle() { printf '%s%s%s\n' "$C_D" "────────────────────────────────────────────────────────────────────────" "$C_0"; }
+
+mourir() { err "$1"; exit 1; }
+
+# ------------------------------------------------------------------- outillage
+command -v openssl >/dev/null 2>&1 || mourir "openssl est requis. Installez-le (paquet « openssl ») puis relancez."
+
+if command -v sha256sum >/dev/null 2>&1; then
+  empreinte() { printf '%s' "$1" | sha256sum | cut -d' ' -f1; }
+elif command -v shasum >/dev/null 2>&1; then
+  empreinte() { printf '%s' "$1" | shasum -a 256 | cut -d' ' -f1; }
+else
+  mourir "sha256sum ou shasum est requis."
+fi
+
+mkdir -p "$ETAT"
+[ -f "$F_RESOLUS" ] || : > "$F_RESOLUS"
+[ -f "$INDEX" ] || mourir "Index des niveaux introuvable. Réextrayez l'archive sans la modifier."
+
+# ------------------------------------------------------------------ index
+# Format d'une ligne : n|id|titre|palier|jour|minutes|nb_questions|sha_reponses
+champ()      { printf '%s' "$1" | cut -d'|' -f"$2"; }
+ligne_par_n(){ awk -F'|' -v n="$1" '$1==n {print; exit}' "$INDEX"; }
+total()      { wc -l < "$INDEX" | tr -d ' '; }
+
+licence_lue() { [ -f "$F_LICENCE" ] && cat "$F_LICENCE" || printf ''; }
+
+# Récupère la clé de contenu d'un niveau : on essaie la licence enregistrée, puis la
+# licence publique « libre ». Une licence supérieure ouvre les paliers inférieurs, parce
+# que la clé de contenu est réemballée sous chacun d'eux.
+cle_contenu() {
+  _id=$1
+  for _lic in "$(licence_lue)" libre; do
+    [ -n "$_lic" ] || continue
+    for _f in "$NIVEAUX/$_id".k.*; do
+      [ -f "$_f" ] || continue
+      if _k=$(ouvrir "$_f" "$_lic:$_id"); then
+        printf '%s' "$_k"
+        return 0
+      fi
+    done
+  done
+  return 1
+}
+
+# Déchiffre et vérifie le marqueur d'entête. Une mauvaise clé fait sortir AES-CBC en
+# produisant des octets parasites : sans ce contrôle, on croirait la clé bonne.
+ouvrir() {
+  _fichier=$1; _passe=$2
+  [ -f "$_fichier" ] || return 1
+  _clair=$(openssl enc -d -aes-256-cbc -pbkdf2 -iter "$ITER" -md sha256 -base64 \
+    -pass "pass:$_passe" -in "$_fichier" 2>/dev/null || true)
+  case "$_clair" in
+    AG42/1*) printf '%s\n' "$_clair" | sed '1d' ;;
+    *) return 1 ;;
+  esac
+}
+
+resolu() { grep -qx -- "$1" "$F_RESOLUS" 2>/dev/null; }
+marquer_resolu() { resolu "$1" || printf '%s\n' "$1" >> "$F_RESOLUS"; }
+# grep -c sort en échec quand le compte vaut 0 : on neutralise le code de retour.
+nb_resolus() { _c=$(grep -c . "$F_RESOLUS" 2>/dev/null || true); printf '%s' "${_c:-0}"; }
+
+# Premier niveau non résolu, ou le dernier si tout est fait.
+niveau_courant() {
+  _n=1
+  while [ "$_n" -le "$(total)" ]; do
+    _l=$(ligne_par_n "$_n")
+    resolu "$(champ "$_l" 2)" || { printf '%s' "$_n"; return; }
+    _n=$((_n + 1))
+  done
+  printf '%s' "$(total)"
+}
+
+normaliser() {
+  printf '%s' "$1" | tr 'A-Z' 'a-z' | tr -cd 'a-d'
+}
+
+# ---------------------------------------------------------------- commandes
+cmd_aide() {
+  titre "L'Air Gap 42 — lanceur de niveaux"
+  cat <<'FIN'
+
+  ./airgap42                    état et niveau en cours
+  ./airgap42 licence <clé>      enregistre votre clé de licence
+  ./airgap42 niveau <n>         affiche le briefing du niveau n
+  ./airgap42 valider <n>        répond aux questions de contrôle du niveau n
+  ./airgap42 progression        tableau d'avancement
+  ./airgap42 certificat         certificat de fin de parcours
+  ./airgap42 aide               cette aide
+
+  Règle du jeu : lisez le briefing, appliquez-le sur votre propre
+  environnement, puis validez. Un niveau validé ouvre le suivant.
+
+  Tout se passe ici, hors-ligne. Aucune donnée ne sort de ce dossier.
+FIN
+}
+
+cmd_licence() {
+  [ $# -ge 1 ] || mourir "Usage : ./airgap42 licence <clé>"
+  _cle=$(printf '%s' "$1" | tr 'a-z' 'A-Z' | tr -d ' ')
+  # On valide la clé en cherchant le palier le plus élevé qu'elle ouvre réellement.
+  _trouve=''
+  while IFS='|' read -r _n _id _titre _palier _reste; do
+    [ -n "$_id" ] && [ "$_palier" != "libre" ] || continue
+    for _f in "$NIVEAUX/$_id".k.*; do
+      [ -f "$_f" ] || continue
+      if ouvrir "$_f" "$_cle:$_id" >/dev/null 2>&1; then _trouve=$_palier; break; fi
+    done
+    [ -n "$_trouve" ] && break
+  done < "$INDEX"
+
+  if [ -n "$_trouve" ]; then
+    printf '%s\n' "$_cle" > "$F_LICENCE"
+    ok "Licence valide. Niveaux du palier « $_trouve » et au-delà déverrouillés."
+  else
+    mourir "Clé refusée. Vérifiez la saisie (les lettres O et I ne sont jamais utilisées)."
+  fi
+}
+
+cmd_niveau() {
+  [ $# -ge 1 ] || mourir "Usage : ./airgap42 niveau <n>"
+  _n=$1
+  _l=$(ligne_par_n "$_n")
+  [ -n "$_l" ] || mourir "Niveau $_n inexistant. Il y a $(total) niveaux."
+  _id=$(champ "$_l" 2); _titre=$(champ "$_l" 3); _palier=$(champ "$_l" 4)
+  _jour=$(champ "$_l" 5); _min=$(champ "$_l" 6)
+
+  # Progression : on n'ouvre pas un niveau si le précédent n'est pas validé.
+  if [ "$_n" -gt 1 ]; then
+    _prec=$(ligne_par_n $((_n - 1)))
+    if ! resolu "$(champ "$_prec" 2)"; then
+      avert "Niveau $((_n - 1)) non validé : terminez-le d'abord."
+      discret "  ./airgap42 valider $((_n - 1))"
+      exit 1
+    fi
+  fi
+
+  if ! _passe=$(cle_contenu "$_id"); then
+    if [ -z "$(licence_lue)" ]; then
+      avert "Niveau $_n — palier « $_palier » : licence requise."
+      discret "  ./airgap42 licence <votre clé>"
+    else
+      avert "Niveau $_n — votre licence n'inclut pas le palier « $_palier »."
+      discret "  Voir les offres sur la page Tarifs du site."
+    fi
+    exit 1
+  fi
+
+  if ! _texte=$(ouvrir "$NIVEAUX/$_id.enc" "$_passe"); then
+    mourir "Archive altérée : réextrayez-la après avoir vérifié son empreinte SHA-256."
+  fi
+
+  regle
+  printf '%s  Niveau %s · %s%s\n' "$C_T" "$_n" "$_titre" "$C_0"
+  discret "  palier $_palier · jour ${_jour:-–} · ~${_min} min"
+  regle
+  printf '%s\n' "$_texte"
+  regle
+  discret "Quand vous avez appliqué la leçon :  ./airgap42 valider $_n"
+}
+
+cmd_valider() {
+  [ $# -ge 1 ] || mourir "Usage : ./airgap42 valider <n>"
+  _n=$1
+  _l=$(ligne_par_n "$_n")
+  [ -n "$_l" ] || mourir "Niveau $_n inexistant."
+  _id=$(champ "$_l" 2); _nbq=$(champ "$_l" 7); _sha=$(champ "$_l" 8)
+
+  if [ "$_nbq" -eq 0 ] 2>/dev/null; then
+    marquer_resolu "$_id"
+    ok "Niveau $_n validé."
+    return
+  fi
+
+  printf '%s\n' "Répondez aux $_nbq questions de contrôle du briefing."
+  discret "Une lettre par question (a, b, c ou d)."
+  _rep=''
+  _i=1
+  while [ "$_i" -le "$_nbq" ]; do
+    printf '  question %s > ' "$_i"
+    IFS= read -r _r || mourir "Entrée interrompue."
+    _r=$(normaliser "$_r")
+    if [ -z "$_r" ]; then
+      err "  Réponse attendue : a, b, c ou d."
+      continue
+    fi
+    _rep="$_rep$(printf '%s' "$_r" | cut -c1)"
+    _i=$((_i + 1))
+  done
+
+  if [ "$(empreinte "$_id:$_rep")" = "$_sha" ]; then
+    marquer_resolu "$_id"
+    ok "Correct. Niveau $_n validé."
+    _suiv=$((_n + 1))
+    if [ "$_suiv" -le "$(total)" ]; then
+      discret "Niveau suivant :  ./airgap42 niveau $_suiv"
+    else
+      ok "Vous avez terminé le parcours. ./airgap42 certificat"
+    fi
+  else
+    err "Réponses incorrectes. Relisez le briefing : ./airgap42 niveau $_n"
+    exit 1
+  fi
+}
+
+cmd_progression() {
+  _t=$(total); _f=$(nb_resolus)
+  _pct=0
+  [ "$_t" -gt 0 ] && _pct=$((_f * 100 / _t))
+  titre "Progression : $_f/$_t niveaux ($_pct %)"
+  regle
+  while IFS='|' read -r _n _id _titre _palier _jour _min _nbq _sha; do
+    [ -n "$_n" ] || continue
+    if resolu "$_id"; then _m="${C_V}[x]${C_0}"
+    elif [ "$_palier" != "libre" ] && [ -z "$(licence_lue)" ]; then _m="${C_D}[~]${C_0}"
+    else _m="[ ]"; fi
+    printf '  %s %2s · %-56.56s %s%s%s\n' "$_m" "$_n" "$_titre" "$C_D" "$_palier" "$C_0"
+  done < "$INDEX"
+  regle
+  [ -n "$(licence_lue)" ] || discret "[~] niveaux verrouillés — ./airgap42 licence <votre clé>"
+}
+
+cmd_certificat() {
+  _t=$(total); _f=$(nb_resolus)
+  if [ "$_f" -lt "$_t" ]; then
+    avert "Certificat disponible à $_t/$_t niveaux. Vous en êtes à $_f."
+    exit 1
+  fi
+  printf 'Nom à faire figurer > '
+  IFS= read -r _nom || _nom=''
+  [ -n "$_nom" ] || _nom='—'
+  _code=$(empreinte "$(licence_lue):$_nom:$_t" | cut -c1-16 | tr 'a-z' 'A-Z')
+  regle
+  titre "                  CERTIFICAT DE RÉUSSITE"
+  printf '\n                      L'"'"'Air Gap 42\n\n'
+  printf '   atteste que %s%s%s\n\n' "$C_T" "$_nom" "$C_0"
+  printf '   a complété les %s niveaux du parcours sur la conception,\n' "$_t"
+  printf '   l'"'"'exploitation et l'"'"'audit des systèmes isolés.\n\n'
+  printf '   Délivré le %s\n' "$(date '+%d/%m/%Y')"
+  printf '   Code de vérification : %s\n' "$_code"
+  regle
+  discret "Conservez ce code : il atteste de votre parcours."
+}
+
+cmd_etat() {
+  _n=$(niveau_courant)
+  _l=$(ligne_par_n "$_n")
+  _t=$(total); _f=$(nb_resolus)
+  titre "L'Air Gap 42 — $_f/$_t niveaux validés"
+  if [ -z "$(licence_lue)" ]; then
+    discret "Licence : aucune (niveaux libres uniquement)"
+  else
+    discret "Licence : enregistrée"
+  fi
+  regle
+  if [ "$_f" -ge "$_t" ]; then
+    ok "Parcours terminé.  ./airgap42 certificat"
+  else
+    printf '  Niveau en cours : %s%s · %s%s\n' "$C_T" "$_n" "$(champ "$_l" 3)" "$C_0"
+    printf '\n  Lire le briefing :  ./airgap42 niveau %s\n' "$_n"
+    printf '  Valider          :  ./airgap42 valider %s\n' "$_n"
+  fi
+  regle
+  discret "./airgap42 aide  ·  ./airgap42 progression"
+}
+
+# ------------------------------------------------------------------ aiguillage
+if [ $# -eq 0 ]; then cmd_etat; exit 0; fi
+_action=$1; shift
+case "$_action" in
+  aide|-h|--help|help) cmd_aide ;;
+  licence)             cmd_licence "$@" ;;
+  niveau)              cmd_niveau "$@" ;;
+  valider)             cmd_valider "$@" ;;
+  progression)         cmd_progression ;;
+  certificat)          cmd_certificat ;;
+  *) err "Action inconnue : $_action"; cmd_aide; exit 1 ;;
+esac
