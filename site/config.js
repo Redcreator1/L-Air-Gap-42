@@ -131,7 +131,7 @@ export default {
       {
         id: 'elite',
         name: 'Elite',
-        price: 2800,
+        price: 1900,
         priceBefore: null,
         pitch: 'Le parcours entier, gouvernance et audit compris. Pour RSSI, auditeurs et consultants.',
         checkoutUrl: '',

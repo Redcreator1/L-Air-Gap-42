@@ -5,7 +5,7 @@ Ce document décrit comment le produit est conçu pour vendre, et ce qu'il faut 
 ## Positionnement
 
 - **Niche à fort enjeu, faible concurrence.** La sécurité des systèmes isolés concerne l'énergie, la défense, la santé, la finance, l'industrie. Les formations existantes sont soit génériques (OT/ICS), soit des slides de conférence. Aucune ne traite transferts, détection hors-ligne, canaux cachés et conformité comme un parcours opérationnel.
-- **Acheteur B2B, budget formation.** L'acheteur type fait financer par son employeur (plan de formation, OPCO) ou facture à son client (consultant). Le prix se compare à une journée de conseil, pas à un cours en ligne grand public. D'où les prix : 390 / 1 190 / 2 800 €, plafonnés à 2 800 €.
+- **Acheteur B2B, budget formation.** L'acheteur type fait financer par son employeur (plan de formation, OPCO) ou facture à son client (consultant). Le prix se compare à une journée de conseil, pas à un cours en ligne grand public. D'où les prix : 390 / 1 190 / 1 900 €. L'écart entre Pro et Elite reste proportionné à ce qui les sépare réellement aujourd'hui : le module gouvernance et audit.
 - **Promesse mesurable.** « Score d'isolation » avant/après, livrables concrets (modèle de menace, schéma, runbook, plan 90 jours, dossier d'architecture). On vend un résultat, pas des heures de vidéo.
 
 ## Les trois paliers
@@ -14,11 +14,11 @@ Ce document décrit comment le produit est conçu pour vendre, et ce qu'il faut 
 | --- | --- | --- | --- |
 | Essentiel | 390 € | Ingénieur qui veut comprendre et concevoir | Niveaux 4 à 17 |
 | **Pro** (ancre) | 1 190 € | Responsable d'un périmètre à défendre | Niveaux 4 à 38 : transferts, détection, canaux cachés |
-| Elite | 2 800 € | RSSI, auditeur, consultant | Les 45 niveaux, gouvernance et audit compris |
+| Elite | 1 900 € | RSSI, auditeur, consultant | Les 45 niveaux, gouvernance et audit compris |
 
-Le palier **Pro** est l'ancre : mis en avant, recommandé. Essentiel sert de porte d'entrée et d'upgrade ; Elite fixe le haut de l'échelle et capte les consultants, pour qui 2 800 € s'amortissent en une mission.
+Le palier **Pro** est l'ancre : mis en avant, recommandé. Essentiel sert de porte d'entrée et d'upgrade ; Elite fixe le haut de l'échelle et capte les consultants, pour qui 1 900 € s'amortissent en une mission.
 
-**Upgrade** : à tout moment, en payant la différence (800 € d'Essentiel à Pro, 1 610 € de Pro à Elite), par demande de paiement PayPal. La progression, stockée chez l'apprenant, est conservée.
+**Upgrade** : à tout moment, en payant la différence (800 € d'Essentiel à Pro, 710 € de Pro à Elite), par demande de paiement PayPal. La progression, stockée chez l'apprenant, est conservée.
 
 **Entreprise** : à partir de 5 licences, devis. Proposez une session privée de lancement (2 h) et un tarif dégressif (−20 % à 5, −30 % à 10).
 
@@ -48,10 +48,10 @@ Une cohorte de 42 places, répartition observée sur ce type d'offre (à valider
 | --- | --- | --- | --- |
 | Essentiel | 40 % | 17 | 6 630 € |
 | Pro | 50 % | 21 | 24 990 € |
-| Elite | 10 % | 4 | 11 200 € |
-| **Total cohorte** | | 42 | **42 820 €** |
+| Elite | 10 % | 4 | 7 600 € |
+| **Total cohorte** | | 42 | **39 220 €** |
 
-Quatre cohortes par an, plus les upgrades et les licences groupées : un ordre de grandeur de 170 à 200 k€ annuels, à condition d'atteindre une audience de quelques milliers de professionnels du secteur. Le coût marginal est quasi nul (GitHub Pages est gratuit, PayPal prélève une commission par transaction) ; le coût réel est votre temps d'animation (lives, revues, coaching Elite).
+Quatre cohortes par an, plus les upgrades et les licences groupées : un ordre de grandeur de 150 à 180 k€ annuels, à condition d'atteindre une audience de quelques milliers de professionnels du secteur. Le coût marginal est quasi nul (GitHub Pages est gratuit, PayPal prélève une commission par transaction) ; le coût réel est votre temps d'animation (lives, revues, coaching Elite).
 
 ## Ce qu'il faut préparer avant la première cohorte
 
