@@ -19,11 +19,15 @@ export default {
     language: 'fr',
     // Contact affiché sur le site et dans les CGV
     contactEmail: 'contact@airgap42.example',
-    // Formateur. Laissez `name` vide pour masquer la section tant qu'elle n'est pas renseignée.
+    // L'auteur. Section masquée tant que `name` est vide.
+    // Ne revendiquez ici que ce que vous pouvez montrer : un titre, une certification ou
+    // des années d'expérience affichés sur une page de vente sont des allégations
+    // vérifiables, pas une formule de style.
     instructor: {
-      name: '',
-      title: '',
-      bio: '',
+      name: 'Redcreator1',
+      title: 'Auteur et développeur du parcours',
+      bio: 'Je construis des outils, et j’écris ce que j’aurais voulu trouver. L’Air Gap 42 est parti d’un constat simple : on répète partout qu’un système déconnecté est sûr, et presque nulle part comment le prouver. J’ai préféré en faire quelque chose qui s’exécute plutôt qu’un cours de plus. Un parcours qui tient dans un terminal, qui fonctionne débranché, et dont vous pouvez lire le code avant de le lancer.',
+      link: 'https://github.com/Redcreator1',
     },
   },
 
@@ -88,8 +92,11 @@ export default {
       {
         id: 'essentiel',
         name: 'Essentiel',
-        price: 490,
-        priceBefore: 690,
+        price: 390,
+        // Prix barré : laissez-le vide. Annoncer une réduction oblige à afficher le prix
+        // le plus bas réellement pratiqué dans les 30 jours précédents (directive Omnibus,
+        // art. L112-1-1 C. conso.). Un prix barré jamais pratiqué est une réduction fictive.
+        priceBefore: null,
         pitch: 'Les fondations et l’architecture d’isolation. Pour bâtir un air gap qui tient.',
         // Option B uniquement : URL d'un lien de paiement PayPal (https://www.paypal.com/ncp/payment/…)
         checkoutUrl: '',
@@ -105,8 +112,8 @@ export default {
       {
         id: 'pro',
         name: 'Pro',
-        price: 1490,
-        priceBefore: 1990,
+        price: 1190,
+        priceBefore: null,
         highlight: true,
         badge: 'Recommandé',
         pitch: 'Le parcours opérationnel complet : transferts, détection, canaux cachés. Pour ceux qui ont un air gap à défendre.',
@@ -124,8 +131,8 @@ export default {
       {
         id: 'elite',
         name: 'Elite',
-        price: 4900,
-        priceBefore: 6900,
+        price: 2800,
+        priceBefore: null,
         pitch: 'Le parcours entier, gouvernance et audit compris. Pour RSSI, auditeurs et consultants.',
         checkoutUrl: '',
         features: [

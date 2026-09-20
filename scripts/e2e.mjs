@@ -65,6 +65,7 @@ const check = (label, ok, detail = '') => {
 const ignorable = (t) => /fonts\.g(oogleapis|static)\.com|ERR_CERT_AUTHORITY_INVALID/.test(t);
 
 const niveaux = JSON.parse(await fs.readFile(path.join(ROOT, 'content/niveaux.json'), 'utf8'));
+const config = (await import(path.join(ROOT, 'site/config.js'))).default;
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1360, height: 900 } });
 page.on('console', (m) => m.type() === 'error' && !ignorable(m.text()) && problems.push(`console: ${m.text()}`));
@@ -88,8 +89,19 @@ try {
     'accueil : aucun service non tenu n’est annoncé',
     await page.evaluate(() => !document.querySelector('[data-engagement]')),
   );
-  check('accueil : section témoignages masquée quand vide', (await page.locator('[data-section="testimonials"]').count()) === 0);
-  check('accueil : section formateur masquée quand vide', (await page.locator('[data-section="instructor"]').count()) === 0);
+  check(
+    config.testimonials.length ? 'accueil : témoignages affichés' : 'accueil : section témoignages masquée quand vide',
+    (await page.locator('[data-section="testimonials"]').count()) === (config.testimonials.length ? 1 : 0),
+  );
+  const auteur = config.site.instructor.name;
+  check(
+    auteur ? 'accueil : présentation de l’auteur affichée' : 'accueil : section auteur masquée quand vide',
+    auteur
+      ? (await page.locator('#instructor').innerText()).includes(auteur)
+      : (await page.locator('[data-section="instructor"]').count()) === 0,
+  );
+  // Un prix barré n'est licite que s'il a réellement été pratiqué : on refuse le prix barré fictif.
+  check('tarifs : aucun prix barré fictif', (await page.locator('.price .before').count()) === config.checkout.tiers.filter((t) => t.priceBefore).length);
   await page.waitForTimeout(2200);
   await shot('home', true);
 

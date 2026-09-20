@@ -241,7 +241,9 @@ function socialProof() {
     const ins = config.site.instructor;
     if (!ins.name) $('[data-section="instructor"]')?.remove();
     else
-      i.innerHTML = `<div class="who instructor-head"><span class="avatar avatar-lg">${esc(ins.name.slice(0, 1))}</span><div><b class="instructor-name">${esc(ins.name)}</b><br><span class="muted small">${esc(ins.title)}</span></div></div><p class="muted">${esc(ins.bio)}</p>`;
+      i.innerHTML = `<div class="who instructor-head"><span class="avatar avatar-lg">${esc(ins.name.slice(0, 1))}</span><div><b class="instructor-name">${esc(ins.name)}</b><br><span class="muted small">${esc(ins.title)}</span></div></div><p class="muted">${esc(ins.bio)}</p>${
+        isConfiguredUrl(ins.link) ? `<p class="small"><a href="${esc(ins.link)}" target="_blank" rel="noopener">${esc(ins.link.replace(/^https?:\/\//, ''))}</a></p>` : ''
+      }`;
   }
   $$('[data-config]').forEach((el) => {
     const v = cfg(el.dataset.config);
