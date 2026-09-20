@@ -73,6 +73,7 @@ function renderFooter() {
         </div>
         <div><h4>Programme</h4><ul>
           <li><a href="${url('programme/')}">Les 7 modules</a></li>
+          <li><a href="${url('briefing/')}">Briefing gratuit</a></li>
           <li><a href="${url('tarifs/')}">Tarifs</a></li>
           <li><a href="${url('jouer/')}">Mode d’emploi</a></li>
           <li><a href="${url('feed.xml')}">Flux RSS</a></li>

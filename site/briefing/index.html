@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://giscus.app https://www.paypal.com https://www.paypalobjects.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://giscus.app https://discord.com https://www.paypal.com https://www.sandbox.paypal.com; connect-src 'self' https://formspree.io https://buttondown.com https://plausible.io https://www.paypal.com https://www.sandbox.paypal.com https://*.vercel.app; base-uri 'self'; object-src 'none'; form-action 'self' https://www.paypal.com https://www.sandbox.paypal.com">
+  <title>Les sept erreurs qui trouent un air gap — L'Air Gap 42</title>
+  <meta name="description" content="Sept défaillances récurrentes des systèmes prétendument isolés, et le test qui permet de vérifier chacune sur votre propre environnement. Briefing en accès libre, sans inscription.">
+  <link rel="canonical" href="https://redcreator1.github.io/L-Air-Gap-42/briefing/">
+  <meta property="og:title" content="Les sept erreurs qui trouent un air gap">
+  <meta property="og:description" content="Sept défaillances récurrentes des systèmes prétendument isolés, et le test qui permet de vérifier chacune.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <script type="module" src="../assets/js/site.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="section">
+      <div class="container container-md prose">
+        <div class="eyebrow">Briefing · accès libre</div>
+        <h1 class="h1-sm">Les sept erreurs qui trouent un air gap</h1>
+        <p class="lead">Un système isolé qui n’a jamais été testé n’est pas isolé : il est supposé isolé. Voici les sept défaillances que l’on retrouve le plus souvent entre la supposition et la preuve, et pour chacune, la vérification qui tranche.</p>
+
+        <div class="notice">Ce briefing est en lecture libre, sans inscription et sans contrepartie. Il est volontairement défensif : on y décrit ce qu’il faut vérifier et corriger, pas comment attaquer.</div>
+
+        <h2 id="e1">1. L’air gap est déclaré, jamais prouvé</h2>
+        <p>Demandez à voir la matrice de flux. Dans la majorité des environnements dits isolés, elle n’existe pas, ou elle date de la mise en service. L’isolation est alors une propriété que l’on croit détenir parce que personne ne se souvient de l’avoir rompue.</p>
+        <p>Or un air gap n’est pas un état, c’est une <strong>contrainte à maintenir</strong>. Chaque intervention — un automate remplacé, un prestataire qui raccorde son portable, une liaison temporaire pour un diagnostic — est une occasion de la rompre. Et une liaison temporaire qui fonctionne devient une liaison permanente : personne ne débranche ce qui marche.</p>
+        <p><strong>Le test :</strong> énumérez toutes les interfaces physiques de chaque équipement du périmètre — ports Ethernet, série, USB, sans-fil, modems de maintenance, cartes cellulaires. Comparez à la matrice. L’écart entre les deux listes est votre surface d’attaque réelle. Tant que vous ne pouvez pas produire cette liste, vous n’avez pas d’air gap : vous avez une intention.</p>
+
+        <h2 id="e2">2. Le support amovible est traité comme un accessoire</h2>
+        <p>Un système isolé doit quand même recevoir des mises à jour, des configurations, des signatures antivirales, et produire des exports. Ce transfert se fait par support amovible. Autrement dit : <strong>la clé USB n’est pas une faille de l’air gap, c’est son interface officielle</strong>. C’est le seul chemin qui traverse la barrière par conception, et c’est presque toujours le moins contrôlé.</p>
+        <p>Stuxnet, en 2010, a franchi des systèmes isolés par cette voie. Quinze ans plus tard, le schéma dominant reste le même : un poste de décontamination qui se résume à un scan antiviral. Or un antivirus reconnaît ce qui est déjà connu. Face à un code écrit pour une cible précise, il ne reconnaît rien — et le rapport « aucune menace détectée » devient une autorisation de franchissement.</p>
+        <p><strong>Le test :</strong> prenez le dernier transfert entrant sur votre périmètre isolé. Pouvez-vous dire qui l’a demandé, qui l’a approuvé, quelle était l’empreinte du fichier à la source, et si cette empreinte correspond à celle arrivée de l’autre côté ? Si l’une de ces quatre réponses manque, votre passerelle transfère des fichiers sans en vérifier l’origine.</p>
+
+        <h2 id="e3">3. La chaîne d’approvisionnement entre par la grande porte</h2>
+        <p>L’air gap arrête ce qui tente de passer. Il n’arrête pas ce que vous faites entrer volontairement : firmwares, correctifs éditeur, images d’installation, fichiers de configuration, portables de prestataires.</p>
+        <p>C’est une inversion complète du modèle de menace. Sur un réseau connecté, l’attaquant doit franchir un périmètre. Sur un système isolé, il lui suffit de compromettre quelque chose que vous introduirez vous-même, et d’attendre. L’isolation ne fait que <em>décaler</em> l’attaque vers l’amont : elle la rend plus lente, pas impossible.</p>
+        <p><strong>Le test :</strong> pour le dernier correctif appliqué sur le périmètre, retrouvez la signature de l’éditeur et l’empreinte publiée, et vérifiez qu’elles ont été contrôlées <strong>avant</strong> l’entrée dans la zone isolée, sur un poste qui n’est pas celui qui a téléchargé le fichier. Un téléchargement et sa vérification faits sur la même machine compromise valident la compromission.</p>
+
+        <h2 id="e4">4. La maintenance à distance ne figure dans aucun schéma</h2>
+        <p>Modem de télémaintenance installé par l’intégrateur, routeur cellulaire posé sur un automate pour la mise au point, accès VPN « provisoire » ouvert pour un dépannage il y a trois ans, carte de gestion hors bande sur un serveur. Ces liens partagent trois propriétés : ils sont utiles, ils sont invisibles dans la documentation, et ils traversent l’air gap.</p>
+        <p>Ils ne sont presque jamais malveillants. Ils sont pragmatiques : quelqu’un devait intervenir vite, la contrainte d’isolation coûtait cher, l’exception a été faite et jamais refermée. L’isolation ne se dégrade pas par attaque, elle se dégrade par <strong>accumulation d’exceptions raisonnables</strong>.</p>
+        <p><strong>Le test :</strong> ouvrez physiquement une armoire au hasard et inventoriez ce qui est branché. Comparez au schéma d’architecture. Recommencez sur une deuxième armoire. Si les deux correspondent, votre documentation est vivante ; c’est rare, et c’est un très bon signe.</p>
+
+        <h2 id="e5">5. On surveille le périmètre et pas l’intérieur</h2>
+        <p>La détection est concentrée là où passe le trafic : pare-feux, sondes, passerelles. À l’intérieur de la zone isolée, il n’y a souvent aucune journalisation exploitable, aucune référence de comportement normal, et personne pour regarder.</p>
+        <p>La conséquence est brutale : <strong>si la barrière est franchie, rien ne le signalera</strong>. Les compromissions de systèmes isolés ne se découvrent généralement pas par une alerte, mais par un effet secondaire — un automate qui se comporte mal, un fichier inattendu, un constat lors d’un audit sans rapport. Entre le franchissement et la découverte, il s’écoule des mois.</p>
+        <p><strong>Le test :</strong> quelle est la dernière fois que quelqu’un a lu un journal produit à l’intérieur du périmètre isolé ? Si la réponse est « lors de l’installation » ou « jamais », vous avez une isolation sans détection, c’est-à-dire une confiance sans vérification.</p>
+
+        <h2 id="e6">6. L’exfiltration n’emprunte pas le chemin de l’infiltration</h2>
+        <p>Un air gap coupe la connectivité réseau. Il ne coupe pas la physique. La recherche académique documente depuis plus de dix ans des canaux de sortie fondés sur le son, les émissions électromagnétiques, la chaleur, la lumière des diodes, ou la consommation électrique. Les débits sont dérisoires — quelques octets par seconde — mais une clé de chiffrement tient dans quelques dizaines d’octets.</p>
+        <p>L’erreur n’est pas d’ignorer ces canaux : pour la plupart des organisations, ils ne sont pas le risque principal, et les traiter coûte cher. L’erreur est de <strong>ne pas avoir décidé</strong>. Un modèle de menace qui ne dit pas explicitement « nous acceptons ce risque, pour ces raisons » n’est pas un modèle de menace, c’est un oubli qu’on découvrira en audit.</p>
+        <p><strong>Le test :</strong> votre modèle de menace nomme-t-il un adversaire capable d’approcher physiquement le périmètre ? Si oui, que dit-il des canaux hors réseau ? Une ligne assumée — « hors périmètre, risque accepté, révision annuelle » — vaut infiniment mieux qu’un silence.</p>
+
+        <h2 id="e7">7. L’humain traverse l’air gap tous les jours</h2>
+        <p>La barrière sépare des réseaux. Elle ne sépare pas les gens. Le même opérateur travaille des deux côtés, avec le même téléphone dans la poche, la même mémoire, parfois le même mot de passe. Les documents sortent imprimés, les schémas sont photographiés « pour aller plus vite », les procédures sont rédigées sur le poste bureautique puis recopiées.</p>
+        <p>C’est la défaillance la plus fréquente et la moins traitée, parce qu’elle ne se corrige pas par de la technique. Un air gap qui rend le travail impossible sera contourné par les gens dont il dépend — et ils auront raison, puisqu’ils doivent produire. <strong>Une isolation qu’on ne peut pas respecter est une isolation qui ne sera pas respectée.</strong></p>
+        <p><strong>Le test :</strong> asseyez-vous une heure à côté d’un opérateur et regardez-le travailler. Comptez les contournements. Puis posez la seule question qui compte : est-ce que la procédure officielle lui permettrait de faire son travail dans le temps imparti ? Si la réponse est non, corrigez la procédure, pas l’opérateur.</p>
+
+        <h2 id="conclusion">Ce que ces sept erreurs ont en commun</h2>
+        <p>Aucune n’est une faille technique sophistiquée. Ce sont toutes des <strong>écarts entre ce qui est documenté et ce qui existe</strong>. C’est pourquoi un air gap ne se conçoit pas une fois : il se prouve, périodiquement, avec des tests que n’importe qui peut rejouer et dont le résultat est vérifiable.</p>
+        <p>C’est exactement ce que fait le parcours : 45 niveaux joués dans un terminal, hors-ligne, un par jour. Chacun pose un concept, un atelier applicable sur votre environnement, et des questions de contrôle. Les trois premiers niveaux sont en accès libre — pas une démonstration bridée, les vrais niveaux.</p>
+
+        <div class="hero-actions mt-lg">
+          <a class="btn btn-primary" href="../jouer/">Commencer les 3 niveaux gratuits</a>
+          <a class="btn btn-ghost" href="../programme/">Voir le programme complet</a>
+        </div>
+
+        <p class="small muted mt-lg">Ce briefing peut être cité et partagé librement, avec un lien vers cette page. Il ne remplace ni un audit ni un conseil juridique : la mise en œuvre dans un environnement donné relève de ceux qui l’exploitent.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+</html>

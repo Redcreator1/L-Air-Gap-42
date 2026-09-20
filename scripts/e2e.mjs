@@ -76,7 +76,7 @@ const shot = async (name, full = false) => SHOTS && (await fs.mkdir(SHOTS, { rec
 
 try {
   console.log('\n▶ e2e');
-  for (const p of ['', 'programme/', 'jouer/', 'tarifs/', 'communaute/', 'acces/', 'merci/', 'legal/']) {
+  for (const p of ['', 'programme/', 'briefing/', 'jouer/', 'tarifs/', 'communaute/', 'acces/', 'merci/', 'legal/']) {
     await page.goto(origin + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(250);
     check(`page ${p || '/'} : nav + pied de page rendus`, (await page.locator('#nav .brand').count()) === 1 && (await page.locator('#footer').innerText()).includes('©'));
@@ -104,6 +104,11 @@ try {
   check('tarifs : aucun prix barré fictif', (await page.locator('.price .before').count()) === config.checkout.tiers.filter((t) => t.priceBefore).length);
   await page.waitForTimeout(2200);
   await shot('home', true);
+
+  // --- Briefing : l'actif d'acquisition. Il doit rester lisible sans rien demander en échange.
+  await page.goto(origin + 'briefing/', { waitUntil: 'networkidle' });
+  check('briefing : les sept erreurs sont toutes rédigées', (await page.locator('.prose h2[id^="e"]').count()) === 7);
+  check('briefing : aucune inscription exigée pour lire', (await page.locator('form, input[type=email]').count()) === 0);
 
   // --- Jouer : la page qui remplace l'espace membre
   await page.goto(origin + 'jouer/', { waitUntil: 'networkidle' });

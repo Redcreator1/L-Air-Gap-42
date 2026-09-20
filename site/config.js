@@ -188,7 +188,9 @@ export default {
   newsletter: {
     provider: 'formspree',
     endpoint: 'https://formspree.io/f/REMPLACER',
-    leadMagnet: 'Recevez le briefing gratuit « Les sept erreurs qui trouent un air gap » et les trois premiers niveaux en accès libre.',
+    // Le briefing est public et se lit sans donner son adresse : la liste sert à prévenir
+    // de l'ouverture et des nouveaux niveaux, rien d'autre. Ne promettez ici que cela.
+    leadMagnet: 'Vous préférez être prévenu ? Laissez votre adresse : vous recevrez l’annonce de l’ouverture des inscriptions et les nouveaux niveaux publiés en accès libre.',
   },
 
   // ---------- Mesure d'audience sans cookies ----------
