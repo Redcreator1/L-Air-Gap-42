@@ -48,9 +48,25 @@ Inventoriez les clés privées du périmètre : où sont-elles, sur quel support
 - [ ] Cérémonies écrites : génération, sauvegarde, rotation, révocation
 - [ ] Opérations de signature journalisées
 
-```quiz
-[
-  {"q":"Ce qu’un HSM garantit :","choices":["Que la clé ne peut pas être utilisée par un attaquant","Que la clé ne peut pas être extraite","Que les signatures sont légitimes","Que la clé n’expire pas"],"answer":1,"explain":"La non-extractibilité empêche la sortie du secret ; l’usage pendant une compromission reste possible, d’où journal et quorum."},
-  {"q":"Où doit être générée et conservée la clé racine de l’autorité interne ?","choices":["Sur le serveur d’annuaire","Sur un HSM ou un poste jamais connecté, sauvegardée sous scellé avec quorum","Dans le coffre de mots de passe","Sur le poste d’ingénierie"],"answer":1,"explain":"La racine est la confiance de tout le périmètre ; elle vit hors ligne et ne s’utilise qu’en cérémonie."}
-]
+## Le cas SITE 42
+
+Les secrets que SITE 42 doit gérer sans service en ligne, et où ils dorment.
+
+```
+SITE 42 - secrets de la zone isolee
+
+code  secret                          stockage            rotation
+----  ------------------------------  ------------------  --------
+x1    autorite de certification       hsm en salle forte  3 ans
+x2    cle de signature des images     hsm en salle forte  2 ans
+x3    cle de chiffrement sauvegardes  fichier sur scada   jamais
+x4    secrets de conduite             coffre hors ligne   annuelle
+```
+
+```epreuve
+{
+  "enonce": "Un secret stocké en clair sur la machine même qu'il protège n'est pas un secret. Donnez son code.",
+  "reponse": "x3",
+  "indice": "Trois lignes citent un coffre ou un HSM."
+}
 ```

@@ -67,10 +67,28 @@ Il y a 42 jours, vous aviez une intention d’isolation. Vous avez aujourd’hui
 - [ ] Relu par deux pairs ; revue senior demandée (Elite)
 - [ ] Cycle de vie du dossier planifié : revues, campagnes, exercice, audit
 
-```quiz
-[
-  {"q":"Rôle de la grille de cohérence ?","choices":["Compter les pages","Vérifier que les livrables se renvoient les uns aux autres sans contradiction","Calculer le score","Lister les annexes"],"answer":1,"explain":"Un auditeur cherche d’abord les incohérences entre documents ; la grille les trouve avant lui."},
-  {"q":"Que devient le dossier après le jour 42 ?","choices":["Il est archivé","Il vit : revues, campagnes, exercice et audit planifiés","Il est remplacé par la certification","Il est transmis au régulateur"],"answer":1,"explain":"L’isolation s’érode ; le dossier est l’outil qui mesure et corrige l’érosion."},
-  {"q":"Thèse centrale du programme ?","choices":["L’air gap est obsolète","Un air gap ne se défend pas contre des attaques mais contre ses propres exceptions","Le blindage est indispensable","La détection remplace l’isolation"],"answer":1,"explain":"Chaque module a traité une catégorie d’exceptions : médias, équipements, tiers, mises à jour, exceptions non révoquées, physique."}
-]
+## Le cas SITE 42
+
+Le sommaire du dossier d’architecture de SITE 42, au terme des 42 jours.
+
+```
+SITE 42 - dossier d architecture, sommaire
+
+code  piece                        etat
+----  ---------------------------  ---------------------------
+j1    modele de menace             a jour, h3 desormais prouvee
+j2    schema d architecture cible  a jour, d5 corrige
+j3    runbook de transfert         a jour, etape ajoutee en e6
+j4    plan de detection            a jour, s4 attribue
+j5    plan de durcissement         a jour, a2 passe au rang 1
+j6    plan 90 jours                a jour, v4 attribue
+j7    preuve de tenabilite         manquante
+```
+
+```epreuve
+{
+  "enonce": "Le dossier est complet à une pièce près, et c'est exactement celle que l'audit avait signalée comme non évaluée. Donnez son code.",
+  "reponse": "j7",
+  "indice": "Un air gap ne se conçoit pas une fois : il se prouve, périodiquement."
+}
 ```

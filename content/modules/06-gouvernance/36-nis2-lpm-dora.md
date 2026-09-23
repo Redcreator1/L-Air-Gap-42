@@ -49,9 +49,25 @@ Déterminez sous quel(s) cadre(s) votre organisation tombe (juridique, DSI, ou v
 - [ ] Phase de notification ajoutée au playbook avec délais et contacts
 - [ ] Correspondance exigences → livrables établie, trous listés
 
-```quiz
-[
-  {"q":"Que demande NIS2 concernant la direction ?","choices":["Rien de spécifique","Qu’elle approuve et supervise la gestion des risques, avec responsabilité","Qu’elle signe les factures","Qu’elle nomme un RSSI"],"answer":1,"explain":"La responsabilité de la direction est explicite ; le modèle de menace en une page est le document qu’elle doit connaître."},
-  {"q":"Un incident dans un périmètre isolé contribuant à un service essentiel :","choices":["N’est pas notifiable, le système est isolé","Est notifiable selon les délais du cadre applicable","Est notifiable uniquement s’il y a eu exfiltration","Est notifiable après un mois"],"answer":1,"explain":"L’isolation n’exempte pas ; l’impact sur le service détermine la notification."}
-]
+## Le cas SITE 42
+
+Les obligations qui s’appliquent réellement à SITE 42, et celles qui ne s’appliquent pas.
+
+```
+SITE 42 - obligations applicables
+
+code  texte      applicable ?  raison
+----  ---------  ------------  -------------------------------
+o1    NIS2       oui           entite essentielle, eau potable
+o2    LPM        non           site non designe OIV
+o3    DORA       non           secteur financier uniquement
+o4    IEC 62443  oui           referentiel retenu, non impose
+```
+
+```epreuve
+{
+  "enonce": "« Nos systèmes sont isolés » n'est pas une réponse à un régulateur. Un seul de ces textes impose à SITE 42 de notifier un incident significatif dans un délai contraint. Donnez son code.",
+  "reponse": "o1",
+  "indice": "Un référentiel volontaire n'impose aucune notification."
+}
 ```

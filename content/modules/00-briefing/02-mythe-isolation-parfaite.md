@@ -24,7 +24,7 @@ Le cas fondateur. Des systèmes de contrôle industriel isolés ont été attein
 
 ## 2. Le poste d’ingénierie à double usage
 
-Scénario récurrent dans les audits industriels, documenté dans plusieurs rapports d’agences nationales : un ordinateur portable d’ingénieur sert à la fois à programmer les automates du réseau isolé et à lire ses e-mails sur le réseau d’entreprise. Il alterne entre les deux mondes plusieurs fois par jour.
+Scénario décrit à plusieurs reprises dans des rapports publics d’agences nationales de cybersécurité : un ordinateur portable d’ingénieur sert à la fois à programmer les automates du réseau isolé et à lire ses e-mails sur le réseau d’entreprise. Il alterne entre les deux mondes plusieurs fois par jour.
 
 **Le pont :** l’humain, par commodité. Le laptop est *techniquement* déconnecté du réseau isolé quand il est sur Internet. Mais son disque, lui, fait le voyage.
 
@@ -34,7 +34,7 @@ Scénario récurrent dans les audits industriels, documenté dans plusieurs rapp
 
 ## 3. Le modem de télémaintenance oublié
 
-Cas fréquent en infrastructure critique : un fabricant installe, à la livraison d’une machine, un modem cellulaire pour son propre support à distance. Il figure sur le bon de livraison, pas sur le schéma réseau. Des années plus tard, il fonctionne encore, avec un mot de passe par défaut.
+Cas régulièrement décrit dans la littérature publique sur les infrastructures critiques : un fabricant installe, à la livraison d’une machine, un modem cellulaire pour son propre support à distance. Il figure sur le bon de livraison, pas sur le schéma réseau. Des années plus tard, il fonctionne encore, avec un mot de passe par défaut.
 
 **Le pont :** une connexion externe *fournie par un tiers*, en dehors du processus de conception du réseau.
 
@@ -54,7 +54,7 @@ Plusieurs campagnes publiques ont visé des éditeurs de logiciels pour insérer
 
 ## 5. Le partage de fichiers « temporaire »
 
-Vu dans une salle de supervision : un partage réseau créé lors d’une migration pour transférer des historiques entre le réseau de production et le réseau bureautique. La migration a duré trois semaines. Le partage est resté quatre ans.
+Situation classique en salle de supervision : un partage réseau créé lors d’une migration pour transférer des historiques entre le réseau de production et le réseau bureautique. La migration a duré trois semaines. Le partage est resté quatre ans.
 
 **Le pont :** l’exception au processus, jamais révoquée.
 
@@ -86,30 +86,25 @@ Les canaux cachés font de bons articles. Les clés USB de prestataires font de 
 
 Reprenez les six questions d’audit. Pour votre système, répondez à chacune par **oui**, **non** ou **je ne sais pas**. Comptez les « je ne sais pas » : c’est votre dette de visibilité, et c’est ce que la leçon suivante attaque.
 
-```quiz
-[
-  {
-    "q": "Point commun aux six incidents présentés ?",
-    "choices": [
-      "Une faille logicielle non corrigée",
-      "Un pont légitime ou une exception, jamais une intrusion réseau",
-      "Un attaquant interne malveillant",
-      "Un défaut de chiffrement"
-    ],
-    "answer": 1,
-    "explain": "Chaque cas exploite quelque chose qui traverse l’isolation par conception : média, équipement, tiers, mise à jour, exception ou physique."
-  },
-  {
-    "q": "Une mise à jour correctement signée par l’éditeur garantit :",
-    "choices": ["Qu’elle est sans danger", "Son origine, pas son innocuité", "Qu’elle a été testée par un tiers", "Sa compatibilité"],
-    "answer": 1,
-    "explain": "La signature authentifie la source. Si la source est compromise en amont, la signature est valide et le contenu malveillant."
-  },
-  {
-    "q": "Que faire d’un portable qui a été connecté aux deux côtés de l’isolation ?",
-    "choices": ["Le nettoyer avec un antivirus puis le réutiliser côté isolé", "Le considérer comme appartenant à la zone la moins sûre", "L’isoler 24 h avant réutilisation", "Rien, s’il était déconnecté au moment du transfert"],
-    "answer": 1,
-    "explain": "L’isolation s’applique aux équipements, pas aux moments : un équipement qui a touché les deux zones reste du côté le moins sûr."
-  }
-]
+## Le cas SITE 42
+
+Voici les incidents qui ont touché la zone isolée de SITE 42 en cinq ans. Aucun n’a exploité une faille de l’isolation elle-même.
+
+```
+SITE 42 - incidents en zone isolee
+
+date        constat                          vecteur retenu
+----------  -------------------------------  -------------------
+2022-04-11  automate redemarre sans ordre    firmware verole (lot)
+2023-01-30  compte technique utilise la nuit mot de passe partage
+2024-09-02  fichier inconnu sur hist-donnees usb-presta-07
+2025-06-17  trafic sortant vers une IP fixe  gsm-televigie-01
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces vecteurs est un équipement installé sur le site après la mise en service, et absent de tout schéma depuis. Donnez-le.",
+  "reponse": "gsm-televigie-01",
+  "indice": "Trois vecteurs traversent l'isolation. Un seul y réside en permanence."
+}
 ```

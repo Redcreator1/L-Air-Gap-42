@@ -44,9 +44,25 @@ Listez les services de votre DMZ (ou ceux qu’il faudrait créer). Pour chacun,
 - [ ] Identités, stockage et administration séparés
 - [ ] Journaux de la DMZ exportés et surveillés
 
-```quiz
-[
-  {"q":"Signe qu’une DMZ est devenue un relais ?","choices":["Elle contient un historian","Le même protocole est utilisé de part et d’autre","Elle est journalisée","Elle est administrée par un poste dédié"],"answer":1,"explain":"La rupture de protocole est la preuve que les flux se terminent dans la DMZ au lieu de la traverser."},
-  {"q":"Un compte valable dans la DMZ et dans le périmètre isolé est :","choices":["Pratique et acceptable","Un pont d’identité","Obligatoire pour l’administration","Sans risque si le mot de passe est fort"],"answer":1,"explain":"Une identité commune permet à une compromission de traverser sans réseau."}
-]
+## Le cas SITE 42
+
+Les quatre flux qui traversent la DMZ industrielle de SITE 42.
+
+```
+SITE 42 - flux traversant la DMZ
+
+code  sens                                 rupture protocolaire ?
+----  -----------------------------------  ----------------------
+f1    z-conduite -> z-dmz (historisation)  oui, diode
+f2    z-dmz -> z-bureau (rapports)         oui, relais applicatif
+f3    z-bureau -> z-dmz (signatures)       oui, depot de fichiers
+f4    z-bureau -> z-conduite (supervision) non, flux direct
+```
+
+```epreuve
+{
+  "enonce": "Une DMZ devient un pont dès qu'un flux la traverse sans rupture. Donnez le code du flux qui va de bout en bout sans en subir aucune.",
+  "reponse": "f4",
+  "indice": "Lisez la colonne de droite."
+}
 ```

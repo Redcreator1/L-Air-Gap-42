@@ -62,9 +62,26 @@ Rédigez la procédure du sas sur une page recto verso, affichée au sas. Testez
 - [ ] Journal immuable avec hachages
 - [ ] Double contrôle en moins de trois minutes, procédure d’urgence définie
 
-```quiz
-[
-  {"q":"Que fait-on d’un fichier entrant sans source de référence pour vérifier son origine ?","choices":["On l’analyse au kiosque et on l’accepte","On refuse, sauf procédure d’exception documentée","On le met en quarantaine 24 h","On demande au fabricant par téléphone"],"answer":1,"explain":"Sans référence, la vérification d’origine est impossible ; le kiosque seul ne couvre pas cette menace."},
-  {"q":"Ce qui rend le double contrôle tenable ?","choices":["Un rôle dédié","N’importe quel habilité présent, moins de trois minutes, procédure d’urgence","La signature électronique","Un formulaire détaillé"],"answer":1,"explain":"Un contrôle lent ou dépendant d’une personne est contourné ; un contrôle rapide et disponible est appliqué."}
-]
+## Le cas SITE 42
+
+Le journal du sas de SITE 42, semaine 36. C’est la pièce qu’un auditeur demande en premier.
+
+```
+SITE 42 - journal du sas, semaine 36
+
+n   sens     demandeur     approbation  empreinte  empreinte
+                                        source     arrivee
+--  -------  ------------  -----------  ---------  ---------
+t1  entrant  exploitation  oui          a41f...    a41f...
+t2  entrant  prestataire   oui          c09b...    c09b...
+t3  entrant  prestataire   non          -          77de...
+t4  sortant  exploitation  oui          5b12...    5b12...
+```
+
+```epreuve
+{
+  "enonce": "Un transfert ne permet pas de répondre à « est-ce bien ce que la source a publié ? », faute d'empreinte d'origine et d'approbation. Donnez son numéro.",
+  "reponse": "t3",
+  "indice": "Deux colonnes vides sur la même ligne."
+}
 ```

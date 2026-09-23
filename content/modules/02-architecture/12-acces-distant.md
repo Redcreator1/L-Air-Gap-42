@@ -51,9 +51,25 @@ Listez chaque contrat de maintenance touchant le périmètre. Qualifiez le nivea
 - [ ] Tout accès distant est activé manuellement, borné, enregistré et regardé
 - [ ] Le conduit vers le périmètre est physique et temporaire
 
-```quiz
-[
-  {"q":"Première réponse à une demande de diagnostic par le fabricant ?","choices":["Un VPN dédié","L’export des données de diagnostic vers la DMZ","Une visite sur site","Un refus"],"answer":1,"explain":"Le diagnostic repose sur des données ; les exporter évite tout chemin réseau."},
-  {"q":"Rôle de l’exploitant pendant un accès distant de niveau 2 ?","choices":["Aucun, la session est enregistrée","Activer, borner et regarder la session en direct","Fournir les identifiants","Valider la facture"],"answer":1,"explain":"La présence humaine en direct est la mesure qui transforme l’accès en travail à deux."}
-]
+## Le cas SITE 42
+
+Tous les accès de maintenance recensés sur SITE 42, y compris ceux que personne n’avait notés.
+
+```
+SITE 42 - acces de maintenance
+
+code          chemin                                ouverture
+------------  ------------------------------------  ------------
+m1-sas        poste dedie en salle, accompagne      a la demande
+m2-bastion    bastion en DMZ, session enregistree   a la demande
+m3-televigie  gsm-televigie-01, SIM du fabricant    permanente
+m4-console    port serie en armoire, acces physique a la demande
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces accès est ouvert en permanence et échappe entièrement au périmètre de l'exploitant. Donnez son code.",
+  "reponse": "m3-televigie",
+  "indice": "Qui détient la carte SIM ?"
+}
 ```

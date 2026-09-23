@@ -31,7 +31,7 @@ Vous n'avez normalement **rien à exécuter** : la publication est automatique �
 ```bash
 npm run lab     # reconstruit l'archive de niveaux (à faire après toute modification du contenu)
 npm run build   # construit le site → dist/
-npm run check   # curriculum, quiz, liens, intégrité de l'archive, déchiffrement réel
+npm run check   # curriculum, épreuves, liens, archive, et la partie rejouée en entier
 npm run dev     # http://localhost:4242
 npm run e2e     # parcours du site dans Chromium (npm ci && npx playwright install chromium)
 ```
@@ -46,7 +46,7 @@ lab/
   LISEZMOI            aide hors-ligne livrée dans l'archive
 content/
   curriculum.json     modules, leçons, paliers
-  modules/**/*.md     leçons en Markdown + bloc ```quiz
+  modules/**/*.md     leçons en Markdown + bloc ```epreuve
   niveaux.json        index public généré par `npm run lab` (titres, extraits, empreinte)
 site/                 documentation statique (HTML/CSS/JS, sans framework)
   jouer/              mode d'emploi : télécharger, vérifier, extraire, jouer

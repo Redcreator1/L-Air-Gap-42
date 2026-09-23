@@ -51,9 +51,27 @@ Rédigez le playbook en six pages. Constituez la boîte à outils et importez-la
 - [ ] Matrice de décision validée avec le responsable du procédé
 - [ ] Plusieurs générations de sauvegardes, hachages de référence disponibles
 
-```quiz
-[
-  {"q":"Premier geste de confinement dans un périmètre isolé ?","choices":["Éteindre le poste suspect","Geler les transferts au sas","Arrêter les automates","Appeler le fabricant"],"answer":1,"explain":"Geler le sas ferme le conduit humain sans toucher à la production ni détruire de preuves."},
-  {"q":"Pourquoi dater l’entrée avant de restaurer ?","choices":["Pour le rapport","Pour choisir une sauvegarde antérieure et ne pas réimporter l’intrusion","Pour l’assurance","Pour informer les autorités"],"answer":1,"explain":"Une sauvegarde postérieure à l’entrée contient le problème."}
-]
+## Le cas SITE 42
+
+Les premières actions du playbook de SITE 42, telles qu’elles ont été copiées du monde connecté.
+
+```
+SITE 42 - playbook, premieres actions
+
+code  action                                pertinente ici ?
+----  ------------------------------------  ----------------------
+p1    isoler la machine du reseau           deja isolee, sans effet
+p2    figer l etat : memoire, journaux      oui
+p3    appeler le prestataire pour qu il se  impossible, pas de lien
+      connecte
+p4    basculer la conduite en mode manuel   oui, procedure existante
+p5    conserver le media sous scelle        oui
+```
+
+```epreuve
+{
+  "enonce": "Deux actions sont des réflexes importés du monde connecté. L'une suppose une aide extérieure qui ne pourra jamais arriver. Donnez son code.",
+  "reponse": "p3",
+  "indice": "L'autre est simplement sans effet ; celle-ci est impossible."
+}
 ```

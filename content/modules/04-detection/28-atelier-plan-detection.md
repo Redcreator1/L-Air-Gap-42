@@ -55,9 +55,26 @@ Postez la section 1 anonymisée dans le canal du module 4. Question aux pairs : 
 
 Le module 5 traite ce qui reste quand tout le reste est fait : la physique, et le durcissement en profondeur.
 
-```quiz
-[
-  {"q":"Une hypothèse d’isolation sans mécanisme de détection est acceptable si :","choices":["Elle est peu probable","Elle est écrite comme angle mort assumé et justifiée","Le budget manque","Elle est couverte par le contrat fabricant"],"answer":1,"explain":"L’angle mort explicite est une décision ; l’angle mort implicite est une surprise."},
-  {"q":"Indicateur qui raconte l’isolation prouvée à la direction ?","choices":["Le nombre d’incidents","Le nombre de preuves négatives datées et le taux de conformité du sas","Le nombre d’alertes","Le budget dépensé"],"answer":1,"explain":"L’absence d’incident ne prouve rien ; des vérifications datées et un sas à 100 % prouvent la méthode."}
-]
+## Le cas SITE 42
+
+Le plan de détection proposé pour SITE 42 : ce qu’on surveille, à quelle fréquence, et qui regarde.
+
+```
+SITE 42 - plan de detection (proposition)
+
+code  ce qu on surveille           frequence     qui regarde
+----  ---------------------------  ------------  -------------
+s1    journaux fw-dmz-01           continu       supervision
+s2    balayage radio               trimestriel   automaticien
+s3    empreintes des automates     mensuel       automaticien
+s4    journaux relais-fichiers-01  continu       personne
+s5    table ARP des automates      hebdomadaire  supervision
+```
+
+```epreuve
+{
+  "enonce": "Collecter sans que personne ne lise revient à ne pas collecter. Donnez le code de la ligne qui produit des données que personne n'exploite.",
+  "reponse": "s4",
+  "indice": "La dernière colonne est celle qui compte."
+}
 ```

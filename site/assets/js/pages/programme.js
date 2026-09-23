@@ -22,7 +22,7 @@ async function main() {
     [data.modules.length, 'modules'],
     [tous.length, 'niveaux'],
     [`${Math.round(tous.reduce((a, l) => a + l.minutes, 0) / 60)} h`, 'de contenu'],
-    [tous.filter((l) => l.questions > 0).length, 'validations'],
+    [tous.filter((l) => l.epreuve).length, 'épreuves'],
   ]
     .map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`)
     .join('');

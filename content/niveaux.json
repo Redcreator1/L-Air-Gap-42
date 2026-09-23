@@ -18,7 +18,7 @@
           "palier": "libre",
           "jour": null,
           "minutes": 9,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Vous avez déjà entendu la phrase. Peut être l’avez vous prononcée : « Ce réseau n’est pas connecté, il n’y a pas de risque. » Cette leçon a un seul but : vous convaincre que l’air gap est à la fois…"
         },
         {
@@ -28,8 +28,8 @@
           "module": "Module 0 · Briefing",
           "palier": "libre",
           "jour": null,
-          "minutes": 9,
-          "questions": 3,
+          "minutes": 10,
+          "epreuve": true,
           "extrait": "Chaque incident ci dessous a touché un système que ses exploitants considéraient comme isolé. Aucun n’a nécessité une faille dans l’isolation elle même : tous ont exploité ce qui traverse l’isolation…"
         },
         {
@@ -39,8 +39,8 @@
           "module": "Module 0 · Briefing",
           "palier": "libre",
           "jour": null,
-          "minutes": 8,
-          "questions": 2,
+          "minutes": 9,
+          "epreuve": true,
           "extrait": "Vous ne pouvez pas isoler ce que vous ne voyez pas. Cette leçon vous fait produire, en 90 minutes chrono, une carte de périmètre honnête : pas le schéma du projet initial, la réalité d’aujourd’hui.…"
         }
       ]
@@ -61,7 +61,7 @@
           "palier": "essentiel",
           "jour": 1,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Les mots que vous employez dans un dossier d’architecture, un contrat de maintenance ou un rapport d’audit engagent . Dire « air gap » quand on a une isolation logique, c’est promettre quelque chose…"
         },
         {
@@ -72,7 +72,7 @@
           "palier": "essentiel",
           "jour": 2,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Un modèle de menace sans adversaires nommés est une liste de peurs. Cette leçon vous fait décrire, en termes opérationnels, qui pourrait vouloir franchir votre isolation, avec quels moyens , et par…"
         },
         {
@@ -82,8 +82,8 @@
           "module": "Module 1 · Fondations & modèle de menace",
           "palier": "essentiel",
           "jour": 3,
-          "minutes": 6,
-          "questions": 2,
+          "minutes": 7,
+          "epreuve": true,
           "extrait": "Isoler coûte cher : en exploitation, en agilité, en frustration. Isoler tout garantit que l’isolation sera contournée. Cette leçon vous fait décider ce qui mérite vraiment l’isolation , et ce qui…"
         },
         {
@@ -94,7 +94,7 @@
           "palier": "essentiel",
           "jour": 4,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Une fois le périmètre réduit à l’essentiel, énumérez exhaustivement par où quelque chose peut entrer ou sortir. Nous en comptons neuf. Si votre modèle en liste moins, il est incomplet ; s’il en liste…"
         },
         {
@@ -104,8 +104,8 @@
           "module": "Module 1 · Fondations & modèle de menace",
           "palier": "essentiel",
           "jour": 5,
-          "minutes": 6,
-          "questions": 2,
+          "minutes": 7,
+          "epreuve": true,
           "extrait": "« Ce réseau est isolé » est une hypothèse. Cette leçon vous apprend à la transformer en une série de preuves vérifiables et datées , parce que c’est exactement ce qu’un auditeur, un assureur ou un…"
         },
         {
@@ -116,7 +116,7 @@
           "palier": "essentiel",
           "jour": 6,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "La matrice des flux autorisés est le document de référence de votre air gap. Tout ce qui n’y figure pas est interdit. Tout ce qui y figure a un propriétaire, un contrôle et un journal. Sans elle, «…"
         },
         {
@@ -127,7 +127,7 @@
           "palier": "essentiel",
           "jour": 7,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Dernier jour du module 1. Vous assemblez les six livrables précédents en un document d’une page : votre modèle de menace. Une page, parce que c’est ce que la direction lira, ce que l’auditeur…"
         }
       ]
@@ -148,7 +148,7 @@
           "palier": "essentiel",
           "jour": 8,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "IEC 62443 a donné aux architectes d’environnements industriels un vocabulaire précieux : zones (groupes d’actifs partageant des exigences de sécurité) et conduits (chemins de communication entre…"
         },
         {
@@ -159,7 +159,7 @@
           "palier": "essentiel",
           "jour": 9,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Le modèle de Purdue (niveaux 0 à 5, du capteur à l’entreprise) a structuré trente ans d’architectures industrielles. Il est régulièrement déclaré mort par les fournisseurs de cloud. Il ne l’est pas ;…"
         },
         {
@@ -170,7 +170,7 @@
           "palier": "essentiel",
           "jour": 10,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "La DMZ industrielle est l’endroit où les données quittent le périmètre pour devenir utilisables par l’entreprise. Bien conçue, elle est le meilleur allié de l’isolation : elle absorbe toutes les…"
         },
         {
@@ -180,8 +180,8 @@
           "module": "Module 2 · Architecture d'isolation",
           "palier": "essentiel",
           "jour": 11,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "La diode de données est l’équipement emblématique de l’isolation. Elle mérite une leçon entière, parce qu’elle est à la fois indispensable et régulièrement mal comprise : mal placée, mal exploitée,…"
         },
         {
@@ -192,7 +192,7 @@
           "palier": "essentiel",
           "jour": 12,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Tôt ou tard, quelqu’un dira : « Le fabricant doit se connecter pour diagnostiquer. » C’est la demande qui a fait sauter plus d’isolations que toutes les attaques réunies. Cette leçon vous donne une…"
         },
         {
@@ -203,7 +203,7 @@
           "palier": "essentiel",
           "jour": 13,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Sans annuaire central, sans fournisseur d’identité en ligne, comment gérer comptes, mots de passe, certificats et secrets dans un périmètre isolé ? Mal, en général : comptes partagés, mots de passe…"
         },
         {
@@ -214,7 +214,7 @@
           "palier": "essentiel",
           "jour": 14,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Fin du module 2. Vous produisez le schéma d’architecture cible : zones, conduits, DMZ, diodes, sas, accès distant, identité. Un schéma qu’un nouvel arrivant comprend en cinq minutes et qu’un auditeur…"
         }
       ]
@@ -234,8 +234,8 @@
           "module": "Module 3 · Transferts & supply chain",
           "palier": "pro",
           "jour": 15,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Toute organisation isolée a une politique de médias amovibles. Presque aucune n’est appliquée. L’écart vient d’un malentendu : une politique est écrite pour interdire, alors qu’elle devrait être…"
         },
         {
@@ -246,7 +246,7 @@
           "palier": "pro",
           "jour": 16,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Le kiosque de décontamination (ou station blanche) est un poste dédié qui analyse les médias avant leur entrée dans le périmètre. Il est utile. Il n’est pas magique. Cette leçon vous aide à le…"
         },
         {
@@ -256,8 +256,8 @@
           "module": "Module 3 · Transferts & supply chain",
           "palier": "pro",
           "jour": 17,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Le sas est le conduit humain de votre isolation. C’est là que se joue la différence entre un air gap et une convention. Cette leçon décrit la procédure de transfert entrant et sortant, le journal, et…"
         },
         {
@@ -267,8 +267,8 @@
           "module": "Module 3 · Transferts & supply chain",
           "palier": "pro",
           "jour": 18,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Vérifier l’origine d’un fichier, c’est répondre à : « Est ce bien ce que l’éditeur a publié ? » Cette leçon vous donne les outils : hachages, signatures, et la notion de source de référence, sans…"
         },
         {
@@ -278,8 +278,8 @@
           "module": "Module 3 · Transferts & supply chain",
           "palier": "pro",
           "jour": 19,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Ne pas mettre à jour un périmètre isolé est une décision, pas une fatalité. Mais mettre à jour sans processus, c’est importer la supply chain sans filtre. Cette leçon organise le cycle : veille,…"
         },
         {
@@ -290,7 +290,7 @@
           "palier": "pro",
           "jour": 20,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Tout ce qui est installé dans le périmètre a été acheté, livré, stocké, déballé. Chaque étape est une opportunité de substitution ou d’ajout. Cette leçon organise la supply chain matérielle avec des…"
         },
         {
@@ -301,7 +301,7 @@
           "palier": "pro",
           "jour": 21,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Fin du module 3. Vous assemblez politique de médias, kiosque, sas, vérification d’origine, quarantaine et supply chain en un runbook de transfert : le document que l’exploitation suit sans réfléchir,…"
         }
       ]
@@ -322,7 +322,7 @@
           "palier": "pro",
           "jour": 22,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Sans Internet, pas de SIEM en nuage, pas de flux de renseignement, pas de mises à jour de règles en continu. Et pourtant, un périmètre isolé est plus facile à surveiller qu’un réseau d’entreprise :…"
         },
         {
@@ -333,7 +333,7 @@
           "palier": "pro",
           "jour": 23,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Détecter l’anormal suppose de connaître le normal. Dans un périmètre isolé, le normal est petit et stable : c’est un avantage immense qu’on gaspille si on n’en fait pas une référence explicite. Cette…"
         },
         {
@@ -343,8 +343,8 @@
           "module": "Module 4 · Détection & réponse",
           "palier": "pro",
           "jour": 24,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Le pont non documenté est la menace n° 1 d’un air gap. Cette leçon organise sa détection active : radio, USB, réseau fantôme, et les liens qui n’apparaissent sur aucun schéma. Mettre en place trois…"
         },
         {
@@ -355,7 +355,7 @@
           "palier": "pro",
           "jour": 25,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "La chasse aux menaces, c’est chercher ce que les alertes n’ont pas vu, à partir d’une hypothèse. En environnement isolé, sans flux de renseignement en temps réel, la chasse repose sur votre…"
         },
         {
@@ -366,7 +366,7 @@
           "palier": "pro",
           "jour": 26,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Un incident dans un périmètre isolé a deux particularités : l’aide extérieure ne peut pas se connecter, et le premier réflexe (« isoler ») n’a pas de sens puisque tout est déjà isolé. Cette leçon…"
         },
         {
@@ -376,8 +376,8 @@
           "module": "Module 4 · Détection & réponse",
           "palier": "pro",
           "jour": 27,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Un playbook non exercé est une hypothèse de plus. Cette leçon vous fait jouer, sur table, en 90 minutes, un scénario réaliste : la clé USB du prestataire . Vous en sortirez avec une liste de failles…"
         },
         {
@@ -387,8 +387,8 @@
           "module": "Module 4 · Détection & réponse",
           "palier": "pro",
           "jour": 28,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Fin du module 4. Vous assemblez télémétrie, baselines, campagnes de détection, chasse, playbook et exercice en un plan de détection : ce que vous surveillez, comment, à quelle fréquence, et ce qui se…"
         }
       ]
@@ -409,7 +409,7 @@
           "palier": "pro",
           "jour": 29,
           "minutes": 7,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Les canaux cachés fascinent : des données qui sortent d’une machine isolée par la lumière d’une LED, le bruit d’un ventilateur, la chaleur d’un processeur. Cette leçon les présente pour ce qu’ils…"
         },
         {
@@ -420,7 +420,7 @@
           "palier": "pro",
           "jour": 30,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Pour les périmètres où l’acteur ciblé est crédible, voici les contre mesures par famille, classées par rapport coût/efficacité. La règle : d’abord la distance et le contrôle physique, ensuite le…"
         },
         {
@@ -430,8 +430,8 @@
           "module": "Module 5 · Canaux cachés & durcissement",
           "palier": "pro",
           "jour": 31,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Le firmware est la couche sous le système d’exploitation : UEFI, contrôleurs, cartes réseau, disques. Un code malveillant qui s’y installe survit à une réinstallation complète, et votre image…"
         },
         {
@@ -441,8 +441,8 @@
           "module": "Module 5 · Canaux cachés & durcissement",
           "palier": "pro",
           "jour": 32,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Un périmètre isolé a un atout unique pour le durcissement système : on sait exactement ce qui doit s’y exécuter . Cette leçon exploite cet atout avec la mesure la plus efficace et la plus sous…"
         },
         {
@@ -452,8 +452,8 @@
           "module": "Module 5 · Canaux cachés & durcissement",
           "palier": "pro",
           "jour": 33,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Un périmètre isolé finit toujours par gérer des clés : autorité de certification interne, signature de vos propres images et programmes, chiffrement des sauvegardes, coffre de secrets. Sans service…"
         },
         {
@@ -463,8 +463,8 @@
           "module": "Module 5 · Canaux cachés & durcissement",
           "palier": "pro",
           "jour": 34,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "L’air gap est une mesure physique. Sa sécurité repose sur la sécurité physique du lieu : qui entre, ce qu’il apporte, ce qu’il touche, ce qu’il emporte. Cette leçon parcourt la « couche zéro » du…"
         },
         {
@@ -474,8 +474,8 @@
           "module": "Module 5 · Canaux cachés & durcissement",
           "palier": "pro",
           "jour": 35,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Fin du module 5. Vous produisez le plan de durcissement priorisé : ce que vous durcissez, dans quel ordre, à quel coût, pour couvrir quel risque. Un plan qui tient sur deux pages et que la direction…"
         }
       ]
@@ -496,7 +496,7 @@
           "palier": "elite",
           "jour": 36,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "« Nos systèmes sont isolés » n’est pas une réponse à un régulateur. C’est le début d’une question : prouvez le, montrez comment vous le surveillez, et dites nous ce qui se passe quand ça casse. Cette…"
         },
         {
@@ -507,7 +507,7 @@
           "palier": "elite",
           "jour": 37,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Les régulateurs demandent une gestion du risque ; les normes vous donnent un catalogue de contrôles pour la démontrer. Cette leçon cartographie vos livrables sur IEC 62443 (industriel) et ISO 27001…"
         },
         {
@@ -517,8 +517,8 @@
           "module": "Module 6 · Gouvernance, conformité & audit",
           "palier": "elite",
           "jour": 38,
-          "minutes": 8,
-          "questions": 2,
+          "minutes": 9,
+          "epreuve": true,
           "extrait": "Auditer un air gap, le vôtre ou celui d’un client, c’est répondre à une question : l’isolation affirmée est elle réelle, surveillée et tenable ? Cette leçon donne la méthode en six étapes, avec les…"
         },
         {
@@ -529,7 +529,7 @@
           "palier": "elite",
           "jour": 39,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Vous avez le modèle, le schéma, les plans, le score. La direction a dix minutes. Cette leçon vous apprend à écrire le rapport qu’elle lira, et qui débouche sur une décision : budget, arbitrage,…"
         },
         {
@@ -539,8 +539,8 @@
           "module": "Module 6 · Gouvernance, conformité & audit",
           "palier": "elite",
           "jour": 40,
-          "minutes": 7,
-          "questions": 2,
+          "minutes": 8,
+          "epreuve": true,
           "extrait": "Tout ce que vous avez produit converge ici : le plan de remédiation 90 jours . Trois vagues de 30 jours, chacune avec un objectif mesurable, des actions avec propriétaire, et un indicateur qui dit à…"
         },
         {
@@ -551,7 +551,7 @@
           "palier": "elite",
           "jour": 41,
           "minutes": 8,
-          "questions": 2,
+          "epreuve": true,
           "extrait": "Dernier exercice avant le capstone : une confrontation sur table entre une équipe qui cherche à franchir l’isolation (rouge) et une équipe qui la défend (bleue), sur votre architecture cible. Aucun…"
         },
         {
@@ -562,7 +562,7 @@
           "palier": "elite",
           "jour": 42,
           "minutes": 8,
-          "questions": 3,
+          "epreuve": true,
           "extrait": "Jour 42. Vous assemblez l’ensemble en un dossier d’architecture complet : le document unique qui décrit, justifie, prouve et planifie l’isolation de votre périmètre. C’est le livrable que vous…"
         }
       ]
@@ -577,7 +577,7 @@
       "palier": "libre",
       "jour": null,
       "minutes": 9,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Vous avez déjà entendu la phrase. Peut être l’avez vous prononcée : « Ce réseau n’est pas connecté, il n’y a pas de risque. » Cette leçon a un seul but : vous convaincre que l’air gap est à la fois…"
     },
     {
@@ -587,8 +587,8 @@
       "module": "Module 0 · Briefing",
       "palier": "libre",
       "jour": null,
-      "minutes": 9,
-      "questions": 3,
+      "minutes": 10,
+      "epreuve": true,
       "extrait": "Chaque incident ci dessous a touché un système que ses exploitants considéraient comme isolé. Aucun n’a nécessité une faille dans l’isolation elle même : tous ont exploité ce qui traverse l’isolation…"
     },
     {
@@ -598,8 +598,8 @@
       "module": "Module 0 · Briefing",
       "palier": "libre",
       "jour": null,
-      "minutes": 8,
-      "questions": 2,
+      "minutes": 9,
+      "epreuve": true,
       "extrait": "Vous ne pouvez pas isoler ce que vous ne voyez pas. Cette leçon vous fait produire, en 90 minutes chrono, une carte de périmètre honnête : pas le schéma du projet initial, la réalité d’aujourd’hui.…"
     },
     {
@@ -610,7 +610,7 @@
       "palier": "essentiel",
       "jour": 1,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Les mots que vous employez dans un dossier d’architecture, un contrat de maintenance ou un rapport d’audit engagent . Dire « air gap » quand on a une isolation logique, c’est promettre quelque chose…"
     },
     {
@@ -621,7 +621,7 @@
       "palier": "essentiel",
       "jour": 2,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Un modèle de menace sans adversaires nommés est une liste de peurs. Cette leçon vous fait décrire, en termes opérationnels, qui pourrait vouloir franchir votre isolation, avec quels moyens , et par…"
     },
     {
@@ -631,8 +631,8 @@
       "module": "Module 1 · Fondations & modèle de menace",
       "palier": "essentiel",
       "jour": 3,
-      "minutes": 6,
-      "questions": 2,
+      "minutes": 7,
+      "epreuve": true,
       "extrait": "Isoler coûte cher : en exploitation, en agilité, en frustration. Isoler tout garantit que l’isolation sera contournée. Cette leçon vous fait décider ce qui mérite vraiment l’isolation , et ce qui…"
     },
     {
@@ -643,7 +643,7 @@
       "palier": "essentiel",
       "jour": 4,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Une fois le périmètre réduit à l’essentiel, énumérez exhaustivement par où quelque chose peut entrer ou sortir. Nous en comptons neuf. Si votre modèle en liste moins, il est incomplet ; s’il en liste…"
     },
     {
@@ -653,8 +653,8 @@
       "module": "Module 1 · Fondations & modèle de menace",
       "palier": "essentiel",
       "jour": 5,
-      "minutes": 6,
-      "questions": 2,
+      "minutes": 7,
+      "epreuve": true,
       "extrait": "« Ce réseau est isolé » est une hypothèse. Cette leçon vous apprend à la transformer en une série de preuves vérifiables et datées , parce que c’est exactement ce qu’un auditeur, un assureur ou un…"
     },
     {
@@ -665,7 +665,7 @@
       "palier": "essentiel",
       "jour": 6,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "La matrice des flux autorisés est le document de référence de votre air gap. Tout ce qui n’y figure pas est interdit. Tout ce qui y figure a un propriétaire, un contrôle et un journal. Sans elle, «…"
     },
     {
@@ -676,7 +676,7 @@
       "palier": "essentiel",
       "jour": 7,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Dernier jour du module 1. Vous assemblez les six livrables précédents en un document d’une page : votre modèle de menace. Une page, parce que c’est ce que la direction lira, ce que l’auditeur…"
     },
     {
@@ -687,7 +687,7 @@
       "palier": "essentiel",
       "jour": 8,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "IEC 62443 a donné aux architectes d’environnements industriels un vocabulaire précieux : zones (groupes d’actifs partageant des exigences de sécurité) et conduits (chemins de communication entre…"
     },
     {
@@ -698,7 +698,7 @@
       "palier": "essentiel",
       "jour": 9,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Le modèle de Purdue (niveaux 0 à 5, du capteur à l’entreprise) a structuré trente ans d’architectures industrielles. Il est régulièrement déclaré mort par les fournisseurs de cloud. Il ne l’est pas ;…"
     },
     {
@@ -709,7 +709,7 @@
       "palier": "essentiel",
       "jour": 10,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "La DMZ industrielle est l’endroit où les données quittent le périmètre pour devenir utilisables par l’entreprise. Bien conçue, elle est le meilleur allié de l’isolation : elle absorbe toutes les…"
     },
     {
@@ -719,8 +719,8 @@
       "module": "Module 2 · Architecture d'isolation",
       "palier": "essentiel",
       "jour": 11,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "La diode de données est l’équipement emblématique de l’isolation. Elle mérite une leçon entière, parce qu’elle est à la fois indispensable et régulièrement mal comprise : mal placée, mal exploitée,…"
     },
     {
@@ -731,7 +731,7 @@
       "palier": "essentiel",
       "jour": 12,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Tôt ou tard, quelqu’un dira : « Le fabricant doit se connecter pour diagnostiquer. » C’est la demande qui a fait sauter plus d’isolations que toutes les attaques réunies. Cette leçon vous donne une…"
     },
     {
@@ -742,7 +742,7 @@
       "palier": "essentiel",
       "jour": 13,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Sans annuaire central, sans fournisseur d’identité en ligne, comment gérer comptes, mots de passe, certificats et secrets dans un périmètre isolé ? Mal, en général : comptes partagés, mots de passe…"
     },
     {
@@ -753,7 +753,7 @@
       "palier": "essentiel",
       "jour": 14,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Fin du module 2. Vous produisez le schéma d’architecture cible : zones, conduits, DMZ, diodes, sas, accès distant, identité. Un schéma qu’un nouvel arrivant comprend en cinq minutes et qu’un auditeur…"
     },
     {
@@ -763,8 +763,8 @@
       "module": "Module 3 · Transferts & supply chain",
       "palier": "pro",
       "jour": 15,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Toute organisation isolée a une politique de médias amovibles. Presque aucune n’est appliquée. L’écart vient d’un malentendu : une politique est écrite pour interdire, alors qu’elle devrait être…"
     },
     {
@@ -775,7 +775,7 @@
       "palier": "pro",
       "jour": 16,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Le kiosque de décontamination (ou station blanche) est un poste dédié qui analyse les médias avant leur entrée dans le périmètre. Il est utile. Il n’est pas magique. Cette leçon vous aide à le…"
     },
     {
@@ -785,8 +785,8 @@
       "module": "Module 3 · Transferts & supply chain",
       "palier": "pro",
       "jour": 17,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Le sas est le conduit humain de votre isolation. C’est là que se joue la différence entre un air gap et une convention. Cette leçon décrit la procédure de transfert entrant et sortant, le journal, et…"
     },
     {
@@ -796,8 +796,8 @@
       "module": "Module 3 · Transferts & supply chain",
       "palier": "pro",
       "jour": 18,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Vérifier l’origine d’un fichier, c’est répondre à : « Est ce bien ce que l’éditeur a publié ? » Cette leçon vous donne les outils : hachages, signatures, et la notion de source de référence, sans…"
     },
     {
@@ -807,8 +807,8 @@
       "module": "Module 3 · Transferts & supply chain",
       "palier": "pro",
       "jour": 19,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Ne pas mettre à jour un périmètre isolé est une décision, pas une fatalité. Mais mettre à jour sans processus, c’est importer la supply chain sans filtre. Cette leçon organise le cycle : veille,…"
     },
     {
@@ -819,7 +819,7 @@
       "palier": "pro",
       "jour": 20,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Tout ce qui est installé dans le périmètre a été acheté, livré, stocké, déballé. Chaque étape est une opportunité de substitution ou d’ajout. Cette leçon organise la supply chain matérielle avec des…"
     },
     {
@@ -830,7 +830,7 @@
       "palier": "pro",
       "jour": 21,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Fin du module 3. Vous assemblez politique de médias, kiosque, sas, vérification d’origine, quarantaine et supply chain en un runbook de transfert : le document que l’exploitation suit sans réfléchir,…"
     },
     {
@@ -841,7 +841,7 @@
       "palier": "pro",
       "jour": 22,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Sans Internet, pas de SIEM en nuage, pas de flux de renseignement, pas de mises à jour de règles en continu. Et pourtant, un périmètre isolé est plus facile à surveiller qu’un réseau d’entreprise :…"
     },
     {
@@ -852,7 +852,7 @@
       "palier": "pro",
       "jour": 23,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Détecter l’anormal suppose de connaître le normal. Dans un périmètre isolé, le normal est petit et stable : c’est un avantage immense qu’on gaspille si on n’en fait pas une référence explicite. Cette…"
     },
     {
@@ -862,8 +862,8 @@
       "module": "Module 4 · Détection & réponse",
       "palier": "pro",
       "jour": 24,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Le pont non documenté est la menace n° 1 d’un air gap. Cette leçon organise sa détection active : radio, USB, réseau fantôme, et les liens qui n’apparaissent sur aucun schéma. Mettre en place trois…"
     },
     {
@@ -874,7 +874,7 @@
       "palier": "pro",
       "jour": 25,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "La chasse aux menaces, c’est chercher ce que les alertes n’ont pas vu, à partir d’une hypothèse. En environnement isolé, sans flux de renseignement en temps réel, la chasse repose sur votre…"
     },
     {
@@ -885,7 +885,7 @@
       "palier": "pro",
       "jour": 26,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Un incident dans un périmètre isolé a deux particularités : l’aide extérieure ne peut pas se connecter, et le premier réflexe (« isoler ») n’a pas de sens puisque tout est déjà isolé. Cette leçon…"
     },
     {
@@ -895,8 +895,8 @@
       "module": "Module 4 · Détection & réponse",
       "palier": "pro",
       "jour": 27,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Un playbook non exercé est une hypothèse de plus. Cette leçon vous fait jouer, sur table, en 90 minutes, un scénario réaliste : la clé USB du prestataire . Vous en sortirez avec une liste de failles…"
     },
     {
@@ -906,8 +906,8 @@
       "module": "Module 4 · Détection & réponse",
       "palier": "pro",
       "jour": 28,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Fin du module 4. Vous assemblez télémétrie, baselines, campagnes de détection, chasse, playbook et exercice en un plan de détection : ce que vous surveillez, comment, à quelle fréquence, et ce qui se…"
     },
     {
@@ -918,7 +918,7 @@
       "palier": "pro",
       "jour": 29,
       "minutes": 7,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Les canaux cachés fascinent : des données qui sortent d’une machine isolée par la lumière d’une LED, le bruit d’un ventilateur, la chaleur d’un processeur. Cette leçon les présente pour ce qu’ils…"
     },
     {
@@ -929,7 +929,7 @@
       "palier": "pro",
       "jour": 30,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Pour les périmètres où l’acteur ciblé est crédible, voici les contre mesures par famille, classées par rapport coût/efficacité. La règle : d’abord la distance et le contrôle physique, ensuite le…"
     },
     {
@@ -939,8 +939,8 @@
       "module": "Module 5 · Canaux cachés & durcissement",
       "palier": "pro",
       "jour": 31,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Le firmware est la couche sous le système d’exploitation : UEFI, contrôleurs, cartes réseau, disques. Un code malveillant qui s’y installe survit à une réinstallation complète, et votre image…"
     },
     {
@@ -950,8 +950,8 @@
       "module": "Module 5 · Canaux cachés & durcissement",
       "palier": "pro",
       "jour": 32,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Un périmètre isolé a un atout unique pour le durcissement système : on sait exactement ce qui doit s’y exécuter . Cette leçon exploite cet atout avec la mesure la plus efficace et la plus sous…"
     },
     {
@@ -961,8 +961,8 @@
       "module": "Module 5 · Canaux cachés & durcissement",
       "palier": "pro",
       "jour": 33,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Un périmètre isolé finit toujours par gérer des clés : autorité de certification interne, signature de vos propres images et programmes, chiffrement des sauvegardes, coffre de secrets. Sans service…"
     },
     {
@@ -972,8 +972,8 @@
       "module": "Module 5 · Canaux cachés & durcissement",
       "palier": "pro",
       "jour": 34,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "L’air gap est une mesure physique. Sa sécurité repose sur la sécurité physique du lieu : qui entre, ce qu’il apporte, ce qu’il touche, ce qu’il emporte. Cette leçon parcourt la « couche zéro » du…"
     },
     {
@@ -983,8 +983,8 @@
       "module": "Module 5 · Canaux cachés & durcissement",
       "palier": "pro",
       "jour": 35,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Fin du module 5. Vous produisez le plan de durcissement priorisé : ce que vous durcissez, dans quel ordre, à quel coût, pour couvrir quel risque. Un plan qui tient sur deux pages et que la direction…"
     },
     {
@@ -995,7 +995,7 @@
       "palier": "elite",
       "jour": 36,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "« Nos systèmes sont isolés » n’est pas une réponse à un régulateur. C’est le début d’une question : prouvez le, montrez comment vous le surveillez, et dites nous ce qui se passe quand ça casse. Cette…"
     },
     {
@@ -1006,7 +1006,7 @@
       "palier": "elite",
       "jour": 37,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Les régulateurs demandent une gestion du risque ; les normes vous donnent un catalogue de contrôles pour la démontrer. Cette leçon cartographie vos livrables sur IEC 62443 (industriel) et ISO 27001…"
     },
     {
@@ -1016,8 +1016,8 @@
       "module": "Module 6 · Gouvernance, conformité & audit",
       "palier": "elite",
       "jour": 38,
-      "minutes": 8,
-      "questions": 2,
+      "minutes": 9,
+      "epreuve": true,
       "extrait": "Auditer un air gap, le vôtre ou celui d’un client, c’est répondre à une question : l’isolation affirmée est elle réelle, surveillée et tenable ? Cette leçon donne la méthode en six étapes, avec les…"
     },
     {
@@ -1028,7 +1028,7 @@
       "palier": "elite",
       "jour": 39,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Vous avez le modèle, le schéma, les plans, le score. La direction a dix minutes. Cette leçon vous apprend à écrire le rapport qu’elle lira, et qui débouche sur une décision : budget, arbitrage,…"
     },
     {
@@ -1038,8 +1038,8 @@
       "module": "Module 6 · Gouvernance, conformité & audit",
       "palier": "elite",
       "jour": 40,
-      "minutes": 7,
-      "questions": 2,
+      "minutes": 8,
+      "epreuve": true,
       "extrait": "Tout ce que vous avez produit converge ici : le plan de remédiation 90 jours . Trois vagues de 30 jours, chacune avec un objectif mesurable, des actions avec propriétaire, et un indicateur qui dit à…"
     },
     {
@@ -1050,7 +1050,7 @@
       "palier": "elite",
       "jour": 41,
       "minutes": 8,
-      "questions": 2,
+      "epreuve": true,
       "extrait": "Dernier exercice avant le capstone : une confrontation sur table entre une équipe qui cherche à franchir l’isolation (rouge) et une équipe qui la défend (bleue), sur votre architecture cible. Aucun…"
     },
     {
@@ -1061,13 +1061,13 @@
       "palier": "elite",
       "jour": 42,
       "minutes": 8,
-      "questions": 3,
+      "epreuve": true,
       "extrait": "Jour 42. Vous assemblez l’ensemble en un dossier d’architecture complet : le document unique qui décrit, justifie, prouve et planifie l’isolation de votre périmètre. C’est le livrable que vous…"
     }
   ],
   "archive": {
     "nom": "airgap42-labs.tar.gz",
-    "sha256": "192c0f645ebfd7869b5f272f6006a3d9f6f11fcc5b953b5ad034b965c70892a4",
-    "octets": 264542
+    "sha256": "7d9f27b1b1114fd175d259d7c9c578b1339737566ea60bbe1fc37f95ab790efa",
+    "octets": 278333
   }
 }

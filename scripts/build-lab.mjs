@@ -8,7 +8,8 @@
  * le lanceur en shell le déchiffre avec la seule commande `openssl enc`. Aucune dépendance,
  * ni pour construire, ni pour jouer.
  *
- * Passe-phrase d'un niveau : "<licence du palier>:<identifiant du niveau>".
+ * Passe-phrase d'un niveau : "<licence du palier>:<identifiant du niveau>:<réponse du niveau
+ * précédent>" — il faut donc avoir payé ET avoir joué. Le premier niveau n'a pas de maillon.
  * Les niveaux libres utilisent la licence publique « libre ».
  *
  * Les clés de licence sont lues dans lab/licences.json (hors dépôt) ou dans les variables
@@ -31,8 +32,6 @@ const OUT_DIR = path.join(ROOT, 'site/telechargements');
 const ITER = 310_000;
 const TIERS = ['essentiel', 'pro', 'elite'];
 const LARGEUR = 76;
-
-const sha256 = (s) => createHash('sha256').update(s).digest('hex');
 
 /** Extrait de présentation (vitrine) : quelques lignes de la leçon, sans les marques. */
 function extrait(corps, n = 200) {
@@ -176,26 +175,27 @@ function separerFrontmatter(md) {
   return m ? md.slice(m[0].length) : md;
 }
 
-function extraireQuiz(corps) {
-  const questions = [];
-  const nettoye = corps.replace(/```quiz\s*\n([\s\S]*?)```/g, (_, json) => {
-    const q = JSON.parse(json);
-    questions.push(...(Array.isArray(q) ? q : [q]));
+/**
+ * Normalisation d'une réponse. Le lanceur applique STRICTEMENT la même en shell
+ * (minuscules ASCII, bords rognés, espaces internes réduits à un seul) : toute
+ * divergence ici rendrait un niveau impossible à ouvrir chez l'apprenant.
+ */
+export const normaliserReponse = (s) => s.toLowerCase().trim().replace(/\s+/g, ' ');
+
+/** Une leçon porte une épreuve unique : c'est une serrure, pas un contrôle de lecture. */
+function extraireEpreuve(corps) {
+  let epreuve = null;
+  const nettoye = corps.replace(/```epreuve\s*\n([\s\S]*?)```/g, (_, json) => {
+    epreuve = JSON.parse(json);
     return '';
   });
-  return { corps: nettoye.trim(), questions };
+  return { corps: nettoye.trim(), epreuve };
 }
 
-function blocQuestions(questions) {
-  if (questions.length === 0) return '';
-  const lettres = 'abcd';
-  const lignes = ['', '  QUESTIONS DE CONTRÔLE', '  ' + '─'.repeat(22), ''];
-  questions.forEach((q, i) => {
-    lignes.push(habiller(`${i + 1}. ${q.q}`, '  '));
-    q.choices.forEach((c, j) => lignes.push(habiller(`${lettres[j]}) ${c}`, '     ')));
-    lignes.push('');
-  });
-  lignes.push(`  Validez avec :  ./airgap42 valider <numéro du niveau>`);
+function blocEpreuve(epreuve, n) {
+  if (!epreuve) return '';
+  const lignes = ['', '  ÉPREUVE', '  ' + '─'.repeat(7), '', habiller(epreuve.enonce, '  '), ''];
+  lignes.push(`  Répondez avec :  ./airgap42 valider ${n}`);
   return lignes.join('\n');
 }
 
@@ -215,6 +215,8 @@ async function main() {
   const publique = { titre: curriculum.title, version: curriculum.version, modules: [], niveaux: [] };
   let n = 0;
   let mots = 0;
+  // Maillon courant de la chaîne : la réponse du niveau précédent, qui ouvre le suivant.
+  let reponsePrecedente = null;
 
   for (const mod of curriculum.modules) {
     const modPublic = { id: mod.id, titre: mod.title, court: mod.short || mod.title, palier: mod.tier === 'free' ? 'libre' : mod.tier, jours: mod.days, resume: mod.summary || '', niveaux: [] };
@@ -222,10 +224,13 @@ async function main() {
     for (const lecon of mod.lessons) {
       n += 1;
       const brut = await fs.readFile(path.join(CONTENT, 'modules', mod.dir, lecon.file), 'utf8');
-      const { corps, questions } = extraireQuiz(separerFrontmatter(brut));
+      const { corps, epreuve } = extraireEpreuve(separerFrontmatter(brut));
+      if (!epreuve || !epreuve.enonce || !epreuve.reponse) {
+        throw new Error(`Leçon ${mod.dir}/${lecon.file} : bloc \`\`\`epreuve manquant ou incomplet. Sans lui, la chaîne des niveaux est rompue.`);
+      }
       // Entête de contrôle : déchiffré avec une mauvaise clé, AES-CBC rend des octets
       // parasites sans forcément signaler d'erreur. Ce marqueur tranche sans ambiguïté.
-      const texte = 'AG42/1\n' + rendreTexte(corps) + '\n' + blocQuestions(questions);
+      const texte = 'AG42/1\n' + rendreTexte(corps) + '\n' + blocEpreuve(epreuve, n);
       mots += corps.split(/\s+/).length;
 
       const palier = mod.tier === 'free' ? 'libre' : mod.tier;
@@ -234,21 +239,38 @@ async function main() {
       // Enveloppes de clés : le niveau est chiffré une fois avec une clé de contenu tirée au
       // hasard, et cette clé est réemballée sous chaque licence qui y donne droit. Une licence
       // Elite ouvre donc aussi les niveaux Essentiel et Pro, sans dupliquer le contenu.
+      //
+      // La passe-phrase enchaîne la réponse du niveau précédent : il faut donc AVOIR PAYÉ
+      // (la licence) ET AVOIR JOUÉ (la réponse trouvée) pour ouvrir un niveau. C'est le
+      // modèle OverTheWire, greffé sur le modèle d'accès payant.
       const cleContenu = randomBytes(32).toString('base64url');
       await fs.writeFile(path.join(travail, 'niveaux', `${id}.enc`), chiffrerOpenSSL(texte, cleContenu));
+      const maillon = reponsePrecedente ? `:${reponsePrecedente}` : '';
       const ayantsDroit = palier === 'libre' ? [['libre', 'libre']] : TIERS.filter((t) => TIERS.indexOf(t) >= TIERS.indexOf(palier)).map((t) => [t, cles[t]]);
       for (const [nom, licence] of ayantsDroit) {
-        await fs.writeFile(path.join(travail, 'niveaux', `${id}.k.${nom}`), chiffrerOpenSSL(`AG42/1\n${cleContenu}`, `${licence}:${id}`));
+        await fs.writeFile(path.join(travail, 'niveaux', `${id}.k.${nom}`), chiffrerOpenSSL(`AG42/1\n${cleContenu}`, `${licence}:${id}${maillon}`));
       }
 
-      const reponses = questions.map((q) => 'abcd'[q.answer]).join('');
-      const minutes = lecon.minutes || Math.max(5, Math.round(corps.split(/\s+/).length / 180) + 4);
-      index.push([n, id, lecon.title.replace(/\|/g, '/'), palier, lecon.day ?? '', minutes, questions.length, sha256(`${id}:${reponses}`)].join('|'));
+      // Témoin de réponse : il ne dépend d'aucune licence, pour qu'un apprenant puisse valider
+      // le dernier niveau de son palier même si le suivant ne lui appartient pas.
+      const reponse = normaliserReponse(epreuve.reponse);
+      await fs.writeFile(path.join(travail, 'niveaux', `${id}.v`), chiffrerOpenSSL(`AG42/1\n${id}`, reponse));
+      reponsePrecedente = reponse;
 
-      const fiche = { n, id, titre: lecon.title, module: mod.title, palier, jour: lecon.day ?? null, minutes, questions: questions.length, extrait: extrait(corps) };
+      const minutes = lecon.minutes || Math.max(5, Math.round(corps.split(/\s+/).length / 180) + 4);
+      index.push([n, id, lecon.title.replace(/\|/g, '/'), palier, lecon.day ?? '', minutes].join('|'));
+
+      const fiche = { n, id, titre: lecon.title, module: mod.title, palier, jour: lecon.day ?? null, minutes, epreuve: true, extrait: extrait(corps) };
       publique.niveaux.push(fiche);
       modPublic.niveaux.push(fiche);
     }
+  }
+
+  // Sceaux de licence : la passe-phrase d'un niveau contient désormais la réponse précédente,
+  // que le lanceur n'a pas encore au moment où l'on enregistre une clé. Ces petits fichiers
+  // ne dépendent que de la licence, et servent uniquement à reconnaître le palier acheté.
+  for (const t of TIERS) {
+    await fs.writeFile(path.join(travail, 'niveaux', `sceau.${t}`), chiffrerOpenSSL(`AG42/1\n${t}`, cles[t]));
   }
 
   await fs.writeFile(path.join(travail, 'niveaux', 'index'), index.join('\n') + '\n');
@@ -282,7 +304,11 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(`\n✖ ${e.message}\n`);
-  process.exit(1);
-});
+// Exécuté seulement en ligne de commande : scripts/check.mjs importe ce module pour
+// réutiliser `normaliserReponse`, et il ne doit surtout pas déclencher un build.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error(`\n✖ ${e.message}\n`);
+    process.exit(1);
+  });
+}

@@ -6,7 +6,7 @@ Le principe : **vous n'exécutez aucune commande.** Tout ce qui doit tourner tou
 
 Le workflow `.github/workflows/deploy.yml` se déclenche à chaque push sur `main` :
 
-1. `npm run check` — curriculum, quiz, liens, intégrité de l'archive de niveaux ;
+1. `npm run check` — curriculum, épreuves, liens, intégrité de l'archive et **partie simulée de bout en bout** ;
 2. `npm run build` — construit le site ;
 3. publication sur la branche `gh-pages`.
 
@@ -65,7 +65,7 @@ Tant qu'aucun `clientId` ni `checkoutUrl` n'est renseigné, aucun lien mort n'ap
 vercel env add PAYPAL_CLIENT_ID        # identifiant de l'application PayPal
 vercel env add PAYPAL_CLIENT_SECRET    # secret de l'application
 vercel env add PAYPAL_SANDBOX          # 1 en bac à sable, à supprimer en production
-vercel env add PAYPAL_PRICES           # {"essentiel":490,"pro":1490,"elite":4900}
+vercel env add PAYPAL_PRICES           # {"essentiel":390,"pro":1190,"elite":1900}
 vercel env add PAYPAL_CURRENCY         # EUR
 vercel env add LICENCE_ESSENTIEL       # vos trois clés, cf. section 2
 vercel env add ALLOWED_ORIGIN          # https://redcreator1.github.io

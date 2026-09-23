@@ -186,6 +186,12 @@ pre {
 .mb-lg {
   margin-bottom: 30px;
 }
+.sep {
+  height: 1px;
+  margin: 28px 0;
+  border: 0;
+  background: var(--border);
+}
 .container-sm {
   max-width: 560px;
 }

@@ -52,9 +52,26 @@ Postez la page 6 (« Que faire si ») dans le canal du module 3. C’est la page
 
 Le module 4 vous apprend à **voir** : ce qui passe par le sas, et surtout ce qui n’y passe pas.
 
-```quiz
-[
-  {"q":"Qui doit tester le runbook ?","choices":["Son auteur","Le responsable sécurité","Une personne qui n’a pas participé à sa rédaction","Un auditeur externe"],"answer":2,"explain":"Seul un lecteur neuf révèle les implicites que l’auteur ne voit plus."},
-  {"q":"Quelle page du runbook bénéficie le plus de la communauté ?","choices":["Les principes","Le transfert standard","« Que faire si »","La réception matériel"],"answer":2,"explain":"Les cas dégradés sont ceux que l’expérience collective enrichit le plus."}
-]
+## Le cas SITE 42
+
+Le runbook de transfert entrant proposé pour SITE 42, dans l’ordre où l’exploitation l’exécuterait.
+
+```
+SITE 42 - runbook de transfert entrant (proposition)
+
+  e1  demande ecrite, objet et justification
+  e2  approbation par le responsable d exploitation
+  e3  releve de l empreinte a la source, sur un poste distinct
+  e4  passage au kiosque, impression du rapport
+  e5  quarantaine 24 h sur relais-fichiers-01
+  e6  transfert vers la zone de conduite
+  e7  journal signe par le demandeur
+```
+
+```epreuve
+{
+  "enonce": "Il manque une étape : comparer l'empreinte relevée en e3 à celle du fichier arrivé, seule façon de détecter une substitution pendant le transfert. Donnez le code de l'étape existante juste après laquelle elle doit s'insérer.",
+  "reponse": "e6",
+  "indice": "On ne peut comparer qu'une fois le fichier arrivé de l'autre côté."
+}
 ```

@@ -19,11 +19,15 @@ export default {
     language: 'fr',
     // Contact affiché sur le site et dans les CGV
     contactEmail: 'contact@airgap42.example',
-    // Formateur. Laissez `name` vide pour masquer la section tant qu'elle n'est pas renseignée.
+    // L'auteur. Section masquée tant que `name` est vide.
+    // Ne revendiquez ici que ce que vous pouvez montrer : un titre, une certification ou
+    // des années d'expérience affichés sur une page de vente sont des allégations
+    // vérifiables, pas une formule de style.
     instructor: {
-      name: '',
-      title: '',
-      bio: '',
+      name: 'Redcreator1',
+      title: 'Auteur et développeur du parcours',
+      bio: 'Je construis des outils, et j’écris ce que j’aurais voulu trouver. L’Air Gap 42 est parti d’un constat simple : on répète partout qu’un système déconnecté est sûr, et presque nulle part comment le prouver. J’ai préféré en faire quelque chose qui s’exécute plutôt qu’un cours de plus. Un parcours qui tient dans un terminal, qui fonctionne débranché, et dont vous pouvez lire le code avant de le lancer.',
+      link: 'https://github.com/Redcreator1',
     },
   },
 
@@ -38,11 +42,32 @@ export default {
     startsOn: '20 septembre 2026',
   },
 
+  // ---------- Engagements ----------
+  // CHAQUE service listé ici est une promesse commerciale que VOUS devrez tenir, et qui
+  // vous engage juridiquement une fois affichée (art. L111-1 C. conso. : information
+  // précontractuelle ; art. L121-2 : pratiques commerciales trompeuses).
+  //
+  // Tout est à `false` par défaut. Passez une ligne à `true` seulement quand le service
+  // existe vraiment et que vous pouvez le tenir dans la durée. Les fonctionnalités et les
+  // questions fréquentes qui en dépendent disparaissent du site tant qu'il est à `false`.
+  engagements: {
+    lives: false, // sessions live hebdomadaires et enregistrements
+    replays: false, // mise à disposition des enregistrements
+    coaching: false, // séances individuelles
+    mastermind: false, // groupe restreint Elite
+    revuePairs: false, // relecture par les pairs sous 72 h
+    revueSenior: false, // revue du plan 90 jours par un architecte senior
+    templates: false, // bibliothèque de modèles de documents
+    kitAudit: false, // kit d'audit Elite
+    misesAJour: false, // mises à jour trimestrielles du contenu
+    facture: false, // facture émise automatiquement (dépend de votre configuration PayPal)
+  },
+
   // ---------- Offres ----------
   checkout: {
     currency: 'EUR',
     // Mention affichée sous le prix. Vente à des consommateurs en France : les prix doivent être TTC.
-    priceNote: 'Paiement unique · accès à vie · facture fournie',
+    priceNote: 'Paiement unique · archive à vous, définitivement',
 
     // PayPal. Deux options, au choix :
     //
@@ -67,59 +92,62 @@ export default {
       {
         id: 'essentiel',
         name: 'Essentiel',
-        price: 490,
-        priceBefore: 690,
+        price: 390,
+        // Prix barré : laissez-le vide. Annoncer une réduction oblige à afficher le prix
+        // le plus bas réellement pratiqué dans les 30 jours précédents (directive Omnibus,
+        // art. L112-1-1 C. conso.). Un prix barré jamais pratiqué est une réduction fictive.
+        priceBefore: null,
         pitch: 'Les fondations et l’architecture d’isolation. Pour bâtir un air gap qui tient.',
         // Option B uniquement : URL d'un lien de paiement PayPal (https://www.paypal.com/ncp/payment/…)
         checkoutUrl: '',
         features: [
-          'Modules 1 & 2 (14 leçons, 14 jours)',
-          'Ateliers guidés + checklists d’architecture',
-          'Quiz de validation et certificat de module',
-          'Accès à vie aux mises à jour du contenu',
-          'Communauté Discord (canaux Essentiel)',
+          'Niveaux 4 à 17 : fondations, modèle de menace, architecture d’isolation',
+          'Ateliers guidés et checklists à appliquer sur votre environnement',
+          'Une épreuve par niveau : sa réponse ouvre le suivant',
+          'Parcours hors-ligne, sans compte ni installation',
+          { t: 'Mises à jour du contenu incluses', e: 'misesAJour' },
         ],
         cta: 'Rejoindre Essentiel',
       },
       {
         id: 'pro',
         name: 'Pro',
-        price: 1490,
-        priceBefore: 1990,
+        price: 1190,
+        priceBefore: null,
         highlight: true,
         badge: 'Recommandé',
         pitch: 'Le parcours opérationnel complet : transferts, détection, canaux cachés. Pour ceux qui ont un air gap à défendre.',
         checkoutUrl: '',
         features: [
-          'Modules 1 à 5 (35 leçons, 35 jours)',
+          'Niveaux 4 à 38 : transferts, supply chain, détection, canaux cachés',
           'Tout Essentiel inclus',
-          'Sessions live hebdomadaires (Q&R + revue d’architecture)',
-          'Bibliothèque de templates : politiques, runbooks, matrices de risques',
-          'Canaux Discord Pro + revue de vos schémas par les pairs',
-          'Certificat de programme',
+          'Certificat de parcours délivré par le lanceur',
+          { t: 'Sessions live hebdomadaires (questions-réponses et revue d’architecture)', e: 'lives' },
+          { t: 'Bibliothèque de modèles : politiques, runbooks, matrices de risques', e: 'templates' },
+          { t: 'Revue de vos schémas par les pairs', e: 'revuePairs' },
         ],
         cta: 'Rejoindre Pro',
       },
       {
         id: 'elite',
         name: 'Elite',
-        price: 4900,
-        priceBefore: 6900,
-        pitch: 'Les 42 jours + gouvernance, audit et 3 sessions de coaching individuel. Pour RSSI, auditeurs et consultants.',
+        price: 1900,
+        priceBefore: null,
+        pitch: 'Le parcours entier, gouvernance et audit compris. Pour RSSI, auditeurs et consultants.',
         checkoutUrl: '',
         features: [
-          'Les 6 modules (42 leçons, 42 jours) + briefing',
+          'Les 45 niveaux, briefing et module gouvernance compris',
           'Tout Pro inclus',
-          '3 sessions de coaching 1:1 (60 min)',
-          'Kit d’audit air gap complet (IEC 62443 / NIS2 / ISO 27001)',
-          'Mastermind Elite (12 personnes max) + accès anticipé aux nouveaux modules',
-          'Revue de votre plan 90 jours par un architecte senior',
+          { t: '3 séances individuelles de 60 minutes', e: 'coaching' },
+          { t: 'Kit d’audit air gap (IEC 62443 / NIS2 / ISO 27001)', e: 'kitAudit' },
+          { t: 'Groupe restreint Elite, douze personnes au plus', e: 'mastermind' },
+          { t: 'Revue de votre plan 90 jours par un architecte senior', e: 'revueSenior' },
         ],
         cta: 'Candidater Elite',
       },
     ],
     enterprise: {
-      pitch: 'Vous formez une équipe de 5+ personnes ? Licences groupées, session privée, facturation sur devis.',
+      pitch: 'Vous formez une équipe de 5 personnes ou plus ? Écrivez-nous pour une licence groupée et un devis.',
       mailto: 'mailto:contact@airgap42.example?subject=Formation%20Air%20Gap%2042%20%E2%80%94%20Entreprise',
     },
     guaranteeDays: 14,
@@ -160,7 +188,9 @@ export default {
   newsletter: {
     provider: 'formspree',
     endpoint: 'https://formspree.io/f/REMPLACER',
-    leadMagnet: 'Recevez le briefing gratuit « Les 7 erreurs qui trouent 90 % des air gaps » et le module 0 en accès libre.',
+    // Le briefing est public et se lit sans donner son adresse : la liste sert à prévenir
+    // de l'ouverture et des nouveaux niveaux, rien d'autre. Ne promettez ici que cela.
+    leadMagnet: 'Vous préférez être prévenu ? Laissez votre adresse : vous recevrez l’annonce de l’ouverture des inscriptions et les nouveaux niveaux publiés en accès libre.',
   },
 
   // ---------- Mesure d'audience sans cookies ----------
@@ -186,11 +216,19 @@ export default {
     },
     {
       q: 'Comment se passe l’accès après paiement ?',
-      a: 'Vous recevez immédiatement votre clé de licence. Vous l’activez sur la page Accès : le contenu, chiffré sur nos serveurs, est déverrouillé dans votre navigateur. Aucun compte ni mot de passe à retenir, et cela fonctionne hors-ligne une fois chargé.',
+      a: 'Vous recevez votre clé de licence. Vous téléchargez l’archive des niveaux depuis la page Jouer, vous vérifiez son empreinte, et vous enregistrez votre clé dans le lanceur : « ./airgap42 licence VOTRE-CLÉ ». Aucun compte, aucun mot de passe, et tout fonctionne hors-ligne.',
+    },
+    {
+      q: 'Comment valide-t-on un niveau ?',
+      a: 'Chaque niveau fournit de la matière — un inventaire, une matrice de flux, un journal, un rapport — et pose une question qui n’a qu’une seule réponse exacte, à dériver de cette matière. Cette réponse est la clé de déchiffrement du niveau suivant : ce n’est pas une note, c’est une serrure. Sans elle, rien ne s’ouvre.',
+    },
+    {
+      q: 'Et si je bloque sur une épreuve ?',
+      a: 'La progression est stricte : tant que la réponse n’est pas trouvée, le niveau suivant reste fermé. C’est ce qui fait la valeur du parcours, et c’est assumé. Si vous restez bloqué, écrivez-nous — et la garantie de 14 jours s’applique sans justification.',
     },
     {
       q: 'Est-ce vraiment 42 jours ?',
-      a: 'Le rythme conseillé est une leçon par jour (20 à 45 minutes). L’accès est à vie : vous pouvez aller plus vite ou étaler sur un trimestre. Les lives hebdomadaires suivent le rythme de la cohorte.',
+      a: 'Le rythme conseillé est un niveau par jour, de 20 à 45 minutes. Rien ne vous y oblige : l’archive est à vous, vous avancez à votre rythme.',
     },
     {
       q: 'Y a-t-il une garantie ?',
@@ -198,11 +236,12 @@ export default {
     },
     {
       q: 'Puis-je faire financer la formation par mon entreprise ?',
-      a: 'Oui. Nous fournissons une facture conforme et un programme détaillé. Pour 5 personnes et plus, contactez-nous pour une licence groupée.',
+      a: 'Oui. Le programme détaillé est public sur la page Programme, et une facture vous est fournie. Pour 5 personnes et plus, écrivez-nous pour une licence groupée.',
     },
     {
       q: 'Le contenu est-il mis à jour ?',
-      a: 'Chaque trimestre : nouvelles menaces, retours d’expérience de la communauté, évolutions réglementaires (NIS2, IEC 62443). Les mises à jour sont incluses à vie.',
+      a: 'Oui, et les mises à jour sont incluses : vous retéléchargez l’archive, votre clé continue de fonctionner.',
+      e: 'misesAJour',
     },
   ],
 };

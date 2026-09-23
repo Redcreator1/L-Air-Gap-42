@@ -43,9 +43,28 @@ Rédigez votre matrice. Comptez les lignes : un périmètre bien conçu en a rar
 - [ ] Les flux sortants sont aussi détaillés que les entrants
 - [ ] La matrice est signée
 
-```quiz
-[
-  {"q":"Que doit-il arriver à un flux dont la date de revue est dépassée ?","choices":["Rien, il reste autorisé","Il est suspendu jusqu’à revue","Il est supprimé définitivement","Il est signalé à la direction"],"answer":1,"explain":"La suspension automatique à la date de revue est ce qui empêche les exceptions temporaires de devenir permanentes."},
-  {"q":"Pourquoi chaque flux doit-il avoir un journal ?","choices":["Pour la facturation","Pour prouver qu’un flux a eu lieu et donc qu’un autre n’a pas eu lieu","Pour mesurer le débit","Pour la conformité RGPD"],"answer":1,"explain":"Sans journal des flux autorisés, aucun écart n’est démontrable."}
-]
+## Le cas SITE 42
+
+La matrice de SITE 42, et ce qu’une capture de 24 heures a réellement vu passer.
+
+```
+SITE 42 - matrice des flux autorises (extrait)
+  source              destination          protocole  proprietaire
+  hmi-salle-01        plc-*                s7         conduite
+  scada-serveur-01    diode-sortie-01      tcp/2404   exploitation
+  relais-fichiers-01  hist-donnees-01      sftp       si industriel
+
+SITE 42 - flux observes sur 24 h
+  hmi-salle-01        -> plc-chloration-02
+  scada-serveur-01    -> diode-sortie-01
+  relais-fichiers-01  -> hist-donnees-01
+  hist-donnees-01     -> srv-annuaire-01
+```
+
+```epreuve
+{
+  "enonce": "Tout ce qui ne figure pas dans la matrice est interdit. Un flux observé n'y figure pas : donnez le nom de sa destination.",
+  "reponse": "srv-annuaire-01",
+  "indice": "Quatre flux observés, trois lignes autorisées."
+}
 ```

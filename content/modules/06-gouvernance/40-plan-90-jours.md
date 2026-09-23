@@ -54,9 +54,25 @@ Rédigez le plan. Faites-le valider par le responsable du périmètre et le resp
 - [ ] Trois vagues avec objectif, indicateur et cible
 - [ ] Suivi hebdomadaire et indicateur mensuel institués
 
-```quiz
-[
-  {"q":"Objectif de la vague 1 ?","choices":["Déployer le SIEM","Fermer tous les ponts avérés et contrôler les médias","Obtenir le budget","Rédiger les politiques"],"answer":1,"explain":"Tant qu’un pont existe, le reste est secondaire ; la vague 1 déplafonne le score."},
-  {"q":"Nombre d’actions raisonnable pour un plan 90 jours ?","choices":["5","10 à 15","25 à 50","Autant que nécessaire"],"answer":1,"explain":"Au-delà, le plan n’aboutit pas ; le reste va dans un plan 12 mois daté."}
-]
+## Le cas SITE 42
+
+Le plan de remédiation 90 jours de SITE 42, en trois vagues de trente jours.
+
+```
+SITE 42 - plan de remediation 90 jours
+
+code  objectif mesurable              proprietaire   indicateur
+----  ------------------------------  -------------  ---------------
+v1    m3-televigie ferme, bastion     si industriel  permanents = 0
+v2    s4 lu quotidiennement           supervision    alertes traitees
+v3    h3 prouvee par balayage         automaticien   preuve datee
+v4    tech-auto supprime              -              -
+```
+
+```epreuve
+{
+  "enonce": "Une action sans propriétaire et sans indicateur n'est pas une action : c'est un souhait. Donnez son code.",
+  "reponse": "v4",
+  "indice": "Deux tirets sur la même ligne."
+}
 ```

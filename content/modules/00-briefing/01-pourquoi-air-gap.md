@@ -16,7 +16,7 @@ Cette leçon a un seul but : vous convaincre que l’air gap est à la fois **la
 
 Un pare-feu réduit une probabilité. Un air gap supprime une *classe entière* de scénarios : l’attaque distante opportuniste. Le ransomware qui balaie Internet à la recherche d’un port RDP ouvert ne vous trouvera jamais. Le scanner qui teste une CVE fraîchement publiée sur des milliers d’adresses IP ne vous atteindra pas.
 
-C’est énorme. La majorité des incidents documentés chaque année commence par une exposition réseau. Retirer cette exposition, c’est retirer l’attaquant automatisé, l’attaquant pressé, l’attaquant qui n’a pas de raison particulière de s’intéresser à *vous*.
+C’est énorme, et c’est mécanique : une attaque distante suppose un chemin réseau. Retirer ce chemin, c’est retirer l’attaquant automatisé, l’attaquant pressé, l’attaquant qui n’a pas de raison particulière de s’intéresser à *vous*.
 
 Ce qui reste, c’est l’attaquant qui a une raison. Et celui-là ne passe pas par le câble que vous avez retiré. Il passe par la clé USB, le prestataire, la mise à jour, la personne. Le risque n’a pas disparu : il a changé de forme, et il exige d’autres défenses que celles que vous avez l’habitude de déployer.
 
@@ -38,7 +38,7 @@ La promesse la plus fragile est l’**intégrité**. Tout ce que votre système 
 
 ## Quatre signaux d’un air gap qui se dégrade
 
-Un air gap ne casse presque jamais d’un coup. Il s’érode. Voici les signes avant-coureurs que nous retrouvons dans presque tous les audits :
+Un air gap ne casse presque jamais d’un coup. Il s’érode. Voici quatre signes avant-coureurs à chercher chez vous :
 
 1. **Les exceptions ont une durée de vie infinie.** Un accès temporaire accordé « pour la migration » il y a trois ans est toujours actif. Personne ne sait plus qui l’a demandé.
 2. **Le nombre de médias amovibles n’est pas connu.** Si vous ne pouvez pas répondre à « combien de clés USB ont été insérées le mois dernier ? », vous n’avez pas d’air gap, vous avez une convention.
@@ -65,24 +65,25 @@ Prenez une feuille. Répondez, sans consulter de document, à ces trois question
 
 Gardez cette feuille. Vous la comparerez à la réalité dans la leçon 3, et vous mesurerez l’écart. Cet écart, c’est votre point de départ.
 
-```quiz
-[
-  {
-    "q": "Quelle classe de menace l’air gap élimine-t-il réellement ?",
-    "choices": [
-      "Toutes les menaces logicielles",
-      "L’attaque distante opportuniste via le réseau",
-      "Les erreurs humaines",
-      "Les canaux cachés"
-    ],
-    "answer": 1,
-    "explain": "L’isolation retire l’exposition réseau, donc l’attaquant automatisé ou opportuniste. Les autres classes restent et changent de forme."
-  },
-  {
-    "q": "Laquelle des trois promesses (confidentialité, intégrité, disponibilité) est la plus fragile dans un système isolé ?",
-    "choices": ["La disponibilité", "La confidentialité", "L’intégrité", "Elles sont équivalentes"],
-    "answer": 2,
-    "explain": "Tout ce que le système exécute a été importé un jour. Sans chaîne de vérification, l’intégrité repose sur la confiance, pas sur la preuve."
-  }
-]
+## Le cas SITE 42
+
+SITE 42 est une station de traitement d'eau potable. Son registre des systèmes, révision du 02/03, décrit ce qui est censé rester isolé.
+
+```
+SITE 42 - registre des systemes (extrait)
+
+systeme             interfaces declarees        sort du perimetre ?
+------------------  --------------------------  -------------------
+plc-filtration-01   eth0, serie -> modem RTC    oui, ligne telephonique
+plc-chloration-02   eth0                        non
+scada-serveur-01    eth0, eth1 (zone 3)         oui, vers la DMZ
+hist-donnees-01     eth0, wlan0 (desactive)     oui si wlan0 revient
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces quatre systèmes n'a aucune interface capable de sortir du périmètre isolé — ni aujourd'hui, ni après une simple erreur de configuration. Donnez son nom.",
+  "reponse": "plc-chloration-02",
+  "indice": "« Désactivé » n'est pas « absent ». Une interface qui existe est un chemin."
+}
 ```

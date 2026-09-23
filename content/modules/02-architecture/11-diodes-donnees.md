@@ -49,9 +49,24 @@ Pour chaque flux sortant de votre matrice, décidez : diode, ou sas. Si diode : 
 - [ ] Un compteur de séquence est supervisé des deux côtés
 - [ ] La procédure de panne n’implique aucun câble
 
-```quiz
-[
-  {"q":"Ce qu’une diode matérielle garantit :","choices":["Que les données arrivent","Que rien ne remonte","Que les données sont saines","Que le récepteur n’est pas saturé"],"answer":1,"explain":"L’absence physique d’émetteur côté réception interdit tout retour ; le reste relève de la conception autour."},
-  {"q":"Pourquoi TCP ne traverse-t-il pas une diode tel quel ?","choices":["Débit insuffisant","Il nécessite des acquittements dans le sens interdit","Il n’est pas chiffré","Question de licence"],"answer":1,"explain":"Les proxys de chaque côté terminent et rejouent les connexions ; entre les deux, le flux est sans retour."}
-]
+## Le cas SITE 42
+
+Le relevé de configuration de la diode de SITE 42, tel qu’un auditeur le recevrait.
+
+```
+SITE 42 - diode-sortie-01, releve de configuration
+
+  sens materiel autorise     z-conduite -> z-dmz
+  protocole transporte       UDP, reconstruit cote DMZ
+  acquittement applicatif    active, retour par relais-fichiers-01
+  journalisation             cote emetteur uniquement
+  essai de sens interdit     realise le 03/19, resultat : bloque
+```
+
+```epreuve
+{
+  "enonce": "Une diode mal exploitée redevient bidirectionnelle. Une option de ce relevé rouvre un chemin de retour malgré la physique du lien. Donnez son intitulé, tel qu'il figure à gauche.",
+  "reponse": "acquittement applicatif",
+  "indice": "Qu'est-ce qui, dans cette liste, suppose une réponse venant de l'autre côté ?"
+}
 ```

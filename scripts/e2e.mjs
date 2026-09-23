@@ -65,6 +65,7 @@ const check = (label, ok, detail = '') => {
 const ignorable = (t) => /fonts\.g(oogleapis|static)\.com|ERR_CERT_AUTHORITY_INVALID/.test(t);
 
 const niveaux = JSON.parse(await fs.readFile(path.join(ROOT, 'content/niveaux.json'), 'utf8'));
+const config = (await import(path.join(ROOT, 'site/config.js'))).default;
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1360, height: 900 } });
 page.on('console', (m) => m.type() === 'error' && !ignorable(m.text()) && problems.push(`console: ${m.text()}`));
@@ -75,18 +76,39 @@ const shot = async (name, full = false) => SHOTS && (await fs.mkdir(SHOTS, { rec
 
 try {
   console.log('\n▶ e2e');
-  for (const p of ['', 'programme/', 'jouer/', 'tarifs/', 'communaute/', 'acces/', 'merci/', 'legal/']) {
+  for (const p of ['', 'programme/', 'briefing/', 'jouer/', 'tarifs/', 'communaute/', 'acces/', 'merci/', 'legal/']) {
     await page.goto(origin + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(250);
     check(`page ${p || '/'} : nav + pied de page rendus`, (await page.locator('#nav .brand').count()) === 1 && (await page.locator('#footer').innerText()).includes('©'));
   }
 
   await page.goto(origin, { waitUntil: 'networkidle' });
-  check('accueil : icônes SVG injectées', (await page.locator('.icon-box svg').count()) >= 9);
-  check('accueil : section témoignages masquée quand vide', (await page.locator('[data-section="testimonials"]').count()) === 0);
-  check('accueil : section formateur masquée quand vide', (await page.locator('[data-section="instructor"]').count()) === 0);
+  const boites = await page.locator('.icon-box').count();
+  check('accueil : toutes les icônes sont injectées', boites > 0 && (await page.locator('.icon-box svg').count()) === boites, `${boites} icônes`);
+  check(
+    'accueil : aucun service non tenu n’est annoncé',
+    await page.evaluate(() => !document.querySelector('[data-engagement]')),
+  );
+  check(
+    config.testimonials.length ? 'accueil : témoignages affichés' : 'accueil : section témoignages masquée quand vide',
+    (await page.locator('[data-section="testimonials"]').count()) === (config.testimonials.length ? 1 : 0),
+  );
+  const auteur = config.site.instructor.name;
+  check(
+    auteur ? 'accueil : présentation de l’auteur affichée' : 'accueil : section auteur masquée quand vide',
+    auteur
+      ? (await page.locator('#instructor').innerText()).includes(auteur)
+      : (await page.locator('[data-section="instructor"]').count()) === 0,
+  );
+  // Un prix barré n'est licite que s'il a réellement été pratiqué : on refuse le prix barré fictif.
+  check('tarifs : aucun prix barré fictif', (await page.locator('.price .before').count()) === config.checkout.tiers.filter((t) => t.priceBefore).length);
   await page.waitForTimeout(2200);
   await shot('home', true);
+
+  // --- Briefing : l'actif d'acquisition. Il doit rester lisible sans rien demander en échange.
+  await page.goto(origin + 'briefing/', { waitUntil: 'networkidle' });
+  check('briefing : les sept erreurs sont toutes rédigées', (await page.locator('.prose h2[id^="e"]').count()) === 7);
+  check('briefing : aucune inscription exigée pour lire', (await page.locator('form, input[type=email]').count()) === 0);
 
   // --- Jouer : la page qui remplace l'espace membre
   await page.goto(origin + 'jouer/', { waitUntil: 'networkidle' });

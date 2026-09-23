@@ -44,9 +44,30 @@ Construisez une grille 9 surfaces × N actifs (ou groupes d’actifs). Remplisse
 - [ ] Chaque « fermée » ou « contrôlée » s’appuie sur un élément vérifiable
 - [ ] Les sorties légitimes (surface 9) sont inventoriées avec la même rigueur que les entrées
 
-```quiz
-[
-  {"q":"Un port USB « désactivé par stratégie de groupe » est une surface :","choices":["Fermée","Contrôlée","Ouverte","Inexistante"],"answer":2,"explain":"Sans processus journalisé ni preuve physique, une désactivation logicielle réversible ne constitue ni une fermeture ni un contrôle vérifiable."},
-  {"q":"Quelle surface est le plus souvent absente des modèles de menace ?","choices":["Le réseau filaire","Les médias amovibles","Les sorties légitimes","Les personnes"],"answer":2,"explain":"Les isolations sont pensées contre les entrées ; sauvegardes, exports et diagnostics sortent sans encadrement."}
-]
+## Le cas SITE 42
+
+Les neuf surfaces appliquées à SITE 42, avec le contrôle réellement en place pour chacune.
+
+```
+SITE 42 - surfaces d entree et couverture
+
+surface                      controle en place
+---------------------------  --------------------------------
+1 media amovible             kiosque de decontamination
+2 reseau filaire             matrice des flux, fw-dmz-01
+3 radio                      inventaire radio trimestriel
+4 maintenance distante       aucun
+5 supply chain logicielle    verification des signatures
+6 supply chain materielle    reception controlee
+7 humain                     habilitation, accompagnement
+8 physique                   badge, video
+9 canaux hors reseau         risque accepte, revision annuelle
+```
+
+```epreuve
+{
+  "enonce": "Une seule de ces neuf surfaces ne fait l'objet d'aucun contrôle, et ce n'est pas celle qu'on cite le plus souvent. Donnez son intitulé, exactement comme il figure dans le tableau.",
+  "reponse": "maintenance distante",
+  "indice": "Le nom s'écrit en deux mots, sans le chiffre qui le précède."
+}
 ```

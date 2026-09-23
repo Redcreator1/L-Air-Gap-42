@@ -59,9 +59,25 @@ Planifiez l’exercice dans les trente jours. Adaptez le scénario à votre cont
 - [ ] Observateur désigné, restitution planifiée
 - [ ] Actions avec propriétaires et dates
 
-```quiz
-[
-  {"q":"Rôle de l’animateur pendant l’exercice ?","choices":["Corriger les erreurs en direct","Poser les questions et noter qui décide et sur quelle base","Jouer le prestataire","Présenter le playbook"],"answer":1,"explain":"Les erreurs sont le produit de l’exercice ; les corriger en direct les efface."},
-  {"q":"Résultat le plus précieux d’un exercice sur table ?","choices":["La liste d’actions","La mise en évidence des divergences de décision entre rôles","Le compte rendu","La validation du playbook"],"answer":1,"explain":"Découvrir en exercice que deux responsables décideraient différemment évite de le découvrir en incident."}
-]
+## Le cas SITE 42
+
+Le déroulé minute par minute de l’exercice sur table de SITE 42.
+
+```
+SITE 42 - exercice sur table, la cle USB du prestataire
+
+  09h02  le prestataire arrive avec usb-presta-07, non annonce
+  09h05  l accueil enregistre la visite, pas le media
+  09h20  le media passe au kiosque : aucune menace detectee
+  09h25  branchement direct sur hist-donnees-01
+  11h40  un fichier inconnu apparait sur hist-donnees-01
+  14h10  l exploitation s en apercoit en cherchant autre chose
+```
+
+```epreuve
+{
+  "enonce": "Une étape du runbook du module 3 a été purement sautée, celle qui aurait retardé de 24 heures l'événement suivant. Donnez l'horodatage de cet événement, tel qu'il est écrit.",
+  "reponse": "09h25",
+  "indice": "La quarantaine se place entre le kiosque et la zone de conduite."
+}
 ```

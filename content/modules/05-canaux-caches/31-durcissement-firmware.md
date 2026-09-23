@@ -58,9 +58,26 @@ Prenez un poste d’ingénierie. Appliquez les sept étapes. Chronométrez : c�
 - [ ] Démarrage externe et interfaces inutiles désactivés, mot de passe firmware en coffre
 - [ ] Châssis scellés ; programmes automates vérifiés contre référence
 
-```quiz
-[
-  {"q":"Ce que Secure Boot ne garantit pas :","choices":["Que le chargeur est signé","Que le firmware lui-même est intact","Que le noyau est signé","Que les pilotes sont signés"],"answer":1,"explain":"Secure Boot vérifie ce qui vient après le firmware ; la protection du firmware repose sur son verrouillage en écriture et sa vérification."},
-  {"q":"Pourquoi un code malveillant dans le firmware est-il particulièrement dangereux pour un air gap ?","choices":["Il se propage par réseau","Il survit à la réinstallation depuis l’image maîtresse","Il désactive le TPM","Il est toujours détecté"],"answer":1,"explain":"La réinstallation, réponse standard à une compromission, ne touche pas le firmware."}
-]
+## Le cas SITE 42
+
+L’état du socle bas de SITE 42, couche par couche.
+
+```
+SITE 42 - etat du socle bas
+
+equipement         secure boot  firmware signe  survit a une
+                                                reinstallation ?
+-----------------  -----------  --------------  ----------------
+scada-serveur-01   active       oui             non
+hmi-salle-01       active       oui             non
+hist-donnees-01    desactive    non             oui
+plc-chloration-02  sans objet   oui             non
+```
+
+```epreuve
+{
+  "enonce": "Un code implanté dans le firmware survit à une réinstallation complète, et l'image de référence ne sert alors plus à rien. Donnez le nom du seul équipement dans ce cas.",
+  "reponse": "hist-donnees-01",
+  "indice": "La dernière colonne ne porte qu'un seul « oui »."
+}
 ```

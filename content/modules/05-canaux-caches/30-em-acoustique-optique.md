@@ -61,9 +61,25 @@ Si votre modèle retient l’acteur ciblé : mettez en œuvre le niveau 1 cette 
 - [ ] Émetteurs non nécessaires retirés ou obturés
 - [ ] Niveau 4 décidé sur justification écrite, pas par défaut
 
-```quiz
-[
-  {"q":"Contre-mesure la plus efficace et la moins chère contre les canaux acoustiques et optiques ?","choices":["Le blindage","Le contrôle des équipements entrant dans la zone (casiers)","Le chiffrement","Le traitement acoustique"],"answer":1,"explain":"Le récepteur doit être proche : empêcher son entrée neutralise le canal."},
-  {"q":"Quand le blindage certifié se justifie-t-il ?","choices":["Toujours pour un air gap","Sur exigence réglementaire ou justification explicite actif/adversaire","Jamais","Dès que le budget le permet"],"answer":1,"explain":"Le niveau 4 est coûteux et inutile sans les niveaux 1 à 3 ; il se décide sur justification écrite."}
-]
+## Le cas SITE 42
+
+Les contre-mesures envisagées pour SITE 42, avec ce qu’elles couvrent et ce qu’elles coûtent.
+
+```
+SITE 42 - contre-mesures envisagees
+
+code  mesure                                 couvre      cout
+----  -------------------------------------  ----------  -----------
+cm1   perimetre d exclusion de 20 m          k1, k2, k3  faible
+cm2   suppression des diodes d etat          k3          faible
+cm3   cage de Faraday sur la salle           k1          tres eleve
+cm4   interdiction des telephones en salle   k2          faible
+```
+
+```epreuve
+{
+  "enonce": "La règle est constante : d'abord la distance et le contrôle physique, le blindage ensuite. Une seule mesure couvre trois familles pour un coût faible. Donnez son code.",
+  "reponse": "cm1",
+  "indice": "Comparez la colonne « couvre » à la colonne « coût »."
+}
 ```

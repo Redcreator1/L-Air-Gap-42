@@ -46,9 +46,25 @@ Dans votre modèle de menace, ajoutez une ligne « canaux cachés » avec l’un
 - [ ] Familles et ordres de grandeur connus
 - [ ] Décision écrite et signée dans le modèle de menace
 
-```quiz
-[
-  {"q":"Prérequis commun à tous les canaux cachés d’exfiltration ?","choices":["Un réseau Wi-Fi à proximité","Un code malveillant s’exécutant déjà sur la machine isolée","Un initié","Une faille firmware"],"answer":1,"explain":"Le canal caché est l’étape après l’échec du sas et de la détection ; il ne remplace pas une entrée."},
-  {"q":"Ordre de grandeur des débits démontrés ?","choices":["Mégabits par seconde","Quelques bits à quelques kilobits par seconde","Gigabits","Illimité en ligne de vue"],"answer":1,"explain":"Assez pour exfiltrer des clés ou des mots de passe, pas des bases de données."}
-]
+## Le cas SITE 42
+
+Les familles de canaux hors réseau, évaluées pour SITE 42 avec des débits mesurés en laboratoire.
+
+```
+SITE 42 - canaux hors reseau
+
+code  famille            debit en labo    prerequis attaquant
+----  -----------------  ---------------  -------------------------
+k1    electromagnetique  quelques o/s     antenne a moins de 10 m
+k2    acoustique         quelques o/s     micro dans la salle
+k3    optique (diodes)   dizaines d o/s   vue directe sur la facade
+k4    thermique          moins d un o/s   machine voisine compromise
+```
+
+```epreuve
+{
+  "enonce": "Ces débits paraissent dérisoires, mais une clé de chiffrement tient dans quelques dizaines d'octets. Un seul canal ne suppose ni présence humaine, ni matériel apporté sur place. Donnez son code.",
+  "reponse": "k4",
+  "indice": "Lisez la colonne des prérequis : trois exigent d'être à proximité."
+}
 ```

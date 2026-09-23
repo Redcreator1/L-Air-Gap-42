@@ -21,6 +21,9 @@ export const fmtPrice = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency
 /** Lit une valeur de config par chemin pointé ('community.discordInvite'). */
 const cfg = (path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), config);
 
+/** Un engagement non tenu ne s'affiche pas : ce qui est écrit sur le site engage le vendeur. */
+export const engagementTenu = (cle) => !cle || config.engagements?.[cle] === true;
+
 /** Une URL est utilisable si elle est absolue et ne contient pas de gabarit à remplacer. */
 export const isConfiguredUrl = (v) => typeof v === 'string' && /^https?:\/\//.test(v) && !/REMPLACER/i.test(v);
 
@@ -69,7 +72,8 @@ function renderFooter() {
           <p class="footer-tagline">${esc(config.site.tagline)}</p>
         </div>
         <div><h4>Programme</h4><ul>
-          <li><a href="${url('programme/')}">Les 6 modules</a></li>
+          <li><a href="${url('programme/')}">Les 7 modules</a></li>
+          <li><a href="${url('briefing/')}">Briefing gratuit</a></li>
           <li><a href="${url('tarifs/')}">Tarifs</a></li>
           <li><a href="${url('jouer/')}">Mode d’emploi</a></li>
           <li><a href="${url('feed.xml')}">Flux RSS</a></li>
@@ -175,7 +179,10 @@ async function pricing() {
       <p class="pitch">${esc(t.pitch)}</p>
       <div class="price"><span class="amount">${fmtPrice(t.price)}</span>${t.priceBefore ? `<span class="before">${fmtPrice(t.priceBefore)}</span>` : ''}</div>
       <div class="price-note">${esc(config.checkout.priceNote)}</div>
-      <ul class="features">${t.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+      <ul class="features">${t.features
+        .filter((f) => engagementTenu(typeof f === 'string' ? null : f.e))
+        .map((f) => `<li>${esc(typeof f === 'string' ? f : f.t)}</li>`)
+        .join('')}</ul>
       ${cta}
     </article>`;
     })
@@ -224,13 +231,20 @@ function socialProof() {
   const s = $('#sectors');
   if (s) s.innerHTML = config.sectors.map((x) => `<span>${esc(x)}</span>`).join('');
   const f = $('#faq');
-  if (f) f.innerHTML = config.faq.map((x) => `<details><summary>${esc(x.q)}</summary><p>${esc(x.a)}</p></details>`).join('');
+  if (f) f.innerHTML = config.faq.filter((x) => engagementTenu(x.e)).map((x) => `<details><summary>${esc(x.q)}</summary><p>${esc(x.a)}</p></details>`).join('');
+
+  // Les blocs de page qui annoncent un service disparaissent tant qu'il n'est pas tenu.
+  $$('[data-engagement]').forEach((el) => {
+    if (!engagementTenu(el.dataset.engagement)) el.remove();
+  });
   const i = $('#instructor');
   if (i) {
     const ins = config.site.instructor;
     if (!ins.name) $('[data-section="instructor"]')?.remove();
     else
-      i.innerHTML = `<div class="who instructor-head"><span class="avatar avatar-lg">${esc(ins.name.slice(0, 1))}</span><div><b class="instructor-name">${esc(ins.name)}</b><br><span class="muted small">${esc(ins.title)}</span></div></div><p class="muted">${esc(ins.bio)}</p>`;
+      i.innerHTML = `<div class="who instructor-head"><span class="avatar avatar-lg">${esc(ins.name.slice(0, 1))}</span><div><b class="instructor-name">${esc(ins.name)}</b><br><span class="muted small">${esc(ins.title)}</span></div></div><p class="muted">${esc(ins.bio)}</p>${
+        isConfiguredUrl(ins.link) ? `<p class="small"><a href="${esc(ins.link)}" target="_blank" rel="noopener">${esc(ins.link.replace(/^https?:\/\//, ''))}</a></p>` : ''
+      }`;
   }
   $$('[data-config]').forEach((el) => {
     const v = cfg(el.dataset.config);
