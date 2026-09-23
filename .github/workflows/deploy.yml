@@ -25,11 +25,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Vérifications (curriculum, crypto, liens)
+      - name: Vérifications (liens, engagements, archive publiée)
         run: npm run check
 
       - name: Build
-        # Aucun secret : l'archive de niveaux est déjà chiffrée et versionnée dans le dépôt.
+        # Aucun secret : l'archive arrive déjà chiffrée depuis le dépôt privé Jeux42.
         env:
           SITE_URL: ${{ vars.SITE_URL }}
         run: npm run build

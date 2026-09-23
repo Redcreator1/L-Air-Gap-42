@@ -97,13 +97,18 @@ Chaque page déclare une CSP en balise `<meta>` (GitHub Pages ne permet pas d'en
 
 ## 8. Confidentialité du contenu
 
-Le dépôt est public et `content/modules/` contient les 45 leçons en clair, historique compris. **Le texte du parcours est donc lisible par qui sait regarder.** L'archive téléchargée, elle, est bien chiffrée.
+**C'est fait pour ce qui vient.** Les 45 leçons, leurs réponses et le lanceur vivent dans le dépôt privé [`Jeux42`](https://github.com/Redcreator1/Jeux42). Ce dépôt public ne reçoit plus que l'archive chiffrée, son empreinte et l'index — aucune réponse. `npm run check` refuse que les leçons en clair y réapparaissent, et refuse qu'une réponse soit lisible dans l'index publié.
 
-Trois postures, à choisir en connaissance de cause :
+**Ce qui reste exposé.** Les leçons commitées ici *avant* la séparation restent dans l'historique git, et tout le monde peut les lire avec `git log -p`. Déplacer des fichiers n'efface rien du passé. Deux postures :
 
-1. **Assumer.** Le produit vendu n'est pas le texte : c'est le parcours guidé, les validations, la communauté, les lives, le certificat. C'est le modèle d'OverTheWire, dont tout le contenu est public.
-2. **Séparer les dépôts.** La source (leçons, scripts) dans un dépôt privé ; un dépôt public ne recevant que le site construit et l'archive chiffrée. Deux clics dans l'interface GitHub, aucune commande.
-3. **Réécrire l'historique.** Purger les leçons du dépôt public et forcer la réécriture. Destructif et irréversible : à ne faire qu'avec une sauvegarde, et cela ne récupère pas ce qui a déjà été copié.
+1. **Assumer.** Le produit vendu n'est pas le texte : c'est le parcours, la chaîne des épreuves, le certificat. C'est le modèle d'OverTheWire, dont tout le contenu est public depuis vingt ans.
+2. **Réécrire l'historique du dépôt public.** Destructif et irréversible : la réécriture casse les clones existants et les pull requests ouvertes, et elle ne récupère pas ce qui a déjà été copié ou indexé. À ne faire qu'avec une sauvegarde, et en connaissance de cause.
+
+### Les secrets, désormais
+
+Dans *Settings → Secrets and variables → Actions* du dépôt **privé** : `LICENCE_ESSENTIEL`, `LICENCE_PRO`, `LICENCE_ELITE`, et `TOKEN_PUBLIC` (un jeton avec droit d'écriture ici). Les licences ne sont commitées nulle part, même en privé.
+
+⚠️ Ne régénérez jamais les licences : ce sont elles que vous vendez, et de nouvelles clés n'ouvriraient plus l'archive pour les acheteurs existants.
 
 ## 9. Juridique et allégations
 

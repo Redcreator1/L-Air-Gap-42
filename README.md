@@ -29,47 +29,52 @@ C'est cohérent avec le sujet : un cours sur l'isolation qui exigerait un naviga
 Vous n'avez normalement **rien à exécuter** : la publication est automatique à chaque push sur `main`. Ces commandes servent à faire évoluer le contenu.
 
 ```bash
-npm run lab     # reconstruit l'archive de niveaux (à faire après toute modification du contenu)
 npm run build   # construit le site → dist/
-npm run check   # curriculum, épreuves, liens, archive, et la partie rejouée en entier
+npm run check   # liens, engagements, archive publiée, premier maillon de la chaîne
 npm run dev     # http://localhost:4242
 npm run e2e     # parcours du site dans Chromium (npm ci && npx playwright install chromium)
 ```
 
-`npm run lab` lit les clés de licence dans `lab/licences.json`, **hors dépôt**. Ce fichier est la seule chose à conserver précieusement : sans lui, impossible de reconstruire une archive que les licences déjà vendues ouvriraient. Les variables `LICENCE_ESSENTIEL`, `LICENCE_PRO` et `LICENCE_ELITE` font la même chose.
+**Le contenu ne se modifie pas ici.** Les 45 leçons, leurs réponses et le lanceur vivent dans le dépôt privé [`Jeux42`](https://github.com/Redcreator1/Jeux42), qui reconstruit l'archive et la pousse ici tout seul.
 
 ## Architecture
 
 ```
-lab/
-  airgap42            lanceur POSIX sh, un seul fichier, lisible avant d'être exécuté
-  LISEZMOI            aide hors-ligne livrée dans l'archive
 content/
-  curriculum.json     modules, leçons, paliers
-  modules/**/*.md     leçons en Markdown + bloc ```epreuve
-  niveaux.json        index public généré par `npm run lab` (titres, extraits, empreinte)
+  niveaux.json        index public : titres, extraits, empreinte — aucune réponse
 site/                 documentation statique (HTML/CSS/JS, sans framework)
+  briefing/           les sept erreurs, en lecture libre
   jouer/              mode d'emploi : télécharger, vérifier, extraire, jouer
-  telechargements/    airgap42-labs.tar.gz + son empreinte, versionnés
+  telechargements/    airgap42-labs.tar.gz + son empreinte
 scripts/
-  build-lab.mjs       content/ + lab/ → archive chiffrée
   build.mjs           site/ → dist/
   check.mjs, e2e.mjs  vérifications
 api/activate.js       (optionnel) fonction Vercel : commande PayPal vérifiée → clé de licence
 ```
 
-## Pourquoi l'archive est versionnée
+Trois de ces fichiers ne s'éditent jamais à la main — `content/niveaux.json` et les deux fichiers de `site/telechargements/` sont écrits par `Jeux42`. `npm run check` refuse d'ailleurs que les leçons en clair réapparaissent ici.
 
-Parce qu'elle est chiffrée avec des clés qui ne doivent exister nulle part sur GitHub. La chaîne de publication se contente donc de copier un fichier déjà chiffré : elle n'a besoin d'aucun secret, et un dépôt public ne peut rien fuiter qu'il ne contienne déjà.
+## Les deux dépôts
 
-**Point d'attention.** Le dépôt est public et `content/modules/` contient les leçons en clair. Le texte du parcours est donc lisible sur GitHub, y compris dans l'historique. Si vous voulez qu'il reste confidentiel, la source doit vivre dans un dépôt privé et seul le site être publié depuis un dépôt public. Voir `docs/SETUP.md`.
+```
+Jeux42  (prive)                        L-Air-Gap-42  (public, ici)
+  les 45 lecons en clair           --+
+  les reponses de chaque epreuve     |   site/             pages et vitrine
+  le lanceur airgap42                +-> site/telechargements/*.tar.gz
+  la fabrique de l'archive           |   content/niveaux.json
+  les licences vendues             --+   -> GitHub Pages
+```
+
+Ce dépôt ne contient ni leçon ni réponse. Il reçoit trois fichiers, tous inoffensifs : l'archive **chiffrée**, son empreinte, et l'index public. La chaîne de publication n'a donc besoin d'aucun secret, et ce dépôt ne peut rien fuiter qu'il ne contienne déjà.
+
+**Point d'attention.** Cette séparation protège ce qui vient. Les leçons publiées ici avant la séparation restent lisibles dans l'historique git : seule une réécriture d'historique les retirerait, et elle ne récupère pas ce qui a déjà été copié. Voir `docs/SETUP.md`.
 
 ## Documentation
 
 - [`docs/SETUP.md`](docs/SETUP.md) — mise en production, paiement, communauté
 - [`docs/MONETISATION.md`](docs/MONETISATION.md) — offre, prix, tunnel de vente
 - [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — animation du Discord et des lives
-- [`docs/CONTENU.md`](docs/CONTENU.md) — écrire et modifier les niveaux
+- Écrire ou modifier un niveau : voir le README du dépôt privé [`Jeux42`](https://github.com/Redcreator1/Jeux42)
 
 ## Licence
 

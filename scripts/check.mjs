@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 /**
- * Vérifications avant build et en intégration continue :
- *   1. curriculum.json cohérent (identifiants uniques, fichiers présents, jours croissants)
- *   2. chaque leçon porte une épreuve unique, dont la réponse est saisissable en shell
- *   3. les liens internes des pages du site pointent vers des fichiers existants
- *   4. l'archive de niveaux correspond à content/niveaux.json (taille et empreinte)
- *   5. un niveau libre se déchiffre réellement avec openssl, comme chez l'apprenant
+ * Vérifications du dépôt public, avant build et en intégration continue :
+ *   1. les liens internes des pages pointent vers des fichiers existants
+ *   2. chaque service annoncé sur le site dispose de quoi être tenu
+ *   3. l'archive de niveaux correspond à content/niveaux.json (taille et empreinte)
+ *   4. l'archive s'ouvre vraiment : un niveau libre se déchiffre avec openssl, et ce qui
+ *      ne doit pas s'ouvrir ne s'ouvre pas
+ *
+ * Ce dépôt ne contient AUCUNE leçon et AUCUNE réponse : elles vivent dans le dépôt privé
+ * Jeux42, qui produit l'archive et la pousse ici. On ne peut donc vérifier ici que le
+ * premier maillon de la chaîne — celui qui n'exige aucun secret. C'est voulu : la partie
+ * entière est rejouée du côté de la source, avant publication.
  *
  * Aucune dépendance npm. Sort avec un code ≠ 0 en cas d'erreur.
  */
@@ -16,77 +21,13 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import os from 'node:os';
 
-import { normaliserReponse } from './build-lab.mjs';
-
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = path.join(ROOT, 'site');
 const erreurs = [];
 const alertes = [];
 const err = (m) => erreurs.push(m);
-/** Les épreuves dans l'ordre du curriculum — c'est aussi l'ordre des niveaux. */
-const epreuves = [];
 
-// ---------- 1 & 2 : curriculum et quiz ----------
-const cur = JSON.parse(await fs.readFile(path.join(ROOT, 'content/curriculum.json'), 'utf8'));
-const ids = new Set();
-let lecons = 0;
-for (const m of cur.modules) {
-  if (!['free', 'essentiel', 'pro', 'elite'].includes(m.tier)) err(`Module ${m.id} : palier inconnu « ${m.tier} »`);
-  if (ids.has(m.id)) err(`Module ${m.id} : identifiant dupliqué`);
-  ids.add(m.id);
-  let dernierJour = 0;
-  for (const l of m.lessons) {
-    lecons++;
-    const cle = `${m.id}/${l.id}`;
-    if (ids.has(cle)) err(`Leçon ${cle} : identifiant dupliqué`);
-    ids.add(cle);
-    if (l.day !== undefined) {
-      if (l.day <= dernierJour) err(`Leçon ${cle} : jour ${l.day} non croissant`);
-      dernierJour = l.day;
-    }
-    const fichier = path.join(ROOT, 'content/modules', m.dir, l.file);
-    let brut;
-    try {
-      brut = await fs.readFile(fichier, 'utf8');
-    } catch {
-      err(`Leçon ${cle} : fichier manquant ${path.relative(ROOT, fichier)}`);
-      continue;
-    }
-    const mots = brut.split(/\s+/).length;
-    if (mots < 150) alertes.push(`Leçon ${cle} : contenu court (${mots} mots)`);
-
-    // Chaque leçon porte exactement une épreuve : c'est la serrure du niveau suivant.
-    // Sans elle, la chaîne est rompue et plus personne ne peut avancer.
-    const blocs = [...brut.matchAll(/```epreuve\s*\n([\s\S]*?)```/g)];
-    if (blocs.length === 0) {
-      err(`Leçon ${cle} : aucun bloc \`\`\`epreuve — la chaîne des niveaux serait rompue`);
-      continue;
-    }
-    if (blocs.length > 1) err(`Leçon ${cle} : ${blocs.length} épreuves, une seule est attendue`);
-    let ep;
-    try {
-      ep = JSON.parse(blocs[0][1]);
-    } catch (e) {
-      err(`Leçon ${cle} : épreuve JSON invalide (${e.message})`);
-      continue;
-    }
-    if (typeof ep.enonce !== 'string' || !ep.enonce.trim()) err(`Leçon ${cle} : épreuve sans énoncé`);
-    if (typeof ep.reponse !== 'string' || !ep.reponse.trim()) {
-      err(`Leçon ${cle} : épreuve sans réponse`);
-      continue;
-    }
-    const rep = normaliserReponse(ep.reponse);
-    // Le lanceur normalise en shell avec `tr` et `sed`, qui ne connaissent que l'ASCII :
-    // une réponse accentuée deviendrait impossible à saisir correctement.
-    if (!/^[a-z0-9][a-z0-9 ._:/-]*$/.test(rep)) err(`Leçon ${cle} : réponse « ${rep} » — minuscules ASCII, chiffres, espace et . _ : / - uniquement`);
-    if (rep.length < 2) err(`Leçon ${cle} : réponse « ${rep} » trop courte pour être une serrure`);
-    if (typeof ep.enonce === 'string' && ep.enonce.toLowerCase().includes(rep)) err(`Leçon ${cle} : la réponse figure dans son propre énoncé`);
-    if (!brut.toLowerCase().includes(rep)) alertes.push(`Leçon ${cle} : la réponse n’apparaît nulle part dans la leçon — est-elle vraiment dérivable ?`);
-    epreuves.push({ cle, id: `${m.id}-${l.id}`, reponse: rep });
-  }
-}
-
-// ---------- 2 bis : engagements commerciaux ----------
+// ---------- 1 : engagements commerciaux ----------
 // Ce qui est affiché sur le site engage le vendeur. On vérifie que chaque service annoncé
 // dispose au moins de ce qu'il faut pour être tenu.
 const config = (await import(path.join(SITE, 'config.js'))).default;
@@ -107,7 +48,7 @@ for (const [cle, actif] of Object.entries(engagements)) {
 const actifs = Object.entries(engagements).filter(([, v]) => v).map(([k]) => k);
 if (actifs.length) alertes.push(`Engagements affichés sur le site (vous devrez les tenir) : ${actifs.join(', ')}`);
 
-// ---------- 3 : liens internes ----------
+// ---------- 2 : liens internes ----------
 async function parcourir(dir) {
   const out = [];
   for (const e of await fs.readdir(dir, { withFileTypes: true })) {
@@ -133,97 +74,84 @@ for (const fichier of (await parcourir(SITE)).filter((f) => f.endsWith('.html'))
   }
 }
 
-// ---------- 4 & 5 : archive de niveaux ----------
+// ---------- 3 & 4 : archive de niveaux ----------
 const niveaux = await fs.readFile(path.join(ROOT, 'content/niveaux.json'), 'utf8').then(JSON.parse).catch(() => null);
 if (!niveaux) {
-  err('content/niveaux.json absent : lancez « npm run lab ».');
+  err('content/niveaux.json absent : il est produit par le dépôt privé Jeux42.');
 } else {
-  if (niveaux.niveaux.length !== lecons) err(`L’archive décrit ${niveaux.niveaux.length} niveaux pour ${lecons} leçons : relancez « npm run lab ».`);
   const archive = path.join(SITE, 'telechargements', niveaux.archive.nom);
   const contenu = await fs.readFile(archive).catch(() => null);
-  if (!contenu) err(`Archive ${niveaux.archive.nom} absente : lancez « npm run lab ».`);
+  if (!contenu) err(`Archive ${niveaux.archive.nom} absente : elle est poussée ici par le dépôt privé Jeux42.`);
   else {
-    if (contenu.length !== niveaux.archive.octets) err('Taille de l’archive différente de content/niveaux.json : relancez « npm run lab ».');
-    const empreinte = createHash('sha256').update(contenu).digest('hex');
-    if (empreinte !== niveaux.archive.sha256) err('Empreinte de l’archive différente de content/niveaux.json : relancez « npm run lab ».');
+    if (contenu.length !== niveaux.archive.octets) err('Taille de l’archive différente de content/niveaux.json : les deux fichiers ne viennent pas de la même publication.');
+    if (createHash('sha256').update(contenu).digest('hex') !== niveaux.archive.sha256) err('Empreinte de l’archive différente de content/niveaux.json : l’empreinte affichée sur la page Jouer serait fausse.');
 
-    // Partie simulée de bout en bout, avec la même commande openssl que le lanceur.
-    // C'est LE contrôle qui compte : un maillon cassé au build, et l'apprenant se
-    // retrouve définitivement bloqué sans pouvoir rien y faire.
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'ag42-'));
     try {
       execFileSync('tar', ['xzf', archive, '-C', tmp], { stdio: 'pipe' });
       const base = path.join(tmp, 'airgap42-labs', 'niveaux');
-      const ouvrir = (fichier, passe) =>
-        execFileSync('openssl', ['enc', '-d', '-aes-256-cbc', '-pbkdf2', '-iter', '310000', '-md', 'sha256', '-base64', '-pass', `pass:${passe}`, '-in', fichier], { stdio: ['ignore', 'pipe', 'ignore'] }).toString();
       const essaie = (fichier, passe) => {
         try {
-          const t = ouvrir(fichier, passe);
+          const t = execFileSync(
+            'openssl',
+            ['enc', '-d', '-aes-256-cbc', '-pbkdf2', '-iter', '310000', '-md', 'sha256', '-base64', '-pass', `pass:${passe}`, '-in', fichier],
+            { stdio: ['ignore', 'pipe', 'ignore'] },
+          ).toString();
           return t.startsWith('AG42/1') ? t.split('\n').slice(1).join('\n') : null;
         } catch {
-          return null; // openssl refuse : c'est un échec de déchiffrement, pas un bug
+          return null; // openssl refuse : échec de déchiffrement, pas un bug
         }
       };
 
-      if (epreuves.length !== niveaux.niveaux.length) err(`${epreuves.length} épreuves pour ${niveaux.niveaux.length} niveaux : l’archive est désynchronisée du contenu.`);
-
-      // Les licences ne sont pas dans le dépôt : sans elles on ne rejoue que les niveaux
-      // libres, ce qui reste suffisant pour valider la mécanique de chaînage.
-      const lic = await fs.readFile(path.join(ROOT, 'lab/licences.json'), 'utf8').then(JSON.parse).catch(() => null);
-      let joues = 0;
-      for (const [i, nv] of niveaux.niveaux.entries()) {
-        const ep = epreuves[i];
-        if (!ep) break;
-
-        // a. Le témoin de réponse s'ouvre avec la réponse, et avec elle seule.
-        const temoin = essaie(path.join(base, `${nv.id}.v`), ep.reponse);
-        if (temoin === null) err(`Niveau ${nv.n} : la réponse « ${ep.reponse} » n’ouvre pas son témoin.`);
-        else if (temoin.trim() !== nv.id) err(`Niveau ${nv.n} : témoin de réponse incohérent.`);
-
-        // b. Le contenu s'ouvre avec la licence du palier ET la réponse précédente.
-        const licence = nv.palier === 'libre' ? 'libre' : lic?.[nv.palier];
-        if (!licence) continue;
-        const maillon = i > 0 ? `:${epreuves[i - 1].reponse}` : '';
-        const cle = essaie(path.join(base, `${nv.id}.k.${nv.palier}`), `${licence}:${nv.id}${maillon}`);
-        if (cle === null) {
-          err(`Niveau ${nv.n} : la réponse du niveau ${i} n’ouvre pas ce niveau — la chaîne est rompue ici.`);
-          continue;
-        }
-        const texte = essaie(path.join(base, `${nv.id}.enc`), cle.trim());
-        if (texte === null) err(`Niveau ${nv.n} : contenu illisible avec sa propre clé.`);
-        else if (texte.length < 400) err(`Niveau ${nv.n} : contenu déchiffré anormalement court.`);
-        joues++;
+      // Le premier niveau est le seul vérifiable sans secret : il n'a pas de maillon
+      // précédent, et sa licence est la licence publique « libre ».
+      const n1 = niveaux.niveaux[0];
+      const cle = essaie(path.join(base, `${n1.id}.k.libre`), `libre:${n1.id}`);
+      if (cle === null) err('Niveau 1 : la licence publique ne l’ouvre pas — l’archive publiée est inutilisable en l’état.');
+      else {
+        const texte = essaie(path.join(base, `${n1.id}.enc`), cle.trim());
+        if (texte === null) err('Niveau 1 : contenu illisible avec sa propre clé.');
+        else if (texte.length < 400) err('Niveau 1 : contenu déchiffré anormalement court.');
       }
-      alertes.push(lic ? `Partie simulée : ${joues}/${niveaux.niveaux.length} niveaux rejoués de bout en bout.` : `Partie simulée : ${joues} niveaux libres rejoués (lab/licences.json absent, paliers payants non vérifiés).`);
 
-      // c. Ce qui ne doit surtout PAS marcher.
+      // Ce qui ne doit surtout pas marcher.
+      if (essaie(path.join(base, `${n1.id}.enc`), 'cle-invalide') !== null) err('Une clé invalide a ouvert un niveau.');
       const n2 = niveaux.niveaux[1];
-      if (n2 && essaie(path.join(base, `${n2.id}.k.${n2.palier}`), `libre:${n2.id}:mauvaise-reponse`) !== null) err('Une réponse fausse a ouvert le niveau 2.');
-      if (essaie(path.join(base, `${niveaux.niveaux[0].id}.enc`), 'cle-invalide') !== null) err('Une clé invalide a ouvert un niveau.');
+      if (n2 && essaie(path.join(base, `${n2.id}.k.${n2.palier}`), `libre:${n2.id}`) !== null) err('Le niveau 2 s’ouvre sans la réponse du niveau 1 : la chaîne ne tient pas.');
       const paye = niveaux.niveaux.find((n) => n.palier !== 'libre');
       if (paye) {
         const enveloppes = (await fs.readdir(base)).filter((f) => f.startsWith(`${paye.id}.k.`));
-        if (enveloppes.includes(`${paye.id}.k.libre`)) err(`Niveau payant ${paye.id} : une enveloppe « libre » a été publiée.`);
+        if (enveloppes.includes(`${paye.id}.k.libre`)) err(`Niveau payant ${paye.id} : une enveloppe « libre » a été publiée, le contenu payant est ouvert à tous.`);
         if (enveloppes.length === 0) err(`Niveau payant ${paye.id} : aucune enveloppe de clé.`);
       }
-      // d. Les sceaux de licence, qui servent à « ./airgap42 licence ».
       for (const t of ['essentiel', 'pro', 'elite']) {
-        const sceau = path.join(base, `sceau.${t}`);
-        if (!(await fs.stat(sceau).catch(() => null))) err(`Sceau de licence manquant pour le palier ${t}.`);
-        else if (lic && essaie(sceau, lic[t])?.trim() !== t) err(`Sceau ${t} : la licence ne l’ouvre pas — « ./airgap42 licence » refusera la clé vendue.`);
+        if (!(await fs.stat(path.join(base, `sceau.${t}`)).catch(() => null))) err(`Sceau de licence manquant pour le palier ${t} : « ./airgap42 licence » refusera la clé vendue.`);
       }
+
+      // L'index embarqué dans l'archive et l'index public doivent décrire les mêmes niveaux.
+      const lignes = (await fs.readFile(path.join(base, 'index'), 'utf8')).trim().split('\n');
+      if (lignes.length !== niveaux.niveaux.length) err(`L’archive contient ${lignes.length} niveaux, l’index public en annonce ${niveaux.niveaux.length}.`);
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
   }
 }
 
+// ---------- 5 : aucune source ne doit revenir ici ----------
+// Les leçons en clair et les réponses vivent dans le dépôt privé Jeux42. Si elles
+// réapparaissent ici, tout le travail de séparation est annulé sans que personne ne le voie.
+for (const interdit of ['content/modules', 'content/curriculum.json', 'lab', 'scripts/build-lab.mjs']) {
+  if (await fs.stat(path.join(ROOT, interdit)).catch(() => null)) {
+    err(`${interdit} est présent dans le dépôt public : les leçons en clair doivent rester dans Jeux42.`);
+  }
+}
+
 // ---------- rapport ----------
-console.log(`\n▶ check : ${cur.modules.length} modules, ${lecons} leçons, ${niveaux?.niveaux.length ?? 0} niveaux`);
+console.log(`\n▶ check : ${niveaux?.modules.length ?? 0} modules, ${niveaux?.niveaux.length ?? 0} niveaux publiés`);
 for (const a of alertes) console.log(`  ⚠ ${a}`);
 if (erreurs.length) {
   for (const e of erreurs) console.error(`  ✖ ${e}`);
   console.error(`\n✖ ${erreurs.length} erreur(s)\n`);
   process.exit(1);
 }
-console.log('✔ curriculum, épreuves, liens, archive et chaîne des niveaux OK\n');
+console.log('✔ liens, engagements, archive publiée et premier maillon OK\n');
