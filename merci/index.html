@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://giscus.app https://www.paypal.com https://www.paypalobjects.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://giscus.app https://discord.com https://www.paypal.com https://www.sandbox.paypal.com; connect-src 'self' https://formspree.io https://buttondown.com https://plausible.io https://www.paypal.com https://www.sandbox.paypal.com https://*.vercel.app; base-uri 'self'; object-src 'none'; form-action 'self' https://www.paypal.com https://www.sandbox.paypal.com">
+  <title>Merci — L'Air Gap 42</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script type="module" src="../assets/js/site.js"></script>
+  <script type="module" src="../assets/js/pages/merci.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero">
+      <div class="container container-md">
+        <div class="eyebrow">Paiement confirmé</div>
+        <h1 class="h1-sm">Bienvenue dans <span class="grad-text">L’Air Gap 42</span>.</h1>
+        <p class="lead">Votre place est réservée. Voici vos trois prochaines étapes ; elles prennent moins de cinq minutes.</p>
+        <div id="auto-activate" class="mt-md" aria-live="polite"></div>
+        <ul class="timeline mt-lg" id="manual-steps">
+          <li><b>1. Récupérez votre clé de licence</b><span>Elle s’affiche ci-dessus après vérification du paiement, et vous est envoyée par e-mail. Pensez aux courriers indésirables.</span></li>
+          <li><b>2. Enregistrez-la dans le lanceur</b><span>Dans le dossier extrait de l’archive : <code>./airgap42 licence VOTRE-CLÉ</code>. Voir le <a href="../jouer/">mode d’emploi</a>.</span></li>
+          <li><b>3. Rejoignez le Bunker</b><span>Sur <a data-href="community.discordInvite" href="#" target="_blank" rel="noopener">Discord</a>, présentez-vous dans #bienvenue avec votre secteur et votre objectif à 42 jours. Un modérateur vous ouvre les canaux de votre palier.</span></li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="../jouer/">Télécharger l’archive</a>
+          <a class="btn btn-ghost btn-lg" href="../jouer/">Mode d’emploi</a>
+        </div>
+        <div class="notice mt-lg">Facture : envoyée automatiquement par notre prestataire de paiement. Question, upgrade ou problème d’accès : <a data-mailto href="#"></a>.</div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+</html>

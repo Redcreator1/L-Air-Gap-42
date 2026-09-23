@@ -1,0 +1,11 @@
+{
+  "name": "L'Air Gap 42",
+  "short_name": "AirGap42",
+  "description": "Programme premium sur la sécurité des systèmes isolés.",
+  "start_url": "./app/",
+  "display": "standalone",
+  "background_color": "#07090f",
+  "theme_color": "#07090f",
+  "lang": "fr",
+  "icons": [{ "src": "./assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

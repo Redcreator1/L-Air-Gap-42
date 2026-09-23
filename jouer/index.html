@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://giscus.app https://www.paypal.com https://www.paypalobjects.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://giscus.app https://discord.com https://www.paypal.com https://www.sandbox.paypal.com; connect-src 'self' https://formspree.io https://buttondown.com https://plausible.io https://www.paypal.com https://www.sandbox.paypal.com https://*.vercel.app; base-uri 'self'; object-src 'none'; form-action 'self' https://www.paypal.com https://www.sandbox.paypal.com">
+  <title>Jouer — L'Air Gap 42</title>
+  <meta name="description" content="Le parcours se joue dans votre terminal, hors-ligne. Téléchargez l'archive, vérifiez son empreinte, et commencez au niveau 1.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <script type="module" src="../assets/js/site.js"></script>
+  <script type="module" src="../assets/js/pages/jouer.js"></script>
+</head>
+<body>
+  <header id="nav"></header>
+  <main>
+    <section class="hero hero-short">
+      <div class="container">
+        <div class="eyebrow">Mode d’emploi</div>
+        <h1>Le parcours se joue dans votre <span class="grad-text">terminal</span>.</h1>
+        <p class="lead">Cette page est la seule documentation dont vous avez besoin. Vous la lisez, vous recopiez les commandes, et tout le reste se passe hors-ligne, chez vous. Aucun compte, aucune installation, aucun droit d’administration.</p>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container container-md">
+        <ol class="etapes" id="etapes">
+          <li>
+            <h2>1. Téléchargez l’archive</h2>
+            <p class="muted">Un seul fichier, <span id="taille-archive">250 Ko</span>, qui contient les 45 niveaux et le lanceur.</p>
+            <p><a class="btn btn-primary" id="lien-archive" href="../telechargements/airgap42-labs.tar.gz" download>Télécharger airgap42-labs.tar.gz</a></p>
+          </li>
+
+          <li>
+            <h2>2. Vérifiez son empreinte</h2>
+            <p class="muted">Avant d’extraire quoi que ce soit, comparez. C’est la leçon du module 3 appliquée à nous-mêmes : ne faites confiance à aucun fichier dont vous n’avez pas vérifié l’origine, y compris le nôtre.</p>
+            <pre><code>sha256sum airgap42-labs.tar.gz</code></pre>
+            <p class="muted small">La sortie doit être exactement :</p>
+            <pre><code id="empreinte">…</code></pre>
+            <p class="muted small">Sur macOS, la commande est <code>shasum -a 256 airgap42-labs.tar.gz</code>. Si l’empreinte diffère, n’extrayez pas l’archive et écrivez-nous.</p>
+          </li>
+
+          <li>
+            <h2>3. Extrayez et lancez</h2>
+            <pre><code>tar xzf airgap42-labs.tar.gz
+cd airgap42-labs
+./airgap42</code></pre>
+            <p class="muted">Le lanceur vous dit où vous en êtes et quel niveau vous attend.</p>
+          </li>
+
+          <li>
+            <h2>4. Enregistrez votre clé, si vous en avez une</h2>
+            <p class="muted">Les trois premiers niveaux sont ouverts à tous. Pour la suite, collez la clé reçue après votre achat :</p>
+            <pre><code>./airgap42 licence AG42-XXX-XXXXX-XXXXX-XXXXX</code></pre>
+          </li>
+
+          <li>
+            <h2>5. Jouez</h2>
+            <pre><code>./airgap42 niveau 1      # la leçon, la matière et l'épreuve
+./airgap42 valider 1     # soumettre votre réponse
+./airgap42 progression   # où j'en suis</code></pre>
+            <p class="muted">Chaque niveau vous donne de la matière à examiner et pose une question qui n’a qu’une seule réponse. Cette réponse est littéralement la clé du niveau suivant : rien ne s’ouvre sans elle, et personne ne vous notera. Une leçon par jour, 45 niveaux, six semaines.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="center reveal"><div class="eyebrow eyebrow-center">Pourquoi le terminal</div><h2>Un cours sur l’isolation ne peut pas vivre dans un navigateur.</h2></div>
+        <div class="grid-3 mt-lg">
+          <article class="card reveal"><div class="icon-box" data-icon="lock"></div><h3>Hors-ligne pour de bon</h3><p class="muted">Le lanceur ne contacte aucun serveur et n’écrit que dans son dossier. Débranchez votre machine : le parcours continue de fonctionner. C’est la meilleure façon de le suivre.</p></article>
+          <article class="card reveal"><div class="icon-box" data-icon="file"></div><h3>Lisible avant d’être exécuté</h3><p class="muted">Le lanceur tient en un seul fichier shell. Ouvrez-le, lisez-le, puis lancez-le. Un cours qui vous demanderait d’exécuter un programme sans le lire se contredirait.</p></article>
+          <article class="card reveal"><div class="icon-box" data-icon="toolbox"></div><h3>Rien à installer</h3><p class="muted">Ni paquet, ni conteneur, ni droits d’administration. Seulement <code>sh</code> et <code>openssl</code>, déjà présents sur Linux et macOS. Sous Windows : WSL ou Git Bash.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container container-md">
+        <div class="card">
+          <h3>Ce que le lanceur fait exactement</h3>
+          <ul class="features">
+            <li>Il lit les fichiers de son propre dossier et les déchiffre avec votre clé.</li>
+            <li>Il écrit votre progression dans un sous-dossier <code>.etat</code>.</li>
+            <li>Il n’ouvre aucune connexion réseau, ne lit rien ailleurs sur votre disque, ne demande aucun privilège.</li>
+          </ul>
+          <p class="muted small">Le contenu des niveaux est chiffré en AES-256-CBC avec une dérivation PBKDF2, au format natif d’OpenSSL. Votre clé de licence ouvre une enveloppe qui contient la clé du niveau. Une licence Pro ouvre aussi les niveaux Essentiel.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Les trois premiers niveaux sont gratuits.</h2>
+          <p class="muted">Téléchargez, vérifiez, jouez. Vous déciderez ensuite.</p>
+          <a class="btn btn-primary btn-lg" href="../telechargements/airgap42-labs.tar.gz" download>Télécharger l’archive</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+</html>
