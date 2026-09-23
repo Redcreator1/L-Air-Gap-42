@@ -99,10 +99,13 @@ Chaque page déclare une CSP en balise `<meta>` (GitHub Pages ne permet pas d'en
 
 **C'est fait pour ce qui vient.** Les 45 leçons, leurs réponses et le lanceur vivent dans le dépôt privé [`Jeux42`](https://github.com/Redcreator1/Jeux42). Ce dépôt public ne reçoit plus que l'archive chiffrée, son empreinte et l'index — aucune réponse. `npm run check` refuse que les leçons en clair y réapparaissent, et refuse qu'une réponse soit lisible dans l'index publié.
 
-**Ce qui reste exposé.** Les leçons commitées ici *avant* la séparation restent dans l'historique git, et tout le monde peut les lire avec `git log -p`. Déplacer des fichiers n'efface rien du passé. Deux postures :
+**Ce qui reste exposé, et ce qu'on en a fait.** Les leçons commitées ici *avant* la séparation restent dans l'historique git : tout le monde peut les lire avec `git log -p`, réponses des épreuves comprises.
 
-1. **Assumer.** Le produit vendu n'est pas le texte : c'est le parcours, la chaîne des épreuves, le certificat. C'est le modèle d'OverTheWire, dont tout le contenu est public depuis vingt ans.
-2. **Réécrire l'historique du dépôt public.** Destructif et irréversible : la réécriture casse les clones existants et les pull requests ouvertes, et elle ne récupère pas ce qui a déjà été copié ou indexé. À ne faire qu'avec une sauvegarde, et en connaissance de cause.
+**Décision : l'historique n'est pas réécrit.** Une réécriture casserait les clones et les pull requests ouvertes, et ne récupérerait rien de ce qui a déjà été copié ou indexé.
+
+À la place, les réponses ont été **changées** dans Jeux42. Personne n'avait encore acheté : aucun joueur n'en a pâti. Les 45 anciennes réponses ont été essayées contre l'archive actuelle, aucune n'ouvre son niveau. Elles sont tenues dans `Jeux42/content/reponses-brulees.txt`, et le contrôle de Jeux42 refuse qu'une seule d'entre elles serve à nouveau.
+
+Ce qui reste lisible dans l'historique, c'est le texte des anciennes leçons : un guide de résolution, comme il en existe pour OverTheWire. Le produit vendu n'est pas ce texte, c'est la chaîne des épreuves — et elle ne s'ouvre plus avec.
 
 ### Les secrets, désormais
 
