@@ -43,9 +43,25 @@ Reprenez votre carte de périmètre du module 0. Pour chaque actif, écrivez son
 - [ ] Les documents officiels emploient le terme correspondant au niveau réel
 - [ ] Les interfaces radio présentes sont traitées comme des chemins, même « désactivées »
 
-```quiz
-[
-  {"q":"Une règle de pare-feu qui bloque tout trafic entrant constitue :","choices":["Un air gap","Une isolation unidirectionnelle","Une isolation logique","Une diode de données"],"answer":2,"explain":"Le chemin existe ; seule la configuration le bloque. Une erreur ou une compromission du pare-feu le rouvre."},
-  {"q":"Quel test distingue une diode d’un filtre ?","choices":["Le débit","Le sens interdit est impossible par construction physique","Le prix","La présence d’un journal"],"answer":1,"explain":"Une diode rend le sens interdit physiquement impossible ; un filtre le rend seulement configuré comme interdit."}
-]
+## Le cas SITE 42
+
+Le dossier d'architecture de SITE 42 qualifie ces quatre liens d'« air gap ». Appliquez les tests de la leçon.
+
+```
+SITE 42 - liens quittant la zone de conduite
+
+lien                                   ce qui empeche le sens interdit
+-------------------------------------  ------------------------------
+scada-serveur-01 -> diode-sortie-01    la physique du composant optique
+scada-serveur-01 -> relais-fichiers-01 une regle sur fw-dmz-01
+hmi-salle-01 -> plc-pompage-03         rien, le lien est bidirectionnel
+hist-donnees-01 -> poste-bureau-12     aucun lien : rien n est cable
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces liens relève de l'isolation logique au sens de la leçon : son sens interdit n'est bloqué que par une configuration. Donnez le nom de son équipement de destination.",
+  "reponse": "relais-fichiers-01",
+  "indice": "Une règle de pare-feu n'est pas une diode."
+}
 ```

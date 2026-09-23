@@ -65,24 +65,25 @@ Prenez une feuille. Répondez, sans consulter de document, à ces trois question
 
 Gardez cette feuille. Vous la comparerez à la réalité dans la leçon 3, et vous mesurerez l’écart. Cet écart, c’est votre point de départ.
 
-```quiz
-[
-  {
-    "q": "Quelle classe de menace l’air gap élimine-t-il réellement ?",
-    "choices": [
-      "Toutes les menaces logicielles",
-      "L’attaque distante opportuniste via le réseau",
-      "Les erreurs humaines",
-      "Les canaux cachés"
-    ],
-    "answer": 1,
-    "explain": "L’isolation retire l’exposition réseau, donc l’attaquant automatisé ou opportuniste. Les autres classes restent et changent de forme."
-  },
-  {
-    "q": "Laquelle des trois promesses (confidentialité, intégrité, disponibilité) est la plus fragile dans un système isolé ?",
-    "choices": ["La disponibilité", "La confidentialité", "L’intégrité", "Elles sont équivalentes"],
-    "answer": 2,
-    "explain": "Tout ce que le système exécute a été importé un jour. Sans chaîne de vérification, l’intégrité repose sur la confiance, pas sur la preuve."
-  }
-]
+## Le cas SITE 42
+
+SITE 42 est une station de traitement d'eau potable. Son registre des systèmes, révision du 02/03, décrit ce qui est censé rester isolé.
+
+```
+SITE 42 - registre des systemes (extrait)
+
+systeme             interfaces declarees        sort du perimetre ?
+------------------  --------------------------  -------------------
+plc-filtration-01   eth0, serie -> modem RTC    oui, ligne telephonique
+plc-chloration-02   eth0                        non
+scada-serveur-01    eth0, eth1 (zone 3)         oui, vers la DMZ
+hist-donnees-01     eth0, wlan0 (desactive)     oui si wlan0 revient
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces quatre systèmes n'a aucune interface capable de sortir du périmètre isolé — ni aujourd'hui, ni après une simple erreur de configuration. Donnez son nom.",
+  "reponse": "plc-chloration-02",
+  "indice": "« Désactivé » n'est pas « absent ». Une interface qui existe est un chemin."
+}
 ```

@@ -50,9 +50,25 @@ Créez le registre des sources de référence pour vos cinq éditeurs les plus f
 - [ ] Hachage attendu consigné avant comparaison
 - [ ] Transparence utilisée quand l’écosystème le permet
 
-```quiz
-[
-  {"q":"Un hachage publié sur la même page que le fichier téléchargé prouve :","choices":["L’origine","L’intégrité par rapport à cette page seulement","La sanité","Rien"],"answer":1,"explain":"Sans source de référence indépendante, le hachage suit le fichier ; un attaquant contrôlant la page contrôle les deux."},
-  {"q":"Pourquoi la clé publique de l’éditeur doit-elle arriver par un canal distinct ?","choices":["Pour des raisons légales","Parce qu’une clé reçue avec le fichier peut avoir été substituée avec lui","Pour la performance","Ce n’est pas nécessaire"],"answer":1,"explain":"La confiance dans la signature repose sur la confiance dans la clé, donc dans son canal d’obtention."}
-]
+## Le cas SITE 42
+
+Le lot de correctifs 2025-09 de SITE 42, empreintes publiées contre empreintes reçues.
+
+```
+SITE 42 - verification du lot 2025-09
+
+fichier              publiee par l editeur  fichier recu
+-------------------  ---------------------  ------------
+scada-patch-14.tar   9f2c4d81               9f2c4d81
+hmi-patch-07.tar     1a77be30               1a77be30
+plc-firmware-22.bin  4e5590cc               4e5591cc
+doc-notes.pdf        b3d1f082               b3d1f082
+```
+
+```epreuve
+{
+  "enonce": "Une seule empreinte reçue ne correspond pas à celle publiée par l'éditeur. Donnez le nom du fichier concerné.",
+  "reponse": "plc-firmware-22.bin",
+  "indice": "Comparez caractère par caractère. L'écart tient en un chiffre."
+}
 ```

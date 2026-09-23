@@ -50,9 +50,29 @@ Redessinez votre périmètre en zones et conduits. Chaque conduit, réseau ou no
 - [ ] Chaque conduit, y compris média et humain, a ses exigences écrites
 - [ ] Chaque flux de la matrice correspond à un conduit unique
 
-```quiz
-[
-  {"q":"Qu’est-ce qui définit une zone selon IEC 62443 ?","choices":["Un segment réseau","Un ensemble d’actifs partageant des exigences de sécurité","Une salle","Un fournisseur"],"answer":1,"explain":"La topologie suit les exigences, pas l’inverse."},
-  {"q":"Le passage d’un média du sas vers la zone ingénierie est :","choices":["Hors périmètre de la norme","Un conduit, avec ses exigences propres","Un flux interne sans exigence","Une exception"],"answer":1,"explain":"Tout chemin de données entre zones est un conduit, quel que soit son support."}
-]
+## Le cas SITE 42
+
+Le découpage de SITE 42 en zones et conduits, avec les niveaux de sécurité visés.
+
+```
+SITE 42 - zones
+  z-procede   plc-filtration-01, plc-chloration-02...   SL2
+  z-conduite  hmi-salle-01, scada-serveur-01...         SL2
+  z-dmz       diode-sortie-01, relais-fichiers-01       SL1
+  z-bureau    srv-annuaire-01                           SL1
+
+SITE 42 - conduits
+  code        relie                     controle
+  ----------  ------------------------  --------------------------
+  c-conduite  z-conduite -> z-procede   liste blanche de commandes
+  c-sortie    z-conduite -> z-dmz       diode
+  c-import    z-dmz -> z-conduite       sas fichiers, double controle
+```
+
+```epreuve
+{
+  "enonce": "Un conduit part d'une zone SL2 vers une zone SL1 : c'est là qu'une zone peut être compromise par sa voisine moins exigeante. Donnez le code de ce conduit sortant.",
+  "reponse": "c-sortie",
+  "indice": "Comparez les niveaux visés de part et d'autre de chaque conduit."
+}
 ```

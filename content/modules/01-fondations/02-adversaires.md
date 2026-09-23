@@ -47,9 +47,25 @@ Pour votre périmètre, cochez les profils crédibles. Justifiez en une phrase c
 - [ ] L’initié négligent est traité par un chemin autorisé plus simple, pas par une interdiction
 - [ ] Les canaux cachés ne figurent que si l’acteur ciblé est crédible
 
-```quiz
-[
-  {"q":"Quel profil est la cause première de la majorité des ponts non documentés ?","choices":["L’opportuniste","L’initié négligent","L’initié malveillant","L’acteur ciblé"],"answer":1,"explain":"Il ne veut pas nuire : il veut finir sa tâche. Le chemin interdit est simplement plus facile que le chemin autorisé."},
-  {"q":"Pour quel profil les canaux cachés justifient-ils un budget ?","choices":["Tous","L’initié négligent","L’acteur ciblé et financé","Aucun"],"answer":2,"explain":"Les canaux cachés supposent une compromission préalable et un investissement lourd : seul un acteur ciblé les met en œuvre."}
-]
+## Le cas SITE 42
+
+Les quatre profils retenus pour SITE 42, décrits en termes opérationnels.
+
+```
+SITE 42 - profils d adversaires
+
+code            acces physique   moyens            motivation
+--------------  ---------------  ----------------  ----------------
+a1-opportuniste non              rancongiciel      argent
+a2-mainteneur   oui, planifie    acces legitime    aucune, negligent
+a3-etatique     oui, discret     outillage dedie   sabotage
+a4-initie       oui, quotidien   droits de conduite rancune
+```
+
+```epreuve
+{
+  "enonce": "Un seul profil cumule un accès physique discret et un outillage conçu pour la cible. C'est lui qui rendra crédibles les canaux hors réseau du module 5. Donnez son code.",
+  "reponse": "a3-etatique",
+  "indice": "Discret ne veut pas dire quotidien."
+}
 ```

@@ -53,9 +53,26 @@ Pour chaque hypothèse de votre registre, identifiez la source d’événements 
 - [ ] Temps synchronisé sur une source interne, dérive vérifiée
 - [ ] Flux d’export inscrit dans la matrice si option B
 
-```quiz
-[
-  {"q":"Priorité de collecte dans un périmètre isolé ?","choices":["Les journaux applicatifs","Les événements qui contredisent une hypothèse d’isolation","Les métriques de performance","Les journaux web"],"answer":1,"explain":"La surveillance d’un air gap consiste d’abord à détecter la violation de ce qu’on croit vrai."},
-  {"q":"Pourquoi l’administrateur du collecteur doit-il être différent de celui des postes ?","choices":["Charge de travail","Pour qu’un initié compromettant un poste ne puisse pas effacer ses traces","Exigence légale","Ce n’est pas nécessaire avec le chaînage"],"answer":1,"explain":"La séparation des tâches est la protection principale des journaux contre l’initié."}
-]
+## Le cas SITE 42
+
+Ce que SITE 42 pourrait collecter, et ce qu’il collecte vraiment.
+
+```
+SITE 42 - sources de journaux en zone isolee
+
+source              volume/jour  collecte ?  conservation
+------------------  -----------  ----------  ------------
+plc-*               faible       non         -
+hmi-salle-01        moyen        oui         30 jours
+scada-serveur-01    moyen        oui         30 jours
+fw-dmz-01           eleve        oui         90 jours
+relais-fichiers-01  faible       non         -
+```
+
+```epreuve
+{
+  "enonce": "Deux sources ne sont pas collectées. Une seule verrait passer tout ce qui franchit l'isolation par fichiers. Donnez son nom.",
+  "reponse": "relais-fichiers-01",
+  "indice": "Par où entrent les fichiers, d'après le module 3 ?"
+}
 ```

@@ -52,9 +52,25 @@ Rédigez trois hypothèses de chasse à partir de votre modèle. Menez la premi�
 - [ ] Rythme mensuel planifié
 - [ ] Preuves négatives datées versées au registre
 
-```quiz
-[
-  {"q":"Une chasse qui ne trouve rien est :","choices":["Un échec","Une preuve négative datée à consigner","À refaire","Inutile sans indicateurs externes"],"answer":1,"explain":"En périmètre isolé, l’examen méthodique sans découverte est un résultat d’audit."},
-  {"q":"Source de données sous-exploitée et très parlante en chasse OT ?","choices":["Les journaux web","Les journaux d’automates (programmes, modes, téléchargements)","Les journaux d’impression","Les métriques CPU"],"answer":1,"explain":"Un changement de programme non annoncé sur un automate est un signal fort et rare."}
-]
+## Le cas SITE 42
+
+Les hypothèses de chasse formulées sur SITE 42, et ce que les données permettent d’en faire.
+
+```
+SITE 42 - hypotheses de chasse
+
+code  hypothese                              verifiable ?
+----  -------------------------------------  ----------------------
+c1    un media a introduit un non signe      oui, journal du kiosque
+c2    un compte technique hors horaires      oui, journal hmi
+c3    un automate execute un code non conforme  oui, empreinte
+c4    des donnees sortent hors reseau        non, aucune mesure
+```
+
+```epreuve
+{
+  "enonce": "Une hypothèse qu'on ne peut pas vérifier avec les données disponibles n'est pas une hypothèse de chasse : c'est une inquiétude. Donnez son code.",
+  "reponse": "c4",
+  "indice": "Une seule ligne porte « non »."
+}
 ```

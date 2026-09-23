@@ -50,9 +50,25 @@ Organisez l’exercice dans les trente jours. Partagez le nombre de « passe » 
 - [ ] Chaque « passe » converti en action ou en risque accepté écrit
 - [ ] Délais de détection des « détecté » évalués
 
-```quiz
-[
-  {"q":"Pourquoi seuls les contrôles réellement en place sont-ils dans la pile bleue ?","choices":["Pour simplifier","Pour que l’exercice teste l’architecture réelle, pas la cible","Pour gagner du temps","Ce n’est pas obligatoire"],"answer":1,"explain":"Défendre avec un contrôle prévu mais absent produit une fausse assurance."},
-  {"q":"Où se concentrent typiquement les « passe » ?","choices":["Sur le réseau","Sur les horaires, les rôles secondaires et les sorties","Sur le firmware","Sur les canaux cachés"],"answer":1,"explain":"Les zones non techniques sont celles que le modèle traite le moins bien."}
-]
+## Le cas SITE 42
+
+La confrontation sur table entre l’équipe rouge et l’équipe bleue, sur l’architecture cible de SITE 42.
+
+```
+SITE 42 - exercice rouge contre bleu
+
+code  equipe rouge                    reponse bleue
+----  ------------------------------  ------------------------------
+rb1   media apporte par un mainteneur kiosque, quarantaine 24 h
+rb2   reactivation de wlan0           balayage radio trimestriel
+rb3   exfiltration par diode d etat   aucune, canal non instrumente
+rb4   compte tech-auto reutilise      journal hmi, alerte
+```
+
+```epreuve
+{
+  "enonce": "Sur un seul coup, l'équipe bleue n'a rien à opposer — et c'est précisément celui que le modèle de menace avait accepté comme risque assumé. Donnez son code.",
+  "reponse": "rb3",
+  "indice": "Un risque accepté reste un risque : il ne disparaît pas parce qu'il est écrit."
+}
 ```

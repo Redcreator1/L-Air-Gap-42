@@ -48,9 +48,26 @@ Rédigez votre registre avec au moins sept hypothèses. Pour chacune, si vous n�
 - [ ] Chaque preuve est datée et a un responsable nommé
 - [ ] Les hypothèses non vérifiées depuis plus d’un an sont marquées comme telles
 
-```quiz
-[
-  {"q":"Qu’est-ce qui rend une hypothèse d’isolation utilisable dans un audit ?","choices":["Elle est écrite dans la PSSI","Elle est falsifiable, avec une méthode d’observation et une preuve datée","Elle est validée par la direction","Elle est technique"],"answer":1,"explain":"Sans méthode, date et responsable, ce n’est qu’une affirmation : un auditeur ne peut ni la vérifier ni la contester."},
-  {"q":"Formulation correcte d’une preuve négative ?","choices":["« Il n’y a aucune radio »","« Un balayage par méthode X, le jour Y, par Z, n’a détecté aucune émission »","« Le fournisseur certifie l’absence de radio »","« Le schéma ne montre pas de radio »"],"answer":1,"explain":"Seule une méthode datée et attribuée est défendable ; l’absence n’est jamais prouvée en soi."}
-]
+## Le cas SITE 42
+
+Chaque hypothèse d’isolation de SITE 42, et la preuve datée qui la soutient — ou pas.
+
+```
+SITE 42 - hypotheses et preuves
+
+code  hypothese                             preuve datee
+----  ------------------------------------  ----------------------
+h1    aucun cable ne sort de la zone 1      releve d armoire 12/01
+h2    la diode est unidirectionnelle        essai constructeur 03/19
+h3    aucun lien radio actif                -
+h4    les medias passent par le kiosque     journal du sas, continu
+h5    aucun compte partage sur automates    audit interne 11/02
+```
+
+```epreuve
+{
+  "enonce": "Une hypothèse sans preuve datée n'est pas une hypothèse : c'est un espoir. Donnez le code de la seule qui n'est adossée à rien.",
+  "reponse": "h3",
+  "indice": "Regardez la colonne de droite, ligne par ligne."
+}
 ```

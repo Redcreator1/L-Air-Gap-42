@@ -52,9 +52,26 @@ Faites le tour de salle cette semaine avec la liste ci-dessus. Notez chaque éca
 - [ ] Prestataires et nettoyage escortés dans le cœur et l’ingénierie
 - [ ] Événements physiques dans la télémétrie, tour de salle mensuel
 
-```quiz
-[
-  {"q":"Qui doit escorter un prestataire dans la zone cœur ?","choices":["Un agent d’accueil","Un membre habilité qui comprend l’intervention","Personne si le prestataire est connu","Le responsable sécurité uniquement"],"answer":1,"explain":"L’escorte n’est utile que si elle sait ce qu’elle regarde."},
-  {"q":"Rapprochement de détection propre aux périmètres isolés ?","choices":["Antivirus et pare-feu","Événements physiques (badge, baie) et événements logiques (USB, connexion)","Journaux web et proxy","DNS et flux réseau"],"answer":1,"explain":"Un événement logique sans présence physique correspondante est un signal fort."}
-]
+## Le cas SITE 42
+
+La couche zéro de SITE 42 : qui entre, ce qu’il apporte, ce qu’il touche.
+
+```
+SITE 42 - controles physiques
+
+code  controle                        etat
+----  ------------------------------  -------------------------------
+y1    badge nominatif a l entree      en place
+y2    accompagnement des externes     en place, sauf pour la maintenance
+y3    scelles sur les armoires        en place, verifies mensuellement
+y4    video sur la salle de conduite  en place, 30 jours
+y5    fouille des sacs                non, ecartee
+```
+
+```epreuve
+{
+  "enonce": "Un contrôle est en place partout, sauf précisément pour la population qui ouvre le plus souvent les armoires. Donnez son code.",
+  "reponse": "y2",
+  "indice": "Qui intervient dans les armoires automates ?"
+}
 ```

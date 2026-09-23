@@ -61,9 +61,28 @@ Planifiez la première campagne radio et le premier test de fuite. Consignez la 
 - [ ] Formulaire et procédure de traitement d’une découverte
 - [ ] Un pont qui a servi déclenche le playbook de réponse
 
-```quiz
-[
-  {"q":"Première action face à un pont découvert sur un équipement en production ?","choices":["Débrancher","Qualifier : nature, ancienneté, usage","Prévenir la direction","Réinstaller l’équipement"],"answer":1,"explain":"Débrancher sans comprendre peut créer un incident de production et détruire des preuves."},
-  {"q":"Méthode irremplaçable pour prouver l’absence de lien filaire ?","choices":["Un scan réseau","Le suivi physique de chaque câble","La table des switchs","Le schéma du projet"],"answer":1,"explain":"Les autres méthodes complètent ; seul le suivi physique voit le câble qui ne passe par aucun switch géré."}
-]
+## Le cas SITE 42
+
+La campagne de détection de ponts menée sur SITE 42 le 14/09.
+
+```
+SITE 42 - campagne de detection de ponts, 14/09
+
+controle                          resultat
+--------------------------------  ------------------------------
+balayage radio 2,4 et 5 GHz       1 SSID masque, puissance stable
+inventaire des ports USB montes   conforme
+table ARP des automates           1 adresse hors plage
+releve des armoires               conforme
+
+Plan d adressage de la zone isolee : 10.42.0.0/16
+Adresses vues dans la table ARP : 10.42.1.11, 10.42.2.22, 10.99.0.10
+```
+
+```epreuve
+{
+  "enonce": "Le pont non documenté est la menace numéro un d'un air gap. Donnez l'adresse vue dans la table ARP qui n'appartient pas au plan d'adressage de la zone isolée.",
+  "reponse": "10.99.0.10",
+  "indice": "Comparez chaque adresse au préfixe déclaré."
+}
 ```

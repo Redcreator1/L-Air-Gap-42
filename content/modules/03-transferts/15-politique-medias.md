@@ -53,9 +53,25 @@ Rédigez la politique en une page à partir des six règles. Commandez le parc. 
 - [ ] Chemin autorisé disponible en moins d’une minute
 - [ ] Taux de conformité mesuré
 
-```quiz
-[
-  {"q":"Pourquoi séparer physiquement médias entrants et sortants ?","choices":["Pour la couleur","Pour supprimer le média qui fait l’aller-retour","Pour la comptabilité","Ce n’est pas nécessaire si on formate"],"answer":1,"explain":"Un média à sens unique ne peut pas ramener dans le périmètre ce qu’il a touché à l’extérieur."},
-  {"q":"Ce qui rend une politique de médias appliquée ?","choices":["La sanction","Le chemin autorisé plus facile que le chemin interdit","La formation annuelle","La signature du salarié"],"answer":1,"explain":"L’initié négligent prend le chemin le plus court. Il faut que ce soit le bon."}
-]
+## Le cas SITE 42
+
+La politique de médias de SITE 42 existe. Voici ce que trente jours de transferts en disent réellement.
+
+```
+SITE 42 - application reelle sur 30 jours
+
+code  regle                                    conformes
+----  ---------------------------------------  ---------
+r1    media fourni par l exploitant            28 / 31
+r2    passage au kiosque avant entree          31 / 31
+r3    demande ecrite et approbation             9 / 31
+r4    journal signe des deux cotes             30 / 31
+```
+
+```epreuve
+{
+  "enonce": "Une règle écrite pour interdire est contournée ; une règle écrite pour rendre le bon geste possible est appliquée. Donnez le code de celle que l'exploitation contourne massivement.",
+  "reponse": "r3",
+  "indice": "Un chiffre s'écarte violemment des autres."
+}
 ```

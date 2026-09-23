@@ -86,30 +86,25 @@ Les canaux cachés font de bons articles. Les clés USB de prestataires font de 
 
 Reprenez les six questions d’audit. Pour votre système, répondez à chacune par **oui**, **non** ou **je ne sais pas**. Comptez les « je ne sais pas » : c’est votre dette de visibilité, et c’est ce que la leçon suivante attaque.
 
-```quiz
-[
-  {
-    "q": "Point commun aux six incidents présentés ?",
-    "choices": [
-      "Une faille logicielle non corrigée",
-      "Un pont légitime ou une exception, jamais une intrusion réseau",
-      "Un attaquant interne malveillant",
-      "Un défaut de chiffrement"
-    ],
-    "answer": 1,
-    "explain": "Chaque cas exploite quelque chose qui traverse l’isolation par conception : média, équipement, tiers, mise à jour, exception ou physique."
-  },
-  {
-    "q": "Une mise à jour correctement signée par l’éditeur garantit :",
-    "choices": ["Qu’elle est sans danger", "Son origine, pas son innocuité", "Qu’elle a été testée par un tiers", "Sa compatibilité"],
-    "answer": 1,
-    "explain": "La signature authentifie la source. Si la source est compromise en amont, la signature est valide et le contenu malveillant."
-  },
-  {
-    "q": "Que faire d’un portable qui a été connecté aux deux côtés de l’isolation ?",
-    "choices": ["Le nettoyer avec un antivirus puis le réutiliser côté isolé", "Le considérer comme appartenant à la zone la moins sûre", "L’isoler 24 h avant réutilisation", "Rien, s’il était déconnecté au moment du transfert"],
-    "answer": 1,
-    "explain": "L’isolation s’applique aux équipements, pas aux moments : un équipement qui a touché les deux zones reste du côté le moins sûr."
-  }
-]
+## Le cas SITE 42
+
+Voici les incidents qui ont touché la zone isolée de SITE 42 en cinq ans. Aucun n’a exploité une faille de l’isolation elle-même.
+
+```
+SITE 42 - incidents en zone isolee
+
+date        constat                          vecteur retenu
+----------  -------------------------------  -------------------
+2022-04-11  automate redemarre sans ordre    firmware verole (lot)
+2023-01-30  compte technique utilise la nuit mot de passe partage
+2024-09-02  fichier inconnu sur hist-donnees usb-presta-07
+2025-06-17  trafic sortant vers une IP fixe  gsm-televigie-01
+```
+
+```epreuve
+{
+  "enonce": "Un seul de ces vecteurs est un équipement installé sur le site après la mise en service, et absent de tout schéma depuis. Donnez-le.",
+  "reponse": "gsm-televigie-01",
+  "indice": "Trois vecteurs traversent l'isolation. Un seul y réside en permanence."
+}
 ```

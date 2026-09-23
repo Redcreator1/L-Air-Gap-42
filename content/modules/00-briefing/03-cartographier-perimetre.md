@@ -81,24 +81,27 @@ Vous les traiterez en priorité dans les modules 1 et 3. Si vous n’avez qu’u
 
 Le module 1 transforme cette carte en modèle de menace, puis en matrice de flux autorisés : la référence contre laquelle vous mesurerez chaque écart. Le module 4 automatise la détection des écarts. Vous venez de faire manuellement ce que vous saurez industrialiser dans quatre semaines.
 
-```quiz
-[
-  {
-    "q": "Pourquoi noter les interfaces physiques présentes même si elles ne sont pas utilisées ?",
-    "choices": [
-      "Pour l’inventaire comptable",
-      "Parce qu’une interface présente peut être réactivée sans que l’isolation le remarque",
-      "Pour dimensionner les switchs",
-      "Ce n’est pas nécessaire si elles sont désactivées dans l’OS"
-    ],
-    "answer": 1,
-    "explain": "« Désactivé dans l’OS » n’est pas une preuve d’isolation : droits d’administration ou accès physique suffisent à réactiver."
-  },
-  {
-    "q": "Quel type de flux est l’angle mort classique d’un air gap ?",
-    "choices": ["Les flux entrants de mise à jour", "Les flux sortants (exports, sauvegardes, diagnostics)", "Les flux internes entre automates", "Les flux d’administration"],
-    "answer": 1,
-    "explain": "Les isolations sont conçues contre les entrées. Les sorties sont rarement journalisées, et c’est par elles que la confidentialité fuit."
-  }
-]
+## Le cas SITE 42
+
+Voici les deux documents que vous produirez : la matrice déclarée, et ce qu'on relève réellement en ouvrant les armoires.
+
+```
+SITE 42 - matrice des flux declares (revision 4)
+  scada-serveur-01    -> diode-sortie-01     historisation
+  relais-fichiers-01  -> hist-donnees-01     import de signatures
+  hmi-salle-01        -> plc-*               conduite
+
+SITE 42 - inventaire releve en armoire (ce matin)
+  plc-filtration-01, plc-chloration-02, plc-pompage-03
+  hmi-salle-01, scada-serveur-01, hist-donnees-01
+  diode-sortie-01, relais-fichiers-01
+  ap-maint-03   (point d acces sans fil, alimente, SSID masque)
+```
+
+```epreuve
+{
+  "enonce": "Un équipement est alimenté sur le site sans apparaître dans une seule ligne de la matrice. C'est l'écart entre le schéma et la réalité. Donnez son nom.",
+  "reponse": "ap-maint-03",
+  "indice": "Comparez les deux listes équipement par équipement."
+}
 ```

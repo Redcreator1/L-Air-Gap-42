@@ -41,9 +41,25 @@ Passez chaque actif de votre carte dans ce tableau. Vous devriez sortir entre 20
 - [ ] Les actifs sortis disposent d’un mécanisme de substitution nommé
 - [ ] Le raisonnement tient sur une page pour l’audit
 
-```quiz
-[
-  {"q":"Quel critère est le plus souvent sous-estimé et conduit à un périmètre trop large ?","choices":["La conséquence","L’exposition","La substituabilité","Le coût"],"answer":2,"explain":"On oublie qu’une copie unidirectionnelle ou un service de substitution permet de sortir la fonction du périmètre sans perdre la donnée."},
-  {"q":"Pourquoi réduire le périmètre isolé améliore-t-il la sécurité ?","choices":["Il coûte moins cher","Moins de personnes ont une raison de le franchir","Il est plus facile à documenter","Il réduit la conséquence"],"answer":1,"explain":"Chaque actif retiré supprime des accès et des transferts : moins de ponts potentiels."}
-]
+## Le cas SITE 42
+
+Isoler coûte cher. Voici ce que SITE 42 perdrait, actif par actif.
+
+```
+SITE 42 - consequence d une perte de maitrise
+
+actif              consequence
+-----------------  ---------------------------------------------
+plc-filtration-01  eau trouble, production arretee, sans danger
+plc-chloration-02  dosage de chlore modifie : sante publique
+plc-pompage-03     pression perdue, reseau vide en heures
+hist-donnees-01    historique fausse, aucun effet immediat
+```
+
+```epreuve
+{
+  "enonce": "Un seul actif justifie à lui seul le coût de l'isolation, parce que sa perte de maîtrise met directement en jeu la santé des personnes. Donnez son nom.",
+  "reponse": "plc-chloration-02",
+  "indice": "Demandez-vous ce qui arrive aux gens, pas au réseau."
+}
 ```

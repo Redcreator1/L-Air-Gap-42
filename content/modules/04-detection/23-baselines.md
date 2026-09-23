@@ -49,9 +49,25 @@ Capturez la baseline réseau (MAC par port) et périphériques cette semaine. Ex
 - [ ] Changements annoncés avant exécution, baseline mise à jour à date
 - [ ] Baseline humaine traitée en revue, avec transparence
 
-```quiz
-[
-  {"q":"Une nouvelle adresse MAC sur un port de switch du périmètre isolé est :","choices":["Une information","Une alerte","Un incident jusqu’à preuve du contraire","Normale en phase de maintenance"],"answer":2,"explain":"Dans un périmètre stable, un équipement inconnu connecté est par définition un pont potentiel."},
-  {"q":"Que faire des éléments inexpliqués découverts lors de la première baseline ?","choices":["Les intégrer à la baseline","Les traiter comme des incidents avant acceptation","Les ignorer","Les supprimer sans analyse"],"answer":1,"explain":"La première baseline est un audit : ce qui est là sans raison est suspect."}
-]
+## Le cas SITE 42
+
+La référence de comportement normal de SITE 42, confrontée à la mesure du 14/09.
+
+```
+SITE 42 - reference contre mesure du 14/09
+
+observation                     reference  mesure
+------------------------------  ---------  ------
+processus en execution          38         38
+connexions sortantes par heure  0          3
+comptes ouverts simultanement   2          2
+cles usb montees par semaine    1          1
+```
+
+```epreuve
+{
+  "enonce": "Dans un périmètre isolé, le normal est petit et stable : c'est ce qui rend l'anormal visible. Une seule mesure s'écarte. Donnez l'intitulé de l'observation, tel qu'il figure à gauche.",
+  "reponse": "connexions sortantes par heure",
+  "indice": "Quatre lignes, une seule différence entre les deux colonnes."
+}
 ```

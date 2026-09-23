@@ -54,9 +54,26 @@ Rédigez votre politique par catégorie. Définissez la durée de quarantaine. P
 - [ ] Dépôt miroir alimenté par le sas, avec hachage par lot
 - [ ] Retour arrière testé à blanc dans les 30 jours
 
-```quiz
-[
-  {"q":"Rôle de la quarantaine avant déploiement ?","choices":["Tester la compatibilité","Servir de détection différée d’une mise à jour compromise en amont","Attendre l’approbation de la direction","Réduire le coût"],"answer":1,"explain":"Les compromissions amont sont découvertes publiquement en jours ou semaines ; attendre, c’est en bénéficier."},
-  {"q":"Un retour arrière documenté mais jamais exécuté :","choices":["Suffit pour l’audit","N’existe pas","Est acceptable pour les postes non critiques","Doit être signé"],"answer":1,"explain":"Seule une restauration réellement effectuée prouve que la sauvegarde et la procédure fonctionnent."}
-]
+## Le cas SITE 42
+
+Le cycle de mise à jour hors ligne de SITE 42, étape par étape, avec sa dernière exécution.
+
+```
+SITE 42 - cycle de mise a jour hors ligne
+
+code  action                                 derniere execution
+----  -------------------------------------  ------------------
+e1    veille editeur et bulletins            01/09
+e2    telechargement sur poste dedie         02/09
+e3    verification de signature hors de e2   jamais
+e4    depot au kiosque                       02/09
+e5    fenetre de patch, essai sur banc       05/09
+```
+
+```epreuve
+{
+  "enonce": "Télécharger un fichier et le vérifier sur la même machine valide la compromission au lieu de la détecter. Donnez le code de l'étape qui n'a jamais été exécutée.",
+  "reponse": "e3",
+  "indice": "Une seule ligne porte « jamais »."
+}
 ```

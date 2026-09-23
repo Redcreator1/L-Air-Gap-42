@@ -53,9 +53,26 @@ Postez la page 1 anonymisée dans le canal du module 5. Question : « Quelle mes
 
 Le module 6 vous fait prouver tout cela à ceux qui vous le demanderont : régulateurs, auditeurs, direction.
 
-```quiz
-[
-  {"q":"Une mesure liée à un risque non retenu dans le modèle de menace :","choices":["Est prioritaire si elle est peu chère","Descend dans le plan quelle que soit sa popularité","Est retirée du plan","Remonte si elle est spectaculaire"],"answer":1,"explain":"Le plan sert le modèle de menace ; une mesure sans risque retenu n’a pas de justification."},
-  {"q":"À quoi sert la page 2 du plan ?","choices":["Aux détails techniques","À ce que la direction comprenne et arbitre la page 1","À l’audit","Au budget"],"answer":1,"explain":"Chaque mesure y est reliée à un risque et à une conséquence de l’inaction : c’est ce qui permet une décision."}
-]
+## Le cas SITE 42
+
+Le plan de durcissement proposé pour SITE 42, tel qu’il remonterait à la direction.
+
+```
+SITE 42 - plan de durcissement (proposition)
+
+rang  code  action                          cout        couvre
+----  ----  ------------------------------  ----------  --------------
+1     a1    cage de Faraday sur la salle    tres eleve  k1
+2     a2    perimetre d exclusion de 20 m   faible      k1, k2, k3
+3     a3    liste blanche sur scada         faible      execution
+4     a4    secure boot sur hist-donnees    faible      firmware
+5     a5    rotation de x3 et passage hsm   moyen       secret en clair
+```
+
+```epreuve
+{
+  "enonce": "Ce plan est priorisé à l'envers. Une action couvre trois familles de canaux pour un coût faible : c'est elle qui devrait occuper le rang 1. Donnez son code.",
+  "reponse": "a2",
+  "indice": "Classez par rapport entre ce qui est couvert et ce qui est dépensé."
+}
 ```

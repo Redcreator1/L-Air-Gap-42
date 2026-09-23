@@ -54,9 +54,25 @@ Lancez l’allowlisting en mode audit sur un poste d’ingénierie cette semaine
 - [ ] Image maîtresse et configuration de référence par type de poste
 - [ ] Contrôle mensuel de la dérive
 
-```quiz
-[
-  {"q":"Pourquoi l’allowlisting est-il plus facile en périmètre isolé qu’en entreprise ?","choices":["Les outils sont différents","Les applications sont peu nombreuses et stables","Il n’y a pas d’utilisateurs","Ce n’est pas plus facile"],"answer":1,"explain":"On sait exactement ce qui doit s’exécuter ; la liste est courte et change rarement."},
-  {"q":"Une règle d’allowlisting par chemin est acceptable si :","choices":["Le chemin est court","Le chemin n’est pas inscriptible par l’utilisateur","Le poste est isolé","Elle est temporaire"],"answer":1,"explain":"Un chemin inscriptible permet d’y déposer n’importe quel exécutable, ce qui annule la règle."}
-]
+## Le cas SITE 42
+
+Un périmètre isolé sait exactement ce qui doit s’y exécuter. Voici ce que SITE 42 exécute vraiment.
+
+```
+SITE 42 - executables attendus contre observes
+
+equipement         attendus  liste blanche  observes
+-----------------  --------  -------------  --------
+scada-serveur-01   41        active         44
+hmi-salle-01       28        active         28
+hist-donnees-01    33        absente        33
+plc-chloration-02  1         sans objet     1
+```
+
+```epreuve
+{
+  "enonce": "Un équipement exécute trois programmes de plus que ce que l'inventaire prévoit, alors même qu'une liste blanche y est active. Donnez son nom.",
+  "reponse": "scada-serveur-01",
+  "indice": "Une liste blanche active qui laisse passer l'imprévu n'est pas appliquée."
+}
 ```

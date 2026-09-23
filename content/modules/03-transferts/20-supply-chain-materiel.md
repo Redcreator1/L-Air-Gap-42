@@ -49,9 +49,25 @@ Classez vos équipements par niveau. Rédigez la fiche de réception pour le niv
 - [ ] Stock de rechange scellé, inventorié, renouvelé
 - [ ] Réforme avec révocation des secrets et conservation du stockage
 
-```quiz
-[
-  {"q":"Un équipement en panne renvoyé au fabricant :","choices":["Part avec son disque pour faciliter le diagnostic","Part sans son stockage, qui reste dans le périmètre","Est effacé rapidement puis envoyé","N’est jamais renvoyé"],"answer":1,"explain":"Le stockage contient données, secrets et configuration ; il ne quitte pas le périmètre."},
-  {"q":"Pourquoi le stock de rechange est-il contrôlé comme les équipements installés ?","choices":["Pour l’assurance","Parce qu’il est installable sans délai et donc aussi exposé","Pour la comptabilité","Il ne l’est pas"],"answer":1,"explain":"Une pièce de rechange substituée ou piégée entre en production au premier incident."}
-]
+## Le cas SITE 42
+
+La réception du lot matériel 2025-Q3 de SITE 42. Chaque étape avant le déballage est une occasion de substitution.
+
+```
+SITE 42 - reception du lot 2025-Q3
+
+reference        livre le  scelle intact  serie conforme au bon
+---------------  --------  -------------  ---------------------
+plc-pompage-04   03/07     oui            oui
+carte-reseau-11  03/07     oui            oui
+disque-hist-05   18/07     oui            oui
+cle-usb-lot-9    03/07     oui            non
+```
+
+```epreuve
+{
+  "enonce": "Un seul article est arrivé avec un numéro de série qui ne correspond pas au bon de livraison. Donnez sa référence.",
+  "reponse": "cle-usb-lot-9",
+  "indice": "La dernière colonne ne porte qu'un seul « non »."
+}
 ```

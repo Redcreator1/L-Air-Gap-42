@@ -6,7 +6,7 @@ Ce document décrit comment le produit est conçu pour vendre, et ce qu'il faut 
 
 - **Niche à fort enjeu, faible concurrence.** La sécurité des systèmes isolés concerne l'énergie, la défense, la santé, la finance, l'industrie. Les formations existantes sont soit génériques (OT/ICS), soit des slides de conférence. Aucune ne traite transferts, détection hors-ligne, canaux cachés et conformité comme un parcours opérationnel.
 - **Acheteur B2B, budget formation.** L'acheteur type fait financer par son employeur (plan de formation, OPCO) ou facture à son client (consultant). Le prix se compare à une journée de conseil, pas à un cours en ligne grand public. D'où les prix : 390 / 1 190 / 1 900 €. L'écart entre Pro et Elite reste proportionné à ce qui les sépare réellement aujourd'hui : le module gouvernance et audit.
-- **Promesse mesurable.** « Score d'isolation » avant/après, livrables concrets (modèle de menace, schéma, runbook, plan 90 jours, dossier d'architecture). On vend un résultat, pas des heures de vidéo.
+- **Promesse mesurable.** Des livrables concrets : modèle de menace, schéma d'architecture, runbook de transfert, plan de détection, plan 90 jours, dossier d'architecture. On vend un résultat, pas des heures de vidéo. N'annoncez pas de « score » : le parcours ne mesure rien d'autre que le nombre de niveaux résolus, et c'est déjà une affirmation vérifiable.
 
 ## Les trois paliers
 
@@ -70,7 +70,7 @@ Quatre cohortes par an, plus les upgrades et les licences groupées : un ordre d
 | Visiteurs → newsletter | Plausible `Newsletter` / visiteurs uniques | > 5 % |
 | Visiteurs page Tarifs → clic Checkout | événement `Checkout` | > 8 % |
 | Clic Checkout → achat | PayPal | > 40 % |
-| Taux de complétion (certificats délivrés) | déclaratif Discord + quiz | > 50 % |
+| Taux de complétion (certificats délivrés) | déclaratif, code de vérification | > 50 % |
 | Remboursements | PayPal | < 5 % |
 | Upgrades | PayPal | > 15 % des Essentiel sous 90 jours |
 

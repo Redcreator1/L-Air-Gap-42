@@ -6,7 +6,7 @@ Le principe : **vous n'exécutez aucune commande.** Tout ce qui doit tourner tou
 
 Le workflow `.github/workflows/deploy.yml` se déclenche à chaque push sur `main` :
 
-1. `npm run check` — curriculum, quiz, liens, intégrité de l'archive de niveaux ;
+1. `npm run check` — curriculum, épreuves, liens, intégrité de l'archive et **partie simulée de bout en bout** ;
 2. `npm run build` — construit le site ;
 3. publication sur la branche `gh-pages`.
 

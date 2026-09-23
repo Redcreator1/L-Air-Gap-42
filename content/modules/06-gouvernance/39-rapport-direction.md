@@ -56,9 +56,27 @@ Rédigez votre rapport en une page. Faites-le lire à quelqu’un hors sécurit�
 - [ ] Décisions demandées avec coût, délai, effet sur un risque
 - [ ] Objections anticipées avec chiffres
 
-```quiz
-[
-  {"q":"Différence entre une recommandation et une demande de décision ?","choices":["Le ton","La demande oblige à un oui, un non ou un arbitrage d’ici une date","La recommandation est plus professionnelle","Aucune"],"answer":1,"explain":"Une demande datée transforme le rapport en événement de décision ; une recommandation peut rester sans réponse."},
-  {"q":"Réponse à « on n’a jamais eu d’incident » ?","choices":["C’est vrai, mais le risque existe","Nous n’avions pas de moyen de le voir ; voici ce que nous détectons depuis les baselines","Les statistiques du secteur","Un scénario catastrophe"],"answer":1,"explain":"Les écarts détectés depuis la mise en place de la visibilité sont l’argument factuel."}
-]
+## Le cas SITE 42
+
+Le rapport d’une page destiné à la direction de SITE 42. Elle a dix minutes et doit arbitrer.
+
+```
+SITE 42 - rapport a la direction
+
+code  ligne               contenu
+----  ------------------  ----------------------------------------
+r1    constat majeur      h3 sans preuve, s4 sans lecteur,
+                          m3-televigie permanent
+r2    risque              perte de maitrise de plc-chloration-02
+r3    cout de l inaction  non chiffre
+r4    decision demandee   budget de 40 k euros, trois actions
+r5    echeance            90 jours
+```
+
+```epreuve
+{
+  "enonce": "Une seule ligne manque à l'appel pour qu'un arbitrage soit possible : sans elle, la direction compare une dépense à rien. Donnez son code.",
+  "reponse": "r3",
+  "indice": "On arbitre entre deux montants, pas entre un montant et une inquiétude."
+}
 ```

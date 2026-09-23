@@ -62,9 +62,29 @@ Postez le schéma anonymisé dans le canal du module 2. Demandez : « Quel condu
 
 Le module 3 attaque le point où tout se joue : ce qui entre et sort par le sas.
 
-```quiz
-[
-  {"q":"Que doit montrer un schéma d’isolation en plus des équipements ?","choices":["Les adresses IP","Les absences prouvées (radio, comptes communs) avec référence aux hypothèses","Les fournisseurs","Le coût"],"answer":1,"explain":"L’isolation est faite d’absences ; un schéma qui ne les prouve pas ne prouve rien."},
-  {"q":"Un chemin qui traverse la frontière d’isolation sans numéro de conduit est :","choices":["Acceptable s’il est chiffré","Un pont non documenté","Une exception temporaire","Normal en phase projet"],"answer":1,"explain":"Rien ne traverse sans numéro : c’est la règle qui rend le schéma opposable."}
-]
+## Le cas SITE 42
+
+Le schéma cible proposé pour SITE 42, et les décisions qui l’accompagnent.
+
+```
+SITE 42 - schema d architecture cible (proposition)
+
+  z-bureau -- f3 -- z-dmz -- c-import -- z-conduite -- c-conduite --
+                      |          |                                 |
+                      +- c-sortie (diode) -+              z-procede
+
+  Decisions
+  d1  ap-maint-03 depose, armoire scellee
+  d2  gsm-televigie-01 remplace par m2-bastion, a la demande
+  d3  agent-cloud-01 deplace en z-dmz
+  d4  f4 supprime
+  d5  tech-auto conserve pour ne pas gener l exploitation
+```
+
+```epreuve
+{
+  "enonce": "Une seule de ces décisions laisse en place un défaut identifié plus tôt dans le module, au nom du confort d'exploitation. Donnez son code.",
+  "reponse": "d5",
+  "indice": "Une isolation qu'on ne peut pas respecter ne sera pas respectée — mais l'inverse est vrai aussi."
+}
 ```

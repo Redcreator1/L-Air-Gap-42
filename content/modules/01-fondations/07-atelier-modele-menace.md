@@ -52,9 +52,25 @@ Si votre modèle dépasse une page, ce n’est pas que vous avez trop de choses 
 
 Vous avez fait en sept jours ce que la plupart des organisations n’ont jamais écrit. Le module 2 transforme ce modèle en architecture.
 
-```quiz
-[
-  {"q":"Comment doit être formulé un risque prioritaire dans le modèle ?","choices":["Par une note de 1 à 5","« Adversaire utilise surface pour conséquence »","Par référence à une CVE","Par un coût estimé"],"answer":1,"explain":"Cette formulation relie chaque risque aux trois livrables précédents et rend la remédiation évidente."},
-  {"q":"Que demander en priorité aux relecteurs ?","choices":["Une validation","L’adversaire oublié et la surface notée trop favorablement","Des corrections de forme","Une estimation de coût"],"answer":1,"explain":"Ce sont les deux biais systématiques d’un auteur sur son propre périmètre."}
-]
+## Le cas SITE 42
+
+Voici le modèle de menace de SITE 42 assemblé en une page. Relisez-le comme un auditeur le ferait.
+
+```
+SITE 42 - modele de menace en une page (brouillon)
+
+  Perimetre     zones 1 et 2, huit equipements
+  Isolation     air gap physique
+  Adversaires   a2-mainteneur, a3-etatique, a4-initie
+  Actif majeur  plc-chloration-02
+  Entrees       medias amovibles, supply chain, humain
+  Preuves       h1, h2, h4, h5   (h3 manquante)
+```
+
+```epreuve
+{
+  "enonce": "Ce brouillon contient une sur-promesse : un terme qui affirme un niveau d'isolation que les preuves rassemblées ne soutiennent pas. Donnez ce terme, tel qu'il est écrit.",
+  "reponse": "air gap physique",
+  "indice": "Quelle preuve manque, et que prétend la ligne Isolation ?"
+}
 ```

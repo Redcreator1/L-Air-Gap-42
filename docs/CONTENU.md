@@ -45,10 +45,15 @@ Introduction (2 à 4 phrases : pourquoi cette leçon compte).
 ## Checklist
 - [ ] …
 
-```quiz
-[
-  { "q": "Question ?", "choices": ["A", "B", "C", "D"], "answer": 1, "explain": "Pourquoi B." }
-]
+## Le cas SITE 42
+…matière à examiner, dans un bloc de code…
+
+```epreuve
+{
+  "enonce": "Question qui n'a qu'une seule reponse exacte.",
+  "reponse": "valeur-attendue",
+  "indice": "Piste, non publiee aujourd'hui."
+}
 ```
 ```
 
@@ -63,7 +68,10 @@ Texte du callout.
 
 Types de callout : `note`, `tip`, `warning` (le style est le même, le titre change).
 
-- Le bloc ` ```quiz ` contient un tableau JSON. `answer` est l'index (0-based) de la bonne réponse. Le quiz est validé à 70 % et marque la leçon comme terminée.
+- Le bloc ` ```epreuve ` est **obligatoire, et unique par leçon**. Il définit la serrure du niveau suivant : `reponse` sert de passe-phrase dans la chaîne de chiffrement, le build échoue si le bloc manque.
+- **Contraintes sur `reponse`** : minuscules ASCII, chiffres, espace et `. _ : / -` seulement, deux caractères au minimum. Le lanceur normalise la saisie en shell avec `tr` et `sed`, qui ne connaissent pas les accents : une réponse accentuée serait impossible à saisir. `npm run check` refuse tout le reste.
+- **La réponse doit être dérivable**, jamais devinable : elle s'extrait de la matière fournie dans la leçon (inventaire, matrice, journal, rapport). `check` vous alerte si elle n'apparaît nulle part, et refuse qu'elle figure dans son propre énoncé.
+- `indice` est facultatif et **n'est pas publié** dans l'archive : la progression est stricte. Le champ existe pour pouvoir l'activer sans retoucher les 45 leçons.
 - Le HTML brut n'est pas interprété (sécurité) ; le rendu se fait sans CDN, hors-ligne.
 
 ## Vérifier
@@ -72,7 +80,9 @@ Types de callout : `note`, `tip`, `warning` (le style est le même, le titre cha
 npm run check
 ```
 
-Signale : fichier manquant, id dupliqué, jours non croissants, quiz JSON invalide, réponse hors choix, leçon trop courte, lien cassé dans le site, et vérifie le chiffrement de bout en bout.
+Signale : fichier manquant, id dupliqué, jours non croissants, épreuve absente ou invalide, réponse non saisissable en shell, leçon trop courte, lien cassé dans le site.
+
+Surtout, `check` **rejoue la partie entière** : il extrait l'archive et vérifie, avec `openssl`, que chaque réponse ouvre bien le niveau suivant, du premier au quarante-cinquième. Un maillon cassé au build bloquerait définitivement l'apprenant : c'est le contrôle qui compte le plus.
 
 ## Mettre à jour le contenu en production
 

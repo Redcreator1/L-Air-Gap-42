@@ -60,9 +60,27 @@ Auditez votre propre périmètre avec cette méthode, en vous forçant à l’ob
 - [ ] Score calculé, plafond appliqué si pont avéré
 - [ ] Rapport en trois niveaux
 
-```quiz
-[
-  {"q":"Un schéma qui indique « aucune radio » constitue une preuve :","choices":["Suffisante","Documentaire, à compléter par observation ou test","Testée","Inutile"],"answer":1,"explain":"Un constat d’audit s’appuie sur deux types de preuves ; le document seul dit ce que l’organisation croit."},
-  {"q":"Effet d’un pont avéré sur le score d’isolation ?","choices":["Moins 10 points","Plafond à 50","Aucun si le reste est bon","Score nul"],"answer":1,"explain":"Un air gap avec un chemin réel vers l’extérieur n’est pas un air gap ; le plafond le rend visible."}
-]
+## Le cas SITE 42
+
+L’audit de SITE 42 conduit selon la méthode en six étapes, avec ses résultats.
+
+```
+SITE 42 - audit en six etapes
+
+code  ce qui est verifie             resultat
+----  -----------------------------  -------------------------
+a1    perimetre et inventaire        conforme
+a2    matrice des flux a jour        conforme depuis revision 5
+a3    preuves d isolation datees     h3 toujours sans preuve
+a4    transferts journalises         conforme
+a5    detection effective            s4 sans lecteur
+a6    tenabilite dans la duree       non evaluee
+```
+
+```epreuve
+{
+  "enonce": "L'audit répond à une question : l'isolation affirmée est-elle réelle, surveillée et tenable ? Une étape n'a tout simplement pas été conduite. Donnez son code.",
+  "reponse": "a6",
+  "indice": "Deux étapes remontent un défaut ; une seule n'a pas eu lieu."
+}
 ```

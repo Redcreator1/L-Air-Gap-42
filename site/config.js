@@ -103,7 +103,7 @@ export default {
         features: [
           'Niveaux 4 à 17 : fondations, modèle de menace, architecture d’isolation',
           'Ateliers guidés et checklists à appliquer sur votre environnement',
-          'Questions de contrôle à chaque niveau',
+          'Une épreuve par niveau : sa réponse ouvre le suivant',
           'Parcours hors-ligne, sans compte ni installation',
           { t: 'Mises à jour du contenu incluses', e: 'misesAJour' },
         ],
@@ -217,6 +217,14 @@ export default {
     {
       q: 'Comment se passe l’accès après paiement ?',
       a: 'Vous recevez votre clé de licence. Vous téléchargez l’archive des niveaux depuis la page Jouer, vous vérifiez son empreinte, et vous enregistrez votre clé dans le lanceur : « ./airgap42 licence VOTRE-CLÉ ». Aucun compte, aucun mot de passe, et tout fonctionne hors-ligne.',
+    },
+    {
+      q: 'Comment valide-t-on un niveau ?',
+      a: 'Chaque niveau fournit de la matière — un inventaire, une matrice de flux, un journal, un rapport — et pose une question qui n’a qu’une seule réponse exacte, à dériver de cette matière. Cette réponse est la clé de déchiffrement du niveau suivant : ce n’est pas une note, c’est une serrure. Sans elle, rien ne s’ouvre.',
+    },
+    {
+      q: 'Et si je bloque sur une épreuve ?',
+      a: 'La progression est stricte : tant que la réponse n’est pas trouvée, le niveau suivant reste fermé. C’est ce qui fait la valeur du parcours, et c’est assumé. Si vous restez bloqué, écrivez-nous — et la garantie de 14 jours s’applique sans justification.',
     },
     {
       q: 'Est-ce vraiment 42 jours ?',

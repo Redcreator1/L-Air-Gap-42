@@ -52,9 +52,25 @@ Décrivez votre kiosque actuel ou cible sur le tableau ci-dessus. Pour chaque «
 - [ ] Journal avec hachage de chaque fichier
 - [ ] Limites documentées et couvertes par d’autres contrôles
 
-```quiz
-[
-  {"q":"Ce qu’un kiosque de décontamination ne détecte pas :","choices":["Un malware connu","Un document avec macro","Un programme automate légitimement formaté mais altéré","Un exécutable avec signature antivirus"],"answer":2,"explain":"Un fichier valide dans sa forme n’est pas suspect pour un antivirus ; seule la vérification d’origine ou le double contrôle le couvre."},
-  {"q":"Comment les signatures antivirus du kiosque doivent-elles arriver ?","choices":["Par le média analysé","Par un canal distinct dédié","Par Internet directement","Manuellement une fois par an"],"answer":1,"explain":"Le média analysé est hostile par hypothèse ; il ne peut pas être le canal de mise à jour du contrôle qui l’analyse."}
-]
+## Le cas SITE 42
+
+Le rapport imprimé par le kiosque de SITE 42 le jour de l’incident du 02/09.
+
+```
+SITE 42 - rapport du kiosque, media usb-presta-07, 02/09
+
+  fichiers analyses         412
+  moteurs antiviraux        3, signatures du 28/08
+  detections                0
+  types non reconnus        1  (maj-plc.bin, format proprietaire)
+  fichiers non analysables  2  (archives chiffrees, sans mot de passe)
+  verdict imprime           AUCUNE MENACE DETECTEE
+```
+
+```epreuve
+{
+  "enonce": "Le verdict est devenu une autorisation de franchissement, alors que trois fichiers n'ont pas été réellement analysés. Donnez le nom du fichier dont le format n'a pas pu être reconnu.",
+  "reponse": "maj-plc.bin",
+  "indice": "Un antivirus reconnaît ce qui est déjà connu, et rien d'autre."
+}
 ```

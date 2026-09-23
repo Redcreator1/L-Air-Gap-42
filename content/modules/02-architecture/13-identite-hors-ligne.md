@@ -48,9 +48,25 @@ Inventoriez les comptes du périmètre. Marquez : nominatif / partagé / fabrica
 - [ ] Coffre hors-ligne avec copie sous scellé et ouverture à deux
 - [ ] Revue trimestrielle des comptes signée
 
-```quiz
-[
-  {"q":"Une réplique en lecture seule de l’annuaire d’entreprise dans le périmètre isolé :","choices":["Est une bonne pratique","Crée un pont d’identité","Est sans risque via diode","Est exigée par ISO 27001"],"answer":1,"explain":"Chaque compromission de compte d’entreprise devient valable dans le périmètre, sans réseau."},
-  {"q":"Mesure la plus rentable pour l’identité hors-ligne ?","choices":["Un HSM","La revue trimestrielle des comptes contre le personnel habilité","Des mots de passe de 24 caractères","La biométrie"],"answer":1,"explain":"Sans alerte RH automatique, seule une revue périodique détecte les comptes orphelins."}
-]
+## Le cas SITE 42
+
+Les comptes qui existent réellement dans la zone isolée de SITE 42.
+
+```
+SITE 42 - comptes en zone isolee
+
+compte       portee               secret               rotation
+-----------  -------------------  -------------------  ------------
+op-conduite  hmi-salle-01         carte a puce         annuelle
+tech-auto    tous les automates   mot de passe partage jamais
+svc-histo    hist-donnees-01      certificat interne   annuelle
+adm-local    scada-serveur-01     coffre hors ligne    semestrielle
+```
+
+```epreuve
+{
+  "enonce": "Un seul compte cumule les trois défauts : portée maximale, secret partagé, aucune rotation. Donnez son nom.",
+  "reponse": "tech-auto",
+  "indice": "Trois colonnes, trois défauts, une seule ligne qui les réunit."
+}
 ```
